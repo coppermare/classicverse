@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { CARS, getCarForYear } from '@/data/cars';
 import TimelineScrubber from '@/components/TimelineScrubber';
 import ConfidenceBadge from '@/components/ConfidenceBadge';
@@ -40,16 +41,18 @@ export default function Home() {
 
   // Initialise theme from localStorage / system preference
   useEffect(() => {
-    const saved = localStorage.getItem('cv-theme');
-    if (saved === 'dark') {
-      setIsDark(true);
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else if (saved === 'light') {
-      setIsDark(false);
-      document.documentElement.setAttribute('data-theme', 'light');
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true);
-    }
+    queueMicrotask(() => {
+      const saved = localStorage.getItem('cv-theme');
+      if (saved === 'dark') {
+        setIsDark(true);
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else if (saved === 'light') {
+        setIsDark(false);
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setIsDark(true);
+      }
+    });
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -74,8 +77,10 @@ export default function Home() {
   useEffect(() => {
     const car = getCarForYear(currentYear);
     clearTimeout(crossfadeTimeout.current);
-    setImageVisible(false);
-    setImgError(false);
+    queueMicrotask(() => {
+      setImageVisible(false);
+      setImgError(false);
+    });
     crossfadeTimeout.current = setTimeout(() => {
       setDisplayCar(car);
       setImageVisible(true);
@@ -122,14 +127,14 @@ export default function Home() {
             className="flex items-center justify-between px-6 py-3"
             aria-label="Main navigation"
           >
-            <a
+            <Link
               href="/"
               className="text-sm font-bold uppercase tracking-widest no-underline hover:opacity-80 transition-opacity"
               style={{ color: 'var(--cv-brass)', fontFamily: "'Playfair Display', Georgia, serif" }}
               aria-current="page"
             >
               Classicverse
-            </a>
+            </Link>
 
             <ul className="flex items-center gap-2 list-none m-0 p-0">
               <li>

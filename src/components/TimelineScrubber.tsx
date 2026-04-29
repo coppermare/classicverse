@@ -76,17 +76,19 @@ export default function TimelineScrubber({ currentYear, onYearSelect }: Timeline
   useEffect(() => { currentYearRef.current = currentYear; }, [currentYear]);
 
   useEffect(() => {
-    setKnob(prev => {
-      const cur = prev.slots[prev.active];
-      const era = getEraForYear(currentYear);
-      if (cur.year === currentYear && cur.era === era) return prev;
-      const reveal = (1 - prev.active) as 0 | 1;
-      const nextSlots: [KnobSlot, KnobSlot] = [
-        { ...prev.slots[0] },
-        { ...prev.slots[1] },
-      ];
-      nextSlots[reveal] = { year: currentYear, era };
-      return { active: reveal, slots: nextSlots };
+    queueMicrotask(() => {
+      setKnob(prev => {
+        const cur = prev.slots[prev.active];
+        const era = getEraForYear(currentYear);
+        if (cur.year === currentYear && cur.era === era) return prev;
+        const reveal = (1 - prev.active) as 0 | 1;
+        const nextSlots: [KnobSlot, KnobSlot] = [
+          { ...prev.slots[0] },
+          { ...prev.slots[1] },
+        ];
+        nextSlots[reveal] = { year: currentYear, era };
+        return { active: reveal, slots: nextSlots };
+      });
     });
   }, [currentYear]);
 

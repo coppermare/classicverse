@@ -15,10 +15,12 @@ export default function SearchCommand({ open, onClose, cars, onSelect }: SearchC
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (open) {
+    if (!open) return;
+    queueMicrotask(() => {
       setQuery('');
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    });
+    const t = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(t);
   }, [open]);
 
   const filtered = query.trim()
