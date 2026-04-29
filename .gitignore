@@ -18,3 +18,4 @@ tsconfig.tsbuildinfo
 
 # debug
 npm-debug.log*
+.vercel

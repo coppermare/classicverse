@@ -10,35 +10,129 @@
   --color-brass: #B5913A;
   --color-ivory: #F5F0E8;
   --color-muted: #6B7280;
-
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 
+/* ─── Theme tokens (light defaults) ─── */
 :root {
   color-scheme: light;
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --cv-bg:             #FAFAF7;
+  --cv-bg-surface:     #F5F0E8;
+  --cv-bg-deep:        #EDE9DF;
+  --cv-bg-placeholder: #C8B89A;
+  --cv-text:           #2C2C2C;
+  --cv-text-body:      #3D3D3D;
+  --cv-text-muted:     #6B7280;
+  --cv-text-steel:     #8B9BAE;
+  --cv-brass:          #B5913A;
+  --cv-red:            #B91C1C;
+  --cv-border:         #E5E0D8;
+  --cv-overlay:        rgba(44, 44, 44, 0.6);
+
+  /* Derived opacity variants — auto-update in dark mode */
+  --cv-brass-08: color-mix(in srgb, var(--cv-brass)  8%, transparent);
+  --cv-brass-12: color-mix(in srgb, var(--cv-brass) 12%, transparent);
+  --cv-brass-19: color-mix(in srgb, var(--cv-brass) 19%, transparent);
+  --cv-steel-25: color-mix(in srgb, var(--cv-text-steel) 25%, transparent);
 }
 
+/* ─── Dark mode (system preference) ─── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --cv-bg:             #141412;
+    --cv-bg-surface:     #1D1C18;
+    --cv-bg-deep:        #191815;
+    --cv-bg-placeholder: #4A4438;
+    --cv-text:           #F0EDE8;
+    --cv-text-body:      #D4CFC8;
+    --cv-text-muted:     #9CA3AF;
+    --cv-text-steel:     #8B9BAE;
+    --cv-brass:          #C9A84C;
+    --cv-red:            #E05252;
+    --cv-border:         #2C2924;
+    --cv-overlay:        rgba(0, 0, 0, 0.72);
+  }
+}
+
+/* ─── Dark mode (manual override) ─── */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --cv-bg:             #141412;
+  --cv-bg-surface:     #1D1C18;
+  --cv-bg-deep:        #191815;
+  --cv-bg-placeholder: #4A4438;
+  --cv-text:           #F0EDE8;
+  --cv-text-body:      #D4CFC8;
+  --cv-text-muted:     #9CA3AF;
+  --cv-text-steel:     #8B9BAE;
+  --cv-brass:          #C9A84C;
+  --cv-red:            #E05252;
+  --cv-border:         #2C2924;
+  --cv-overlay:        rgba(0, 0, 0, 0.72);
+}
+
+/* Tailwind dark: variant — activates on [data-theme=dark] ancestor */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 body {
-  background-color: #FAFAF7;
-  color: #2C2C2C;
+  background-color: var(--cv-bg);
+  color: var(--cv-text);
   font-family: var(--font-sans);
 }
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #B5913A;
+  outline: 2px solid var(--cv-brass);
   outline-offset: 2px;
 }
 
-/* Scrollbar styling */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
+/* Suppress focus ring on timeline — aria attrs handle a11y */
+.timeline-scrubber:focus-visible {
+  outline: none;
 }
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* @starting-style for stagger on fact chips */
+.fact-chip {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.28s var(--ease-out), transform 0.28s var(--ease-out);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fact-chip {
+    transition: none;
+  }
+  @keyframes fadeIn  { from { opacity: 1; } }
+  @keyframes fadeInUp { from { opacity: 1; transform: none; } }
+}
+
+/* Scrollbar */
+.scrollbar-thin::-webkit-scrollbar       { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #8B9BAE;
+  background-color: var(--cv-text-steel);
   border-radius: 2px;
 }
