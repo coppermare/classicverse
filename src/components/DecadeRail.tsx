@@ -56,7 +56,7 @@ export default function DecadeRail({ currentYear, onYearSelect }: DecadeRailProp
       <div className="px-5 mb-6">
         <p
           className="text-xs font-bold uppercase tracking-widest"
-          style={{ color: '#B5913A', fontFamily: "'Playfair Display', Georgia, serif" }}
+          style={{ color: '#B5913A' }}
         >
           Classicverse
         </p>
@@ -102,10 +102,7 @@ export default function DecadeRail({ currentYear, onYearSelect }: DecadeRailProp
                       if (!isActive) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
                     }}
                   >
-                    <span
-                      className="text-sm font-medium"
-                      style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-                    >
+                    <span className="text-sm font-medium">
                       {decade === 1880 ? '1885' : `${decade}s`}
                     </span>
                   </button>
@@ -122,7 +119,6 @@ export default function DecadeRail({ currentYear, onYearSelect }: DecadeRailProp
                           aria-current={y === currentYear ? 'page' : undefined}
                           className="w-full text-left px-3 py-0.5 rounded transition-all duration-100 text-xs"
                           style={{
-                            fontFamily: "'Playfair Display', Georgia, serif",
                             color: y === currentYear ? '#B91C1C' : '#6B7280',
                             fontWeight: y === currentYear ? '700' : '400',
                             backgroundColor: y === currentYear ? '#B91C1C12' : 'transparent',

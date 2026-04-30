@@ -56,7 +56,6 @@ export default function MobileYearSelector({ currentYear, onYearSelect }: Mobile
             className="text-2xl font-bold leading-none"
             style={{
               color: '#F5F0E8',
-              fontFamily: "'Playfair Display', Georgia, serif",
             }}
             aria-live="polite"
             aria-label={`Current year: ${currentYear}`}

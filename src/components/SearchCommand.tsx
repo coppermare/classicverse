@@ -136,7 +136,6 @@ export default function SearchCommand({ open, onClose, cars, onSelect }: SearchC
                   <span
                     className="text-sm font-bold shrink-0"
                     style={{
-                      fontFamily: "'Playfair Display', Georgia, serif",
                       color: 'var(--cv-red)',
                     }}
                   >

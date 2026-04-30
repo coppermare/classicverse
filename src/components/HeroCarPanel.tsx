@@ -37,14 +37,14 @@ function NavArrow({ direction, onClick, enabled }: { direction: 'prev' | 'next';
   );
 }
 
-function ImagePlaceholder({ year, era, label }: { year: number; era?: string; label: string }) {
+function ImagePlaceholder({ era, label }: { era?: string; label: string }) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ backgroundColor: '#EDE9DF' }}>
       <p
-        className="text-8xl font-bold select-none"
-        style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#C8B89A', lineHeight: 1 }}
+        className="text-3xl font-bold select-none"
+        style={{ color: '#C8B89A', lineHeight: 1.1, textAlign: 'center', padding: '0 24px' }}
       >
-        {year}
+        {label}
       </p>
       <p className="mt-3 text-xs tracking-widest uppercase" style={{ color: '#B5913A' }}>
         {era ? `${era} · ` : ''}{label}
@@ -62,10 +62,10 @@ export default function HeroCarPanel({ car, year, onPrevYear, onNextYear, canGoP
         <div className="relative shrink-0" style={{ height: '380px' }}>
           <NavArrow direction="prev" onClick={onPrevYear} enabled={canGoPrev} />
           <NavArrow direction="next" onClick={onNextYear} enabled={canGoNext} />
-          <ImagePlaceholder year={year} label="Record in progress" />
+          <ImagePlaceholder label="Record in progress" />
         </div>
         <div className="flex-1 flex flex-col items-center justify-center px-8 py-10 text-center">
-          <p className="text-5xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#2C2C2C' }}>
+          <p className="text-5xl font-bold mb-2" style={{ color: '#2C2C2C' }}>
             {year}
           </p>
           <p className="text-sm" style={{ color: '#8B9BAE' }}>Our researchers are compiling the landmark automobile for this year.</p>
@@ -107,7 +107,7 @@ export default function HeroCarPanel({ car, year, onPrevYear, onNextYear, canGoP
             )}
           </>
         ) : (
-          <ImagePlaceholder year={car.year} era={car.era} label={imgError ? 'Image unavailable' : 'Image pending'} />
+          <ImagePlaceholder era={car.era} label={imgError ? 'Image unavailable' : 'Image pending'} />
         )}
       </div>
 
@@ -116,24 +116,24 @@ export default function HeroCarPanel({ car, year, onPrevYear, onNextYear, canGoP
         <div>
           <p
             className="text-5xl font-bold leading-none mb-1"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#2C2C2C' }}
-            aria-label={`Year: ${car.year}`}
+            style={{ color: '#2C2C2C' }}
+            aria-label={`Car: ${car.hero_car_name}`}
           >
-            {car.year}
+            {car.hero_car_name}
           </p>
           <p className="text-sm tracking-wide" style={{ color: '#6B7280' }}>
-            {car.manufacturer} · {car.country} · {car.era}
+            {car.year} · {car.manufacturer} · {car.country} · {car.era}
           </p>
         </div>
 
         <h1
-          className="text-4xl font-bold leading-tight"
-          style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#2C2C2C' }}
+          className="text-2xl font-bold leading-tight"
+          style={{ color: '#2C2C2C' }}
         >
-          {car.hero_car_name}
+          {car.category}
         </h1>
 
-        <p className="text-lg leading-relaxed" style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#2C2C2C' }}>
+        <p className="text-lg leading-relaxed" style={{ color: '#2C2C2C' }}>
           {car.short_description}
         </p>
 

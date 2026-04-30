@@ -343,7 +343,7 @@ export default function TimelineScrubber({ currentYear, onYearSelect }: Timeline
                         fontWeight,
                         opacity,
                         color: isActive ? 'var(--timeline-accent)' : 'var(--timeline-display-muted)',
-                        letterSpacing: '-0.025em',
+                        letterSpacing: 0,
                         lineHeight: 1,
                         fontFamily: 'var(--font-sans)',
                         fontVariantNumeric: 'tabular-nums',
