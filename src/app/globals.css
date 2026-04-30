@@ -97,6 +97,323 @@ body {
   outline: none;
 }
 
+/* ─── Skeuomorphic timeline scrubber ─── */
+.timeline-scrubber-frame {
+  max-width: 720px;
+
+  /* Light mode tokens — neutral warm palette, no blue */
+  --timeline-rim-light:        #edeae2;
+  --timeline-rim-mid:          #c4bfb5;
+  --timeline-rim-dark:         #6e6a62;
+  --timeline-lip:              #0e0e0c;
+  --timeline-glass-top:        #f5f3ed;
+  --timeline-glass-mid:        #eae7df;
+  --timeline-glass-bottom:     #dedad1;
+  --timeline-glass-vignette:   rgba(40, 36, 30, 0.20);
+  --timeline-display-muted:    #8a8d8b;
+  --timeline-accent:           #1c1a16;   /* warm near-black — no blue */
+  --timeline-roller-top:       #6a6660;
+  --timeline-roller-mid:       #3b3830;
+  --timeline-roller-low:       #080807;
+  --timeline-ridge-dark:       #0e0d0c;
+  --timeline-ridge-face:       #5a5650;
+  --timeline-ridge-hi:         #cec8bc;
+  --timeline-ridge-shadow:     rgba(0, 0, 0, 0.78);
+
+  background: transparent;
+}
+
+/* Dark mode — manual toggle */
+[data-theme='dark'] .timeline-scrubber-frame {
+  --timeline-rim-light:        #52504b;
+  --timeline-rim-mid:          #302f2b;
+  --timeline-rim-dark:         #141312;
+  --timeline-lip:              #030303;
+  --timeline-glass-top:        #1e1e1b;
+  --timeline-glass-mid:        #181714;
+  --timeline-glass-bottom:     #101010;
+  --timeline-glass-vignette:   rgba(0, 0, 0, 0.80);
+  --timeline-display-muted:    #8a8b86;
+  --timeline-accent:           #d8d3cb;   /* warm cream — no blue */
+  --timeline-roller-top:       #726e67;
+  --timeline-roller-mid:       #3c3a32;
+  --timeline-roller-low:       #060605;
+  --timeline-ridge-dark:       #0c0c0b;
+  --timeline-ridge-face:       #4c4944;
+  --timeline-ridge-hi:         #a8a29a;
+  --timeline-ridge-shadow:     rgba(0, 0, 0, 0.92);
+}
+
+/* Dark mode — system preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .timeline-scrubber-frame {
+    --timeline-rim-light:        #52504b;
+    --timeline-rim-mid:          #302f2b;
+    --timeline-rim-dark:         #141312;
+    --timeline-lip:              #030303;
+    --timeline-glass-top:        #1e1e1b;
+    --timeline-glass-mid:        #181714;
+    --timeline-glass-bottom:     #101010;
+    --timeline-glass-vignette:   rgba(0, 0, 0, 0.80);
+    --timeline-display-muted:    #8a8b86;
+    --timeline-accent:           #d8d3cb;
+    --timeline-roller-top:       #726e67;
+    --timeline-roller-mid:       #3c3a32;
+    --timeline-roller-low:       #060605;
+    --timeline-ridge-dark:       #0c0c0b;
+    --timeline-ridge-face:       #4c4944;
+    --timeline-ridge-hi:         #a8a29a;
+    --timeline-ridge-shadow:     rgba(0, 0, 0, 0.92);
+  }
+}
+
+/* ── Display shell (outer bezel) ── */
+.timeline-display-shell {
+  isolation: isolate;
+  background:
+    linear-gradient(175deg, rgba(255,255,255,0.88) 0%, transparent 24%),
+    linear-gradient(180deg, var(--timeline-rim-light) 0%, var(--timeline-rim-mid) 52%, var(--timeline-rim-dark) 100%);
+  box-shadow:
+    0 1px 0   rgba(255, 255, 255, 0.80) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.52) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.44);
+}
+
+/* Inner depth ring */
+.timeline-display-shell::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  box-shadow:
+    0 8px 14px rgba(0,0,0,0.38) inset,
+    0 -2px 5px rgba(255,255,255,0.18) inset;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Display glass (inner surface) ── */
+.timeline-display-glass {
+  z-index: 1;
+  border: 1px solid var(--timeline-lip);
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(255,255,255,0.64), transparent 52%),
+    radial-gradient(ellipse at center, transparent 48%, var(--timeline-glass-vignette) 100%),
+    linear-gradient(90deg, rgba(0,0,0,0.14), transparent 11%, transparent 89%, rgba(0,0,0,0.14)),
+    linear-gradient(180deg, var(--timeline-glass-top), var(--timeline-glass-mid) 52%, var(--timeline-glass-bottom));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.30) inset,
+    0 0 0 3px rgba(0, 0, 0, 0.28) inset,
+    0 12px 22px rgba(0, 0, 0, 0.22) inset;
+}
+
+/* Top gloss sheen */
+.timeline-display-glass::before {
+  content: "";
+  position: absolute;
+  inset: 6px 22px auto;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.04) 70%, transparent);
+  pointer-events: none;
+}
+
+/* Bottom vignette overlay */
+.timeline-display-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), transparent 36%, rgba(0,0,0,0.12)),
+    linear-gradient(90deg, rgba(0,0,0,0.10), transparent 10%, transparent 90%, rgba(0,0,0,0.10));
+  pointer-events: none;
+}
+
+/* ── Era picker display ── */
+.timeline-era-display {
+  animation: eraFadeIn 0.18s ease;
+}
+
+@keyframes eraFadeIn {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+.timeline-era-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 2px;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 120ms ease;
+  position: relative;
+}
+
+/* Subtle vertical dividers between cells */
+.timeline-era-cell + .timeline-era-cell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 1px;
+  background: linear-gradient(180deg,
+    transparent,
+    color-mix(in srgb, var(--timeline-display-muted) 22%, transparent) 30%,
+    color-mix(in srgb, var(--timeline-display-muted) 22%, transparent) 70%,
+    transparent
+  );
+}
+
+.timeline-era-cell--active {
+  flex: 2;
+  cursor: default;
+  pointer-events: none;
+}
+
+.timeline-era-cell--near {
+  opacity: 0.60;
+}
+
+.timeline-era-cell--far {
+  opacity: 0.36;
+}
+
+.timeline-era-cell:not(:disabled):hover {
+  opacity: 0.80;
+}
+
+.timeline-era-cell-year {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--timeline-display-muted);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.28),
+    0 -1px 0 rgba(0,0,0,0.18);
+}
+
+.timeline-era-cell--near .timeline-era-cell-year {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.timeline-era-cell--active .timeline-era-cell-year {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--timeline-accent);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.22),
+    0 -1px 0 rgba(0,0,0,0.14),
+    0 0 18px color-mix(in srgb, var(--timeline-accent) 28%, transparent);
+}
+
+.timeline-era-cell-name {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 5.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+  color: var(--timeline-display-muted);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.22),
+    0 -1px 0 rgba(0,0,0,0.14);
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+.timeline-era-cell--near .timeline-era-cell-name {
+  font-size: 6.5px;
+}
+
+.timeline-era-cell--active .timeline-era-cell-name {
+  font-size: 8px;
+  color: var(--timeline-accent);
+  opacity: 0.9;
+  white-space: normal;
+  overflow: visible;
+}
+
+/* ── Pointer triangle ── */
+.timeline-pointer {
+  width: 0;
+  height: 0;
+  border-left:  7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 13px solid var(--timeline-accent);
+  filter:
+    drop-shadow(0 1px 0 rgba(255,255,255,0.22))
+    drop-shadow(0 6px 8px rgba(0,0,0,0.44));
+}
+
+/* ── Roller shell — carved recess in the surface ── */
+.timeline-roller-shell {
+  isolation: isolate;
+  background: var(--cv-bg);
+  box-shadow:
+    /* Top wall shadow — carved edge casts shadow inward */
+    0  6px 16px rgba(0,0,0,0.48) inset,
+    /* Bottom wall — lighter, less shadow */
+    0 -3px  8px rgba(0,0,0,0.22) inset,
+    /* Perimeter groove line */
+    0 0 0 1px rgba(0,0,0,0.30),
+    /* Light catches the surface just below the groove */
+    0 1px 0 rgba(255,255,255,0.36);
+}
+
+/* ── Roller cavity — deep black floor ── */
+.timeline-roller-cavity {
+  background: radial-gradient(ellipse at 50% 35%, #1c1c1a 0%, #050505 70%, #000 100%);
+  box-shadow:
+    0  6px 16px rgba(0,0,0,0.90) inset,
+    0 -2px  8px rgba(0,0,0,0.70) inset,
+    0 0 0 1px rgba(0,0,0,0.95) inset,
+    0 1px 0 rgba(255,255,255,0.30);
+}
+
+/* ── Wheel pill — SVG drum sits inside here ── */
+.timeline-roller-pill {
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.60),
+    0 1px 0 rgba(255,255,255,0.06);
+}
+
+@media (max-width: 640px) {
+  .timeline-scrubber {
+    height: 176px !important;
+  }
+  .timeline-display-shell {
+    height: 86px !important;
+    border-radius: 28px !important;
+  }
+  .timeline-display-glass {
+    border-radius: 23px !important;
+  }
+  .timeline-roller-shell {
+    height: 72px !important;
+    border-radius: 22px !important;
+  }
+  .timeline-roller-cavity {
+    border-radius: 16px !important;
+  }
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
