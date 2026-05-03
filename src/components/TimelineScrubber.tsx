@@ -290,7 +290,7 @@ export default function TimelineScrubber({ currentYear, onYearSelect, embedded }
         ref={containerRef}
         className="timeline-scrubber relative select-none touch-none w-full"
         style={{
-          height: embedded ? '138px' : '178px',
+          height: embedded ? '126px' : '178px',
           cursor: isDragging ? 'grabbing' : 'grab',
           outline: 'none',
         }}

@@ -305,7 +305,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
       <div
         className="brand-knob timeline-scrubber relative select-none touch-none w-full"
         style={{
-          height: embedded ? '114px' : '154px',
+          height: embedded ? '126px' : '154px',
           cursor: isDragging ? 'grabbing' : 'grab',
           outline: 'none',
         }}
@@ -322,7 +322,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
         tabIndex={0}
       >
         <div className={embedded
-          ? 'timeline-display-shell absolute inset-x-1 top-0 h-[62px] rounded-[8px] p-[4px]'
+          ? 'timeline-display-shell absolute inset-x-1 top-0 h-[76px] rounded-[8px] p-[4px]'
           : 'timeline-display-shell absolute inset-x-4 top-0 h-[76px] rounded-[28px] p-[5px] sm:inset-x-8'
         }>
           <div
