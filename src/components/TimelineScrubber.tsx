@@ -159,9 +159,10 @@ function WheelSVG({ width, height, rotation, theme }: {
 interface TimelineScrubberProps {
   currentYear: number;
   onYearSelect: (year: number) => void;
+  embedded?: boolean;
 }
 
-export default function TimelineScrubber({ currentYear, onYearSelect }: TimelineScrubberProps) {
+export default function TimelineScrubber({ currentYear, onYearSelect, embedded }: TimelineScrubberProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement>(null);
   const [pillSize, setPillSize] = useState({ width: 0, height: 0 });
@@ -284,12 +285,12 @@ export default function TimelineScrubber({ currentYear, onYearSelect }: Timeline
   const displayTrackX = -((smoothYear - MIN_YEAR) * DISPLAY_SLOT_W + DISPLAY_SLOT_W / 2);
 
   return (
-    <div className="timeline-scrubber-frame mx-auto w-full px-3 py-4 sm:px-5 sm:py-5">
+    <div className={embedded ? 'w-full' : 'timeline-scrubber-frame mx-auto w-full px-3 py-4 sm:px-5 sm:py-5'}>
       <div
         ref={containerRef}
         className="timeline-scrubber relative select-none touch-none w-full"
         style={{
-          height: '178px',
+          height: embedded ? '126px' : '178px',
           cursor: isDragging ? 'grabbing' : 'grab',
           outline: 'none',
         }}
@@ -305,9 +306,12 @@ export default function TimelineScrubber({ currentYear, onYearSelect }: Timeline
         tabIndex={0}
       >
         {/* ── Display panel ── */}
-        <div className="timeline-display-shell absolute inset-x-3 top-0 h-[90px] rounded-[32px] p-[5px] sm:inset-x-6">
+        <div className={embedded
+          ? 'timeline-display-shell absolute inset-x-1 top-0 h-[76px] rounded-[8px] p-[4px]'
+          : 'timeline-display-shell absolute inset-x-3 top-0 h-[90px] rounded-[32px] p-[5px] sm:inset-x-6'
+        }>
           <div
-            className="timeline-display-glass relative h-full overflow-hidden rounded-[27px]"
+            className={embedded ? 'timeline-display-glass relative h-full overflow-hidden rounded-[6px]' : 'timeline-display-glass relative h-full overflow-hidden rounded-[27px]'}
             style={{
               maskImage: 'linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%)',
@@ -385,13 +389,16 @@ export default function TimelineScrubber({ currentYear, onYearSelect }: Timeline
         </div>
 
         {/* ── Roller drum ── */}
-        <div className="timeline-roller-shell absolute inset-x-16 bottom-0 h-[80px] rounded-[26px] sm:inset-x-28">
+        <div className={embedded
+          ? 'timeline-roller-shell absolute inset-x-1 bottom-0 h-[44px] rounded-[8px]'
+          : 'timeline-roller-shell absolute inset-x-16 bottom-0 h-[80px] rounded-[26px] sm:inset-x-28'
+        }>
           {/* Black cavity floor */}
-          <div className="timeline-roller-cavity absolute inset-[10px] rounded-[16px]">
+          <div className={embedded ? 'timeline-roller-cavity absolute inset-[5px] rounded-[10px]' : 'timeline-roller-cavity absolute inset-[10px] rounded-[16px]'}>
             {/* Wheel pill — SVG fills this */}
             <div
               ref={pillRef}
-              className="timeline-roller-pill absolute inset-[7px_12px] overflow-hidden"
+              className={embedded ? 'timeline-roller-pill absolute inset-[4px_8px] overflow-hidden' : 'timeline-roller-pill absolute inset-[7px_12px] overflow-hidden'}
               style={{ borderRadius: 999 }}
             >
               <WheelSVG
