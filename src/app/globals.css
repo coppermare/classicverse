@@ -938,9 +938,9 @@ body {
 
 .cv-tv {
   position: relative;
-  width: 920px;
+  width: 1100px;
   max-width: 100%;
-  aspect-ratio: 1000 / 800;
+  aspect-ratio: 1000 / 620;
   filter: drop-shadow(0 24px 40px rgba(0,0,0,0.18));
 }
 
@@ -958,8 +958,8 @@ body {
 .cv-tv-cabinet {
   position: absolute;
   top: 0; left: 0; right: 0;
-  bottom: 28px;
-  border-radius: 14px 14px 0 0;
+  bottom: 16px;
+  border-radius: 22px;
   background:
     linear-gradient(180deg, #b8b1a4 0%, #9a9286 50%, #7a7468 100%);
   box-shadow:
@@ -996,14 +996,14 @@ body {
 .cv-tv-bezel {
   position: absolute;
   inset: 14px;
-  border-radius: 8px;
+  border-radius: 14px;
   background:
     linear-gradient(180deg, #524e48 0%, #3e3a32 60%, #302c24 100%);
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,0.5),
     inset 0 2px 0 rgba(255,255,255,0.06);
   display: grid;
-  grid-template-columns: 1fr 170px;
+  grid-template-columns: 1fr 250px;
   gap: 10px;
   padding: 10px;
   overflow: hidden;
@@ -1024,7 +1024,7 @@ body {
   border-radius: 36px / 42px;
   background:
     radial-gradient(ellipse at 50% 50%, #1a1612 0%, #0a0806 70%, #050403 100%);
-  padding: 18px;
+  padding: 8px;
   box-shadow:
     inset 0 6px 16px rgba(0,0,0,0.9),
     inset 0 -4px 12px rgba(0,0,0,0.8),
@@ -1080,6 +1080,12 @@ body {
   overflow: hidden;
   transform: perspective(900px) rotateX(0.6deg);
   transform-style: preserve-3d;
+}
+
+/* Hide system cursor inside the screen — pixel cursor handles it */
+.cv-tv-screen-well,
+.cv-tv-screen-well * {
+  cursor: none !important;
 }
 
 /* Power animations */
@@ -1193,6 +1199,7 @@ body {
   flex-direction: column;
   gap: 8px;
   overflow: hidden;
+  padding-bottom: 8px;
 }
 
 /* Force vars for all scrubbers/knobs inside TV (bezel is always dark) */
@@ -1267,8 +1274,8 @@ body {
   gap: 6px;
   background: linear-gradient(180deg, #1a1410, #0a0806);
   border-radius: 8px;
-  margin: 0 4px;
-  padding: 6px 0;
+  margin: 0;
+  padding: 6px 10px;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
   flex-shrink: 0;
 }
@@ -1290,6 +1297,80 @@ body {
   text-transform: uppercase;
 }
 
+/* ── Boot overlay ───────────────────────────────────────── */
+.cv-boot-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cv-boot-overlay--fading {
+  animation: cv-boot-fade 700ms ease-in forwards;
+}
+
+@keyframes cv-boot-fade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+/* Scan flash bar — animates from thin line to full height */
+.cv-boot-scan-bar {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: center center;
+  animation: cv-crt-scan 500ms ease-out forwards;
+}
+
+@keyframes cv-crt-scan {
+  0%   { transform: scaleY(0.004); opacity: 1; filter: brightness(3); }
+  50%  { transform: scaleY(0.06);  opacity: 0.9; filter: brightness(2); }
+  80%  { transform: scaleY(0.5);   opacity: 0.6; filter: brightness(1.2); }
+  100% { transform: scaleY(1);     opacity: 0; }
+}
+
+/* Logo: strip on left, text on right */
+.cv-boot-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  animation: cv-boot-logo-in 350ms ease-out forwards;
+}
+
+@keyframes cv-boot-logo-in {
+  0%   { opacity: 0; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.cv-boot-logo-strip {
+  display: inline-flex;
+  flex-direction: row;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+}
+
+.cv-boot-logo-strip span {
+  width: 16px;
+  height: 28px;
+  display: block;
+}
+
+.cv-boot-logo-name {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  color: #d4cfc4;
+  text-transform: uppercase;
+  text-shadow: 0 0 24px rgba(212, 207, 196, 0.25);
+}
+
 /* Base / feet */
 .cv-tv-base-neck {
   position: absolute;
@@ -1305,10 +1386,10 @@ body {
   position: absolute;
   bottom: 0;
   left: 4%; right: 4%;
-  height: 28px;
+  height: 16px;
   background:
     linear-gradient(180deg, #4a4238 0%, #2a241e 55%, #14110d 100%);
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 18px 18px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.14),
     inset 0 -2px 4px rgba(0,0,0,0.7),

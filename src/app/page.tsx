@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { CARS, getCarForYear } from '@/data/cars';
 import { getBrandLogo } from '@/data/brandLogos';
 import TimelineScrubber from '@/components/TimelineScrubber';
@@ -66,6 +65,7 @@ function getManufacturerMark(manufacturer: string) {
 function clampYear(year: number) {
   return Math.max(MIN_YEAR, Math.min(MAX_YEAR, year));
 }
+
 
 function CarScreenInfo({ car }: { car: CarRecord }) {
   return (
@@ -161,6 +161,104 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
             </div>
           </section>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Bat-handle toggle switch ── */
+function BatToggle({
+  value,
+  onChange,
+  label,
+}: {
+  value: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+}) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
+        {label}
+      </div>
+      {/* Mount plate */}
+      <div
+        onClick={() => onChange(!value)}
+        style={{
+          position: 'relative',
+          width: 28, height: 44,
+          borderRadius: 6,
+          background: 'linear-gradient(180deg, #1a1814 0%, #0d0b09 100%)',
+          boxShadow: [
+            'inset 0 2px 5px rgba(0,0,0,0.9)',
+            'inset 0 -1px 2px rgba(255,255,255,0.04)',
+            '0 3px 8px rgba(0,0,0,0.7)',
+            '0 1px 0 rgba(255,255,255,0.06)',
+          ].join(', '),
+          cursor: 'pointer',
+          userSelect: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {/* Slot recess */}
+        <div style={{
+          position: 'absolute',
+          left: '50%', top: '14%', bottom: '14%',
+          width: 6,
+          transform: 'translateX(-50%)',
+          borderRadius: 3,
+          background: 'rgba(0,0,0,0.7)',
+          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.9)',
+        }} />
+        {/* Lever */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          bottom: value ? '52%' : '10%',
+          transform: 'translateX(-50%)',
+          transition: 'bottom 180ms cubic-bezier(0.4, 0, 0.2, 1)',
+          width: 14, height: 22,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0,
+        }}>
+          {/* Bat head */}
+          <div style={{
+            width: 14, height: 14,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 38% 32%, #706860 0%, #3a3530 50%, #1c1a16 100%)',
+            boxShadow: [
+              'inset 0 2px 3px rgba(255,255,255,0.20)',
+              'inset 0 -2px 5px rgba(0,0,0,0.85)',
+              '0 2px 6px rgba(0,0,0,0.8)',
+            ].join(', '),
+            flexShrink: 0,
+          }} />
+          {/* Stem */}
+          <div style={{
+            width: 5, height: 10,
+            background: 'linear-gradient(180deg, #4a4540 0%, #252220 100%)',
+            borderRadius: '0 0 3px 3px',
+            boxShadow: '1px 0 2px rgba(0,0,0,0.5), -1px 0 2px rgba(0,0,0,0.5)',
+            flexShrink: 0,
+          }} />
+        </div>
+        {/* ON/OFF pip labels */}
+        <span style={{
+          position: 'absolute', top: 5, left: '50%', transform: 'translateX(-50%)',
+          fontSize: 5, letterSpacing: '0.05em', color: value ? '#d4cfc4' : '#3a3835',
+          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
+          userSelect: 'none',
+        }}>I</span>
+        <span style={{
+          position: 'absolute', bottom: 5, left: '50%', transform: 'translateX(-50%)',
+          fontSize: 5, letterSpacing: '0.05em', color: value ? '#3a3835' : '#d4cfc4',
+          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
+          userSelect: 'none',
+        }}>O</span>
       </div>
     </div>
   );
@@ -316,10 +414,15 @@ export default function Home() {
   const [brightness, setBrightness] = useState(0.55);
   const [contrast, setContrast]     = useState(0.6);
   const [volume, setVolume]         = useState(0.5);
-  const [screenOn, setScreenOn]     = useState(true);
-  const [turningOff, setTurningOff] = useState(false);
-  const [turningOn, setTurningOn]   = useState(false);
+  const [screenOn, setScreenOn]       = useState(true);
+  const [turningOff, setTurningOff]   = useState(false);
+  const [turningOn, setTurningOn]     = useState(false);
+  const [bootPhase, setBootPhase]     = useState<'idle' | 'scanning' | 'logo' | 'fading'>('idle');
+  const [volumeChanging, setVolumeChanging] = useState(false);
+  const [screenCursor, setScreenCursor] = useState<{ x: number; y: number; pointer: boolean } | null>(null);
+  const screenContentRef = useRef<HTMLDivElement>(null);
   const powerRef = useRef({ on: true, turningOff: false, turningOn: false });
+  const volumeHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const glitchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const displayCar = getCarForYear(currentYear);
@@ -415,10 +518,18 @@ export default function Home() {
     if (newOn && !powerRef.current.turningOn) {
       setScreenOn(true);
       setTurningOn(true);
+      setBootPhase('scanning');
       powerRef.current.on = true;
       powerRef.current.turningOn = true;
-      setTimeout(() => { setTurningOn(false); powerRef.current.turningOn = false; }, 700);
+      setTimeout(() => { setBootPhase('logo'); }, 500);
+      setTimeout(() => { setBootPhase('fading'); }, 1800);
+      setTimeout(() => {
+        setBootPhase('idle');
+        setTurningOn(false);
+        powerRef.current.turningOn = false;
+      }, 2500);
     } else if (!newOn && !powerRef.current.turningOff) {
+      setBootPhase('idle');
       setTurningOff(true);
       setScreenOn(false);
       powerRef.current.on = false;
@@ -428,9 +539,11 @@ export default function Home() {
   }, []);
 
   const handleVolumeChange = useCallback((v: number) => {
-    setPowerState(v >= 0.04);
-    if (v >= 0.04) setVolume(v);
-  }, [setPowerState]);
+    setVolume(v);
+    setVolumeChanging(true);
+    clearTimeout(volumeHideTimer.current);
+    volumeHideTimer.current = setTimeout(() => setVolumeChanging(false), 1600);
+  }, []);
 
   const screenFilter = useMemo(() => {
     const b = 0.4 + brightness;
@@ -459,76 +572,6 @@ export default function Home() {
         {currentYear}: {displayCar ? `${displayCar.hero_car_name} by ${displayCar.manufacturer}` : 'Record in progress'}
       </div>
 
-      <header>
-        <nav
-          className="flex items-center justify-between px-6 py-3"
-          style={{ maxWidth: 960, margin: '0 auto' }}
-          aria-label="Main navigation"
-        >
-          <Link
-            href="/"
-            className="text-sm font-bold uppercase tracking-widest no-underline hover:opacity-80 transition-opacity"
-            style={{ color: 'var(--cv-brass)' }}
-            aria-current="page"
-          >
-            Classicverse
-          </Link>
-
-          <ul className="flex items-center gap-2 list-none m-0 p-0">
-            <li>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex items-center justify-center w-8 h-8 rounded-lg transition-opacity hover:opacity-70 active:scale-[0.97]"
-                style={{
-                  backgroundColor: 'var(--cv-bg-surface)',
-                  color: 'var(--cv-text-muted)',
-                  transition: 'transform 160ms ease-out, opacity 160ms ease-out',
-                }}
-                aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {isDark ? (
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="5" strokeWidth={2} />
-                    <line x1="12" y1="1"  x2="12" y2="3"  strokeWidth={2} strokeLinecap="round" />
-                    <line x1="12" y1="21" x2="12" y2="23" strokeWidth={2} strokeLinecap="round" />
-                    <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"  strokeWidth={2} strokeLinecap="round" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" strokeWidth={2} strokeLinecap="round" />
-                    <line x1="1"  y1="12" x2="3"  y2="12" strokeWidth={2} strokeLinecap="round" />
-                    <line x1="21" y1="12" x2="23" y2="12" strokeWidth={2} strokeLinecap="round" />
-                    <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36" strokeWidth={2} strokeLinecap="round" />
-                    <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"  strokeWidth={2} strokeLinecap="round" />
-                  </svg>
-                ) : (
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                  </svg>
-                )}
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:opacity-70 active:scale-[0.97]"
-                style={{
-                  backgroundColor: 'var(--cv-bg-surface)',
-                  color: 'var(--cv-text-muted)',
-                  transition: 'transform 160ms ease-out, opacity 160ms ease-out',
-                }}
-                aria-label="Search cars (⌘K)"
-              >
-                <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <span className="hidden sm:inline">Search</span>
-                <kbd className="hidden sm:inline text-xs" style={{ color: 'var(--cv-brass)' }}>⌘K</kbd>
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
       {/* ── TV Stage ── */}
       <div className="cv-tv-stage">
         <div className="cv-tv">
@@ -544,15 +587,46 @@ export default function Home() {
               <div className="cv-tv-bezel-grain" />
 
               {/* ── CRT Screen ── */}
-              <div id="main-content" className="cv-tv-screen-well">
+              <div id="main-content" className="cv-tv-screen-well" style={{ cursor: 'none' }}>
                 <div className="cv-tv-screen-dome" />
                 <div className="cv-tv-screen-frame">
                   <div className={screenClassNames}>
 
                     <div
+                      ref={screenContentRef}
                       className="cv-tv-screen-content"
                       style={{ filter: screenOn ? screenFilter : 'none' }}
+                      onMouseMove={e => {
+                        const r = screenContentRef.current?.getBoundingClientRect();
+                        if (r) {
+                          const pointer = !!(e.target as Element).closest('button, a, [role="option"]');
+                          setScreenCursor({ x: e.clientX - r.left, y: e.clientY - r.top, pointer });
+                        }
+                      }}
+                      onMouseLeave={() => setScreenCursor(null)}
                     >
+                      {/* Boot overlay — always full-size, covers content during startup */}
+                      {screenOn && bootPhase !== 'idle' && (
+                        <div className={`cv-boot-overlay cv-boot-overlay--${bootPhase}`} aria-hidden="true">
+                          {/* Scan flash bar — visible only during scanning phase */}
+                          {bootPhase === 'scanning' && (
+                            <div className="cv-boot-scan-bar" />
+                          )}
+                          {/* Logo — visible during logo + fading phases */}
+                          {(bootPhase === 'logo' || bootPhase === 'fading') && (
+                            <div className="cv-boot-logo">
+                              <div className="cv-boot-logo-strip">
+                                <span style={{ background: '#9a2a2a' }} />
+                                <span style={{ background: '#d4a017' }} />
+                                <span style={{ background: '#1f6f3e' }} />
+                                <span style={{ background: '#2a4a8a' }} />
+                              </div>
+                              <span className="cv-boot-logo-name">Classicverse</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {screenOn && (
                         <>
                           {screenMode === 'info' && displayCar ? (
@@ -594,10 +668,66 @@ export default function Home() {
                             </>
                           )}
 
+                          {screenCursor && (
+                            <div style={{
+                              position: 'absolute',
+                              left: screenCursor.pointer ? screenCursor.x - 6 : screenCursor.x,
+                              top: screenCursor.pointer ? screenCursor.y - 2 : screenCursor.y,
+                              pointerEvents: 'none', zIndex: 99,
+                            }}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'}
+                                alt=""
+                                width={48}
+                                height={48}
+                                style={{ display: 'block', imageRendering: 'pixelated' }}
+                              />
+                            </div>
+                          )}
+
                           <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />
                         </>
                       )}
+
+                      <SearchCommand
+                        open={searchOpen}
+                        onClose={() => setSearchOpen(false)}
+                        cars={CARS}
+                        onSelect={selectSearchResult}
+                        inline
+                      />
                     </div>
+
+                    {/* Volume OSD */}
+                    {screenOn && (
+                      <div style={{
+                        position: 'absolute', bottom: 20, left: 22,
+                        pointerEvents: 'none', zIndex: 8,
+                        opacity: volumeChanging ? 1 : 0,
+                        transition: 'opacity 700ms ease-out',
+                        display: 'flex', flexDirection: 'column', gap: 5,
+                      }}>
+                        <span style={{
+                          fontSize: 7, letterSpacing: '0.24em', color: '#d4a017',
+                          fontFamily: 'monospace', textTransform: 'uppercase',
+                          textShadow: '0 0 8px #d4a01799',
+                        }}>VOL</span>
+                        <div style={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
+                          {Array.from({ length: 14 }).map((_, i) => {
+                            const filled = (i + 1) / 14 <= volume;
+                            const loud = i >= 11;
+                            return (
+                              <div key={i} style={{
+                                width: 7, height: 7,
+                                background: filled ? (loud ? '#e05050' : '#d4a017') : 'rgba(255,255,255,0.10)',
+                                boxShadow: filled ? `0 0 5px ${loud ? '#e0505099' : '#d4a01799'}` : 'none',
+                              }} />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="cv-tv-screen-scanlines" />
                     <div className="cv-tv-screen-vignette" />
@@ -615,56 +745,88 @@ export default function Home() {
 
                 {/* Knob plate */}
                 <div className="cv-tv-knob-plate">
-                  <TvKnob label="BRIGHT" value={brightness} onChange={setBrightness} />
-                  <TvKnob label="CONTRAST" value={contrast} onChange={setContrast} />
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                    <TvKnob
-                      label="VOLUME"
-                      value={screenOn ? volume : 0}
-                      onChange={handleVolumeChange}
-                      accent={screenOn ? '#d4a017' : '#555'}
-                    />
-                    <div style={{ display: 'flex', gap: 6, fontSize: 7, letterSpacing: '0.1em', color: '#6a6258' }}>
-                      <span>OFF</span>
-                      <span>ON</span>
-                    </div>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
+                    <TvKnob label="BRIGHT" value={brightness} onChange={setBrightness} />
+                    <TvKnob label="CONTRAST" value={contrast} onChange={setContrast} />
+                    <TvKnob label="VOLUME" value={volume} onChange={handleVolumeChange} />
                   </div>
 
-                  {/* Info / Image toggle button */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                    <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>INFO</div>
-                    <button
-                      type="button"
-                      onClick={() => setScreenMode(m => m === 'image' ? 'info' : 'image')}
-                      aria-label={screenMode === 'image' ? 'Show car info' : 'Show car image'}
-                      aria-pressed={screenMode === 'info'}
-                      style={{
-                        width: 36, height: 36,
-                        borderRadius: '50%',
-                        border: 'none',
-                        cursor: 'pointer',
-                        background: screenMode === 'info'
-                          ? 'radial-gradient(circle at 35% 28%, #3a4e3a 0%, #182018 46%, #0a100a 100%)'
-                          : 'radial-gradient(circle at 35% 28%, #60584e 0%, #26221e 46%, #121008 100%)',
-                        boxShadow: [
-                          'inset 0 2px 2px rgba(255,255,255,0.18)',
-                          'inset 0 -3px 6px rgba(0,0,0,0.90)',
-                          '0 3px 7px rgba(0,0,0,0.60)',
-                        ].join(', '),
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0,
-                        transition: 'background 200ms',
-                      }}
-                    >
-                      <span style={{
-                        width: 8, height: 8,
-                        borderRadius: '50%',
-                        display: 'block',
-                        background: screenMode === 'info' ? '#7ab87a' : '#3a3632',
-                        boxShadow: screenMode === 'info' ? '0 0 7px #7ab87acc' : 'none',
-                        transition: 'background 200ms, box-shadow 200ms',
-                      }} />
-                    </button>
+                  {/* SRCH · MODE · INFO row */}
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center' }}>
+
+                    {/* Search button */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>SRCH</div>
+                      <button
+                        type="button"
+                        onClick={() => setSearchOpen(o => !o)}
+                        aria-label="Search cars"
+                        aria-pressed={searchOpen}
+                        style={{
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                          background: searchOpen ? '#181614' : '#232120',
+                          boxShadow: searchOpen ? [
+                            'inset 0 4px 10px rgba(0,0,0,0.95)',
+                            'inset 0 2px 4px rgba(0,0,0,0.85)',
+                            '0 1px 0 rgba(255,255,255,0.04)',
+                          ].join(', ') : [
+                            'inset 0 1px 0 rgba(255,255,255,0.18)',
+                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                            '0 6px 0 rgba(0,0,0,0.85)',
+                            '0 8px 16px rgba(0,0,0,0.65)',
+                            '0 2px 4px rgba(0,0,0,0.50)',
+                          ].join(', '),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          transition: 'box-shadow 200ms, background 200ms',
+                        }}
+                      >
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={{ overflow: 'visible' }}>
+                          <g style={{ filter: searchOpen ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="11" cy="11" r="7" stroke={searchOpen ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" style={{ transition: 'stroke 200ms' }} />
+                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke={searchOpen ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* Theme toggle switch */}
+                    <BatToggle label="MODE" value={isDark} onChange={toggleTheme} />
+
+                    {/* Info / Image toggle button */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>INFO</div>
+                      <button
+                        type="button"
+                        onClick={() => setScreenMode(m => m === 'image' ? 'info' : 'image')}
+                        aria-label={screenMode === 'image' ? 'Show car info' : 'Show car image'}
+                        aria-pressed={screenMode === 'info'}
+                        style={{
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                          background: screenMode === 'info' ? '#181614' : '#232120',
+                          boxShadow: screenMode === 'info' ? [
+                            'inset 0 4px 10px rgba(0,0,0,0.95)',
+                            'inset 0 2px 4px rgba(0,0,0,0.85)',
+                            '0 1px 0 rgba(255,255,255,0.04)',
+                          ].join(', ') : [
+                            'inset 0 1px 0 rgba(255,255,255,0.18)',
+                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                            '0 6px 0 rgba(0,0,0,0.85)',
+                            '0 8px 16px rgba(0,0,0,0.65)',
+                            '0 2px 4px rgba(0,0,0,0.50)',
+                          ].join(', '),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          transition: 'box-shadow 200ms, background 200ms',
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                          <g style={{ filter: screenMode === 'info' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="9" cy="4.5" r="1.2" fill={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
+                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+
                   </div>
 
                   {/* Speaker grille */}
@@ -675,15 +837,66 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Brand plate */}
-                <div className="cv-tv-brand-plate">
-                  <div className="cv-tv-brand-mark-strip">
-                    <span style={{ background: '#9a2a2a' }} />
-                    <span style={{ background: '#d4a017' }} />
-                    <span style={{ background: '#1f6f3e' }} />
-                    <span style={{ background: '#2a4a8a' }} />
+                {/* Brand plate row: logo + PWR button as siblings */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '0 4px' }}>
+                  <div className="cv-tv-brand-plate" style={{ flex: 1 }}>
+                    <div className="cv-tv-brand-mark-strip">
+                      <span style={{ background: '#9a2a2a' }} />
+                      <span style={{ background: '#d4a017' }} />
+                      <span style={{ background: '#1f6f3e' }} />
+                      <span style={{ background: '#2a4a8a' }} />
+                    </div>
+                    <span className="cv-tv-brand-name">Classicverse</span>
                   </div>
-                  <span className="cv-tv-brand-name">Classicverse</span>
+
+                  {/* Power button — rectangular, outside logo frame */}
+                  <button
+                    type="button"
+                    onClick={() => setPowerState(!screenOn)}
+                    aria-label={screenOn ? 'Turn off' : 'Turn on'}
+                    aria-pressed={screenOn}
+                    style={{
+                      width: 44, height: 28,
+                      borderRadius: 8,
+                      border: 'none',
+                      cursor: 'pointer',
+                      background: screenOn ? '#181614' : '#232120',
+                      boxShadow: screenOn ? [
+                        'inset 0 4px 10px rgba(0,0,0,0.95)',
+                        'inset 0 2px 4px rgba(0,0,0,0.85)',
+                        '0 1px 0 rgba(255,255,255,0.04)',
+                      ].join(', ') : [
+                        'inset 0 1px 0 rgba(255,255,255,0.18)',
+                        'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                        '0 4px 0 rgba(0,0,0,0.85)',
+                        '0 6px 12px rgba(0,0,0,0.65)',
+                        '0 2px 4px rgba(0,0,0,0.50)',
+                      ].join(', '),
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
+                      transition: 'box-shadow 200ms, background 200ms',
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                      <g style={{ filter: screenOn ? 'drop-shadow(0 0 2.5px #d4a017bb)' : 'none', transition: 'filter 200ms' }}>
+                        <path
+                          d="M 5.5 4.2 A 6 6 0 1 0 12.5 4.2"
+                          stroke={screenOn ? '#d4a017' : '#5e5c5a'}
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          fill="none"
+                          style={{ transition: 'stroke 200ms' }}
+                        />
+                        <line
+                          x1="9" y1="2" x2="9" y2="7"
+                          stroke={screenOn ? '#d4a017' : '#5e5c5a'}
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          style={{ transition: 'stroke 200ms' }}
+                        />
+                      </g>
+                    </svg>
+                  </button>
                 </div>
               </div>
 
@@ -691,13 +904,11 @@ export default function Home() {
           </div>
 
           {/* Base */}
-          <div className="cv-tv-base-neck" />
           <div className="cv-tv-base"><div className="cv-tv-base-shadow" /></div>
           <div className="cv-tv-shadow" />
         </div>
       </div>
 
-      <SearchCommand open={searchOpen} onClose={() => setSearchOpen(false)} cars={CARS} onSelect={selectSearchResult} />
     </>
   );
 }
