@@ -172,13 +172,17 @@ interface BrandKnobProps {
   selectedBrand: string | null;
   onBrandSelect: (brand: string | null) => void;
   embedded?: boolean;
+  /** Prepend an "ALL" cell (brand mode). Off for generic rollers e.g. channels. */
+  showAll?: boolean;
+  ariaLabel?: string;
 }
 
-export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedded }: BrandKnobProps) {
-  const options = useMemo<BrandOption[]>(() => [
-    { manufacturer: null, mark: 'ALL', count: brands.reduce((sum, brand) => sum + brand.count, 0) },
-    ...brands,
-  ], [brands]);
+export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedded, showAll = true, ariaLabel = 'Brand selector' }: BrandKnobProps) {
+  const options = useMemo<BrandOption[]>(() => (
+    showAll
+      ? [{ manufacturer: null, mark: 'ALL', count: brands.reduce((sum, brand) => sum + brand.count, 0) }, ...brands]
+      : brands
+  ), [brands, showAll]);
 
   const selectedIndex = Math.max(0, options.findIndex(option => option.manufacturer === selectedBrand));
   const pillRef = useRef<HTMLDivElement>(null);
@@ -301,7 +305,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
   const wheelRotation = smoothIndex * RIDGES_PER_BRAND;
 
   return (
-    <section className={embedded ? 'w-full' : 'brand-knob-frame timeline-scrubber-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label="Brand selector">
+    <section className={embedded ? 'w-full' : 'brand-knob-frame timeline-scrubber-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label={ariaLabel}>
       <div
         className="brand-knob timeline-scrubber relative select-none touch-none w-full"
         style={{
@@ -318,7 +322,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
         aria-valuemax={options.length - 1}
         aria-valuenow={selectedIndex}
         aria-valuetext={selectedBrand ?? 'All brands'}
-        aria-label="Brand selector"
+        aria-label={ariaLabel}
         tabIndex={0}
       >
         <div className={embedded

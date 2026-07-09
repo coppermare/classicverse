@@ -8,11 +8,20 @@ import TimelineScrubber from '@/components/TimelineScrubber';
 import BrandKnob, { type BrandOption } from '@/components/BrandKnob';
 import ConfidenceBadge from '@/components/ConfidenceBadge';
 import SearchCommand from '@/components/SearchCommand';
+import HomeScreen, { type Channel } from '@/components/HomeScreen';
 import { playPowerOn, playPowerOff } from '@/lib/crtSound';
 import type { CarRecord } from '@/types/car';
 
 const MIN_YEAR = 1885;
 const MAX_YEAR = 2000;
+
+// Home "channels" — the desktop of the Classicverse set. Only Cars is live.
+const CHANNELS: Channel[] = [
+  { id: 'cars', name: 'Cars', tagline: '1885 to 2000 archive', mark: '01', enabled: true },
+  { id: 'guide', name: 'Guide', tagline: 'Whats on', mark: '02', enabled: false },
+  { id: 'radio', name: 'Radio', tagline: 'Period sound', mark: '03', enabled: false },
+  { id: 'about', name: 'About', tagline: 'The project', mark: '04', enabled: false },
+];
 
 const REVIEW_LABEL: Record<string, string> = {
   pending: 'Pending review',
@@ -398,6 +407,8 @@ export default function Home() {
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
   const [searchOpen, setSearchOpen]   = useState(false);
   const [isDark, setIsDark]           = useState(false);
+  const [view, setView]               = useState<'home' | 'cars'>('home');
+  const [channelId, setChannelId]     = useState('cars');
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
@@ -466,6 +477,19 @@ export default function Home() {
     setCurrentYear((cur) => years.find((y) => y > cur) ?? years[0]);
   }, [brandYears]);
 
+  // Channels reuse the roller: the top wheel scrolls the home desktop.
+  const channelOptions = useMemo<BrandOption[]>(
+    () => CHANNELS.map((ch) => ({ manufacturer: ch.id, mark: ch.mark, count: 0 })),
+    [],
+  );
+
+  const openChannel = useCallback((id: string) => {
+    const ch = CHANNELS.find((c) => c.id === id);
+    if (ch?.enabled) setView(id === 'cars' ? 'cars' : 'home');
+  }, []);
+
+  const goHome = useCallback(() => setView('home'), []);
+
   // Theme init
   useEffect(() => {
     queueMicrotask(() => {
@@ -494,7 +518,10 @@ export default function Home() {
   const goToNextYear    = useCallback(() => setCurrentYear(y => clampYear(y + 1)), []);
   const goToPrevDecade  = useCallback(() => setCurrentYear(y => clampYear(y - 10)), []);
   const goToNextDecade  = useCallback(() => setCurrentYear(y => clampYear(y + 10)), []);
-  const selectSearchResult = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
+  const selectSearchResult = useCallback((year: number) => {
+    setCurrentYear(clampYear(year));
+    setView('cars');
+  }, []);
 
   // Glitch on year/mode change
   useEffect(() => {
@@ -510,25 +537,31 @@ export default function Home() {
       cancelAnimationFrame(activate);
       clearTimeout(glitchTimeout.current);
     };
-  }, [currentYear, screenMode]);
+  }, [currentYear, screenMode, view]);
 
   // Keyboard nav
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (e.key === 'Escape') {
+        if (searchOpen) { setSearchOpen(false); return; }
+        if (view === 'cars') { e.preventDefault(); goHome(); return; }
+        return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(o => !o);
+        return;
+      }
+      if (view !== 'cars') return;
       if (e.key === 'ArrowLeft'  && e.shiftKey) { e.preventDefault(); goToPrevDecade(); return; }
       if (e.key === 'ArrowRight' && e.shiftKey) { e.preventDefault(); goToNextDecade(); return; }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); goToPrevYear(); return; }
       if (e.key === 'ArrowRight') { e.preventDefault(); goToNextYear(); return; }
-      if (e.key === 'Escape') { setSearchOpen(false); return; }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchOpen(o => !o);
-      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade]);
+  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade, view, searchOpen, goHome]);
 
   // TV power control
   const setPowerState = useCallback((newOn: boolean) => {
@@ -590,7 +623,9 @@ export default function Home() {
       </a>
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {currentYear}: {displayCar ? `${displayCar.hero_car_name} by ${displayCar.manufacturer}` : 'Record in progress'}
+        {view === 'home'
+          ? `Home: ${CHANNELS.find(c => c.id === channelId)?.name ?? 'Classicverse'} highlighted`
+          : `${currentYear}: ${displayCar ? `${displayCar.hero_car_name} by ${displayCar.manufacturer}` : 'Record in progress'}`}
       </div>
 
       {/* ── TV Stage ── */}
@@ -648,7 +683,16 @@ export default function Home() {
                         </div>
                       )}
 
-                      {screenOn && (
+                      {screenOn && view === 'home' && (
+                        <HomeScreen
+                          channels={CHANNELS}
+                          selectedId={channelId}
+                          onSelect={setChannelId}
+                          onOpen={openChannel}
+                        />
+                      )}
+
+                      {screenOn && view === 'cars' && (
                         <>
                           {screenMode === 'info' && displayCar ? (
                             <CarScreenInfo car={displayCar} />
@@ -687,27 +731,29 @@ export default function Home() {
                               )}
                             </>
                           )}
-
-                          {screenCursor && (
-                            <div style={{
-                              position: 'absolute',
-                              left: screenCursor.pointer ? screenCursor.x - 6 : screenCursor.x,
-                              top: screenCursor.pointer ? screenCursor.y - 2 : screenCursor.y,
-                              pointerEvents: 'none', zIndex: 99,
-                            }}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'}
-                                alt=""
-                                width={48}
-                                height={48}
-                                style={{ display: 'block', imageRendering: 'pixelated' }}
-                              />
-                            </div>
-                          )}
-
-                          <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />
                         </>
+                      )}
+
+                      {screenOn && screenCursor && (
+                        <div style={{
+                          position: 'absolute',
+                          left: screenCursor.pointer ? screenCursor.x - 6 : screenCursor.x,
+                          top: screenCursor.pointer ? screenCursor.y - 2 : screenCursor.y,
+                          pointerEvents: 'none', zIndex: 99,
+                        }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'}
+                            alt=""
+                            width={48}
+                            height={48}
+                            style={{ display: 'block', imageRendering: 'pixelated' }}
+                          />
+                        </div>
+                      )}
+
+                      {screenOn && (
+                        <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />
                       )}
 
                       <SearchCommand
@@ -760,8 +806,24 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded />
-                <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
+                {view === 'home' ? (
+                  <BrandKnob
+                    brands={channelOptions}
+                    selectedBrand={channelId}
+                    onBrandSelect={(id) => id && setChannelId(id)}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Channel selector"
+                  />
+                ) : (
+                  <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded ariaLabel="Brand selector" />
+                )}
+
+                {view === 'cars' ? (
+                  <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
+                ) : (
+                  <div style={{ height: '126px', width: '100%' }} aria-hidden="true" />
+                )}
 
                 {/* Knob plate */}
                 <div className="cv-tv-knob-plate">
@@ -809,21 +871,50 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* Theme toggle switch */}
-                    <BatToggle label="MODE" value={isDark} onChange={toggleTheme} />
+                    {/* MODE: theme switch at Home; back-to-Home button inside a channel */}
+                    {view === 'home' ? (
+                      <BatToggle label="MODE" value={isDark} onChange={toggleTheme} />
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                        <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>HOME</div>
+                        <button
+                          type="button"
+                          onClick={goHome}
+                          aria-label="Back to Home"
+                          style={{
+                            width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                            background: '#232120',
+                            boxShadow: [
+                              'inset 0 1px 0 rgba(255,255,255,0.18)',
+                              'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                              '0 6px 0 rgba(0,0,0,0.85)',
+                              '0 8px 16px rgba(0,0,0,0.65)',
+                              '0 2px 4px rgba(0,0,0,0.50)',
+                            ].join(', '),
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                            transition: 'box-shadow 200ms, background 200ms',
+                          }}
+                        >
+                          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke="#5e5c5a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke="#5e5c5a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
 
-                    {/* Info / Image toggle button */}
+                    {/* INFO: open highlighted channel at Home; toggle car detail inside Cars */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                       <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>INFO</div>
                       <button
                         type="button"
-                        onClick={() => setScreenMode(m => m === 'image' ? 'info' : 'image')}
-                        aria-label={screenMode === 'image' ? 'Show car info' : 'Show car image'}
-                        aria-pressed={screenMode === 'info'}
+                        onClick={() => view === 'home' ? openChannel(channelId) : setScreenMode(m => m === 'image' ? 'info' : 'image')}
+                        aria-label={view === 'home' ? 'Open highlighted channel' : (screenMode === 'image' ? 'Show car info' : 'Show car image')}
+                        aria-pressed={view === 'cars' ? screenMode === 'info' : undefined}
                         style={{
                           width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                          background: screenMode === 'info' ? '#181614' : '#232120',
-                          boxShadow: screenMode === 'info' ? [
+                          background: (view === 'cars' && screenMode === 'info') ? '#181614' : '#232120',
+                          boxShadow: (view === 'cars' && screenMode === 'info') ? [
                             'inset 0 4px 10px rgba(0,0,0,0.95)',
                             'inset 0 2px 4px rgba(0,0,0,0.85)',
                             '0 1px 0 rgba(255,255,255,0.04)',
@@ -839,9 +930,9 @@ export default function Home() {
                         }}
                       >
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                          <g style={{ filter: screenMode === 'info' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
-                            <circle cx="9" cy="4.5" r="1.2" fill={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
-                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          <g style={{ filter: (view === 'cars' && screenMode === 'info') ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="9" cy="4.5" r="1.2" fill={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
+                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
                           </g>
                         </svg>
                       </button>
