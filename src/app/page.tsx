@@ -15,13 +15,26 @@ import type { CarRecord } from '@/types/car';
 const MIN_YEAR = 1885;
 const MAX_YEAR = 2000;
 
-// Home "channels" — the desktop of the Classicverse set. Only Cars is live.
+const HOME_COLS = 2;
+
+// Home "channels" — the desktop of the Classicverse set. Only Cars and
+// Display are live; Display is an instant action (toggles the ambient
+// page theme) rather than a screen you navigate into.
 const CHANNELS: Channel[] = [
-  { id: 'cars', name: 'Cars', tagline: '1885 to 2000 archive', mark: '01', enabled: true },
-  { id: 'guide', name: 'Guide', tagline: 'Whats on', mark: '02', enabled: false },
-  { id: 'radio', name: 'Radio', tagline: 'Period sound', mark: '03', enabled: false },
-  { id: 'about', name: 'About', tagline: 'The project', mark: '04', enabled: false },
+  { id: 'cars', name: 'Cars', tagline: '1885 to 2000 archive', mark: '01', accent: '#9a2a2a', enabled: true },
+  { id: 'guide', name: 'Guide', tagline: "What's on", mark: '02', accent: '#d4a017', enabled: false },
+  { id: 'radio', name: 'Radio', tagline: 'Period sound', mark: '03', accent: '#1f6f3e', enabled: false },
+  { id: 'about', name: 'About', tagline: 'The project', mark: '04', accent: '#2a4a8a', enabled: false },
+  { id: 'display', name: 'Display', tagline: 'Room light', mark: '05', accent: '#7a746a', enabled: true },
 ];
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+const HOME_ROWS: Channel[][] = chunk(CHANNELS, HOME_COLS);
 
 const REVIEW_LABEL: Record<string, string> = {
   pending: 'Pending review',
@@ -409,6 +422,7 @@ export default function Home() {
   const [isDark, setIsDark]           = useState(false);
   const [view, setView]               = useState<'home' | 'cars'>('home');
   const [channelId, setChannelId]     = useState('cars');
+  const [homeLayout, setHomeLayout]   = useState<'grid' | 'list'>('grid');
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
@@ -477,20 +491,56 @@ export default function Home() {
     setCurrentYear((cur) => years.find((y) => y > cur) ?? years[0]);
   }, [brandYears]);
 
-  // Channels reuse the roller: the top wheel scrolls the home desktop.
+  // The Home desktop is a grid; the two rollers become its two axes.
+  // Top roller = column (items in the highlighted row), bottom roller = row.
+  // This mirrors how the same two rollers work inside Cars (brand x year) —
+  // one control always reads across, the other always reads down/through.
+  const homePosition = useMemo(() => {
+    const rowIndex = HOME_ROWS.findIndex((r) => r.some((ch) => ch.id === channelId));
+    const safeRow = rowIndex === -1 ? 0 : rowIndex;
+    const colIndex = HOME_ROWS[safeRow].findIndex((ch) => ch.id === channelId);
+    return { row: safeRow, col: colIndex === -1 ? 0 : colIndex };
+  }, [channelId]);
+  const homeRow = homePosition.row;
+  const homeCol = homePosition.col;
+
+  const homeColumnOptions = useMemo<BrandOption[]>(
+    () => HOME_ROWS[homeRow].map((ch) => ({ manufacturer: ch.id, mark: ch.mark, count: 0 })),
+    [homeRow],
+  );
+
+  const homeRowOptions = useMemo<BrandOption[]>(
+    () => HOME_ROWS.map((r, i) => ({ manufacturer: String(i), mark: `R${i + 1}`, count: 0 })),
+    [],
+  );
+
+  // Flat roller for the List layout — one long scroll through every channel.
   const channelOptions = useMemo<BrandOption[]>(
     () => CHANNELS.map((ch) => ({ manufacturer: ch.id, mark: ch.mark, count: 0 })),
     [],
   );
 
-  const openChannel = useCallback((id: string) => {
-    const ch = CHANNELS.find((c) => c.id === id);
-    if (ch?.enabled) setView(id === 'cars' ? 'cars' : 'home');
+  const selectHomeColumn = useCallback((id: string | null) => {
+    if (id) setChannelId(id);
   }, []);
+
+  const selectHomeRow = useCallback((rowKey: string | null) => {
+    if (rowKey === null) return;
+    const r = Number(rowKey);
+    const targetRow = HOME_ROWS[r];
+    if (!targetRow) return;
+    const clampedCol = Math.min(homeCol, targetRow.length - 1);
+    setChannelId(targetRow[clampedCol].id);
+  }, [homeCol]);
 
   const goHome = useCallback(() => setView('home'), []);
 
-  // Theme init
+  const toggleHomeLayout = useCallback(() => {
+    setHomeLayout((l) => (l === 'grid' ? 'list' : 'grid'));
+  }, []);
+
+  // Theme init — controls the ambient page backdrop behind the TV, not the
+  // screen content. Toggled from the Display tile.
   useEffect(() => {
     queueMicrotask(() => {
       const saved = localStorage.getItem('cv-theme');
@@ -512,6 +562,13 @@ export default function Home() {
     document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
     localStorage.setItem('cv-theme', next ? 'dark' : 'light');
   }, [isDark]);
+
+  const openChannel = useCallback((id: string) => {
+    const ch = CHANNELS.find((c) => c.id === id);
+    if (!ch?.enabled) return;
+    if (ch.id === 'display') { toggleTheme(); return; }
+    if (ch.id === 'cars') { setView('cars'); return; }
+  }, [toggleTheme]);
 
   const goToYear        = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
   const goToPrevYear    = useCallback(() => setCurrentYear(y => clampYear(y - 1)), []);
@@ -685,8 +742,9 @@ export default function Home() {
 
                       {screenOn && view === 'home' && (
                         <HomeScreen
-                          channels={CHANNELS}
+                          rows={HOME_ROWS}
                           selectedId={channelId}
+                          layout={homeLayout}
                           onSelect={setChannelId}
                           onOpen={openChannel}
                         />
@@ -806,7 +864,17 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                {view === 'home' ? (
+                {view === 'home' && homeLayout === 'grid' && (
+                  <BrandKnob
+                    brands={homeColumnOptions}
+                    selectedBrand={channelId}
+                    onBrandSelect={selectHomeColumn}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Desktop column selector"
+                  />
+                )}
+                {view === 'home' && homeLayout === 'list' && (
                   <BrandKnob
                     brands={channelOptions}
                     selectedBrand={channelId}
@@ -815,11 +883,21 @@ export default function Home() {
                     showAll={false}
                     ariaLabel="Channel selector"
                   />
-                ) : (
+                )}
+                {view === 'cars' && (
                   <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded ariaLabel="Brand selector" />
                 )}
 
-                {view === 'cars' ? (
+                {view === 'home' && homeLayout === 'grid' ? (
+                  <BrandKnob
+                    brands={homeRowOptions}
+                    selectedBrand={String(homeRow)}
+                    onBrandSelect={selectHomeRow}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Desktop row selector"
+                  />
+                ) : view === 'cars' ? (
                   <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
                 ) : (
                   <div style={{ height: '126px', width: '100%' }} aria-hidden="true" />
@@ -871,9 +949,9 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* MODE: theme switch at Home; back-to-Home button inside a channel */}
+                    {/* MODE: grid/list switch at Home; back-to-Home button inside a channel */}
                     {view === 'home' ? (
-                      <BatToggle label="MODE" value={isDark} onChange={toggleTheme} />
+                      <BatToggle label="MODE" value={homeLayout === 'list'} onChange={toggleHomeLayout} />
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                         <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>HOME</div>
