@@ -540,10 +540,10 @@ export const CARS: CarRecord[] = [
         "tier": 3
       }
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Daimler_Motorized_Carriage.JPG",
-    "image_license": "CC BY-SA 4.0",
-    "image_creator": "Ad Meskens",
-    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:Daimler_Motorized_Carriage.JPG",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Mercedes-Benz-Museum_2015-01_by-RaBoe_021.jpg",
+    "image_license": "CC BY-SA 3.0 de",
+    "image_creator": "Ra Boe / Wikipedia",
+    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz-Museum_2015-01_by-RaBoe_021.jpg",
     "alternate_cars": [
       {
         "name": "Benz Patent-Motorwagen (Model 1)",
@@ -588,10 +588,10 @@ export const CARS: CarRecord[] = [
         "tier": 3
       }
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/1885Benz.jpg",
-    "image_license": "Public domain",
-    "image_creator": "Unknown (transferred from English Wikipedia by user Saforrest)",
-    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:1885Benz.jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Patent-Motorwagen_Nr.1_Benz_2.jpg",
+    "image_license": "CC BY-SA 3.0",
+    "image_creator": "DaimlerChrysler AG",
+    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:Patent-Motorwagen_Nr.1_Benz_2.jpg",
     "alternate_cars": [
       {
         "name": "Daimler Motor Carriage",
@@ -641,10 +641,10 @@ export const CARS: CarRecord[] = [
         "tier": 3
       }
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/1888_Benz_Patent-Motorwagen_Model_No._3_Automuseum_Dr._Carl_Benz,_2014.JPG",
-    "image_license": "CC BY-SA 4.0",
-    "image_creator": "Bahnfrend",
-    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:1888_Benz_Patent-Motorwagen_Model_No._3_Automuseum_Dr._Carl_Benz,_2014.JPG",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Benz_Patent-Motorwagen_Model_3.jpg",
+    "image_license": "Public domain",
+    "image_creator": "William Worby Beaumont",
+    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:Benz_Patent-Motorwagen_Model_3.jpg",
     "alternate_cars": [
       {
         "name": "Benz Patent-Motorwagen Model I",
@@ -1075,10 +1075,10 @@ export const CARS: CarRecord[] = [
         "tier": 3
       }
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/1896_Ford_Quadricycle_Runabout_(14454150721).jpg",
-    "image_license": "CC BY 2.0",
-    "image_creator": "Sicnag (Cars Down Under)",
-    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:1896_Ford_Quadricycle_Runabout_(14454150721).jpg",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/FordQuadricycle.jpg",
+    "image_license": "Public domain",
+    "image_creator": "Spooner & Wells, Inc.",
+    "image_attribution_url": "https://commons.wikimedia.org/wiki/File:FordQuadricycle.jpg",
     "alternate_cars": [
       {
         "name": "Lanchester Horseless Carriage",

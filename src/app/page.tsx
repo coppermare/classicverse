@@ -8,6 +8,7 @@ import TimelineScrubber from '@/components/TimelineScrubber';
 import BrandKnob, { type BrandOption } from '@/components/BrandKnob';
 import ConfidenceBadge from '@/components/ConfidenceBadge';
 import SearchCommand from '@/components/SearchCommand';
+import { playPowerOn, playPowerOff } from '@/lib/crtSound';
 import type { CarRecord } from '@/types/car';
 
 const MIN_YEAR = 1885;
@@ -26,14 +27,6 @@ const SELECTION_BASIS_LABEL: Record<string, string> = {
   patent_registration: 'Patent registration',
   motorsport_breakthrough: 'Motorsport breakthrough',
   cultural_breakthrough: 'Cultural breakthrough',
-};
-
-const COUNTRY_FLAG_CLASS: Record<string, string> = {
-  Germany: 'cv-flag--germany',
-  France: 'cv-flag--france',
-  Italy: 'cv-flag--italy',
-  'United States': 'cv-flag--united-states',
-  'United Kingdom': 'cv-flag--united-kingdom',
 };
 
 const MANUFACTURER_MARK: Record<string, string> = {
@@ -403,7 +396,6 @@ function TvKnob({
 
 export default function Home() {
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [searchOpen, setSearchOpen]   = useState(false);
   const [isDark, setIsDark]           = useState(false);
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
@@ -422,6 +414,7 @@ export default function Home() {
   const [screenCursor, setScreenCursor] = useState<{ x: number; y: number; pointer: boolean } | null>(null);
   const screenContentRef = useRef<HTMLDivElement>(null);
   const powerRef = useRef({ on: true, turningOff: false, turningOn: false });
+  const volumeRef = useRef(0.5);
   const volumeHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const glitchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -447,6 +440,31 @@ export default function Home() {
         logoSrc: getBrandLogo(manufacturer)?.src,
       }));
   }, []);
+
+  // Each manufacturer mapped to its hero-car years (sorted), so selecting a
+  // brand can jump the timeline to that brand's car(s).
+  const brandYears = useMemo(() => {
+    const map = new Map<string, number[]>();
+    CARS.forEach((car) => {
+      const list = map.get(car.manufacturer);
+      if (list) list.push(car.year);
+      else map.set(car.manufacturer, [car.year]);
+    });
+    map.forEach((list) => list.sort((a, b) => a - b));
+    return map;
+  }, []);
+
+  // The knob always reflects the currently displayed car's brand.
+  const selectedBrand = displayCar?.manufacturer ?? null;
+
+  // Selecting a brand jumps to its next car after the current year (wrapping),
+  // which changes the displayed record and image.
+  const handleBrandSelect = useCallback((brand: string | null) => {
+    if (!brand) return;
+    const years = brandYears.get(brand);
+    if (!years || years.length === 0) return;
+    setCurrentYear((cur) => years.find((y) => y > cur) ?? years[0]);
+  }, [brandYears]);
 
   // Theme init
   useEffect(() => {
@@ -516,6 +534,7 @@ export default function Home() {
   const setPowerState = useCallback((newOn: boolean) => {
     if (newOn === powerRef.current.on) return;
     if (newOn && !powerRef.current.turningOn) {
+      playPowerOn(volumeRef.current);
       setScreenOn(true);
       setTurningOn(true);
       setBootPhase('scanning');
@@ -529,6 +548,7 @@ export default function Home() {
         powerRef.current.turningOn = false;
       }, 2500);
     } else if (!newOn && !powerRef.current.turningOff) {
+      playPowerOff(volumeRef.current);
       setBootPhase('idle');
       setTurningOff(true);
       setScreenOn(false);
@@ -540,6 +560,7 @@ export default function Home() {
 
   const handleVolumeChange = useCallback((v: number) => {
     setVolume(v);
+    volumeRef.current = v;
     setVolumeChanging(true);
     clearTimeout(volumeHideTimer.current);
     volumeHideTimer.current = setTimeout(() => setVolumeChanging(false), 1600);
@@ -658,7 +679,6 @@ export default function Home() {
                               {/* Lower-third car title */}
                               {displayCar && (
                                 <div className="cv-tv-title-overlay" aria-hidden="true">
-                                  <span className="cv-tv-era-label">{displayCar.era}</span>
                                   <span className="cv-tv-car-name">{displayCar.hero_car_name}</span>
                                   <span className="cv-tv-car-meta">
                                     {displayCar.manufacturer} · {displayCar.year} · {displayCar.country}
@@ -740,8 +760,8 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
+                <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded />
                 <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
-                <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={setSelectedBrand} embedded />
 
                 {/* Knob plate */}
                 <div className="cv-tv-knob-plate">
