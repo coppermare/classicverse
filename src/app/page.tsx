@@ -181,104 +181,6 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
   );
 }
 
-/* ── Bat-handle toggle switch ── */
-function BatToggle({
-  value,
-  onChange,
-  label,
-}: {
-  value: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
-        {label}
-      </div>
-      {/* Mount plate */}
-      <div
-        onClick={() => onChange(!value)}
-        style={{
-          position: 'relative',
-          width: 28, height: 44,
-          borderRadius: 6,
-          background: 'linear-gradient(180deg, #1a1814 0%, #0d0b09 100%)',
-          boxShadow: [
-            'inset 0 2px 5px rgba(0,0,0,0.9)',
-            'inset 0 -1px 2px rgba(255,255,255,0.04)',
-            '0 3px 8px rgba(0,0,0,0.7)',
-            '0 1px 0 rgba(255,255,255,0.06)',
-          ].join(', '),
-          cursor: 'pointer',
-          userSelect: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {/* Slot recess */}
-        <div style={{
-          position: 'absolute',
-          left: '50%', top: '14%', bottom: '14%',
-          width: 6,
-          transform: 'translateX(-50%)',
-          borderRadius: 3,
-          background: 'rgba(0,0,0,0.7)',
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.9)',
-        }} />
-        {/* Lever */}
-        <div style={{
-          position: 'absolute',
-          left: '50%',
-          bottom: value ? '52%' : '10%',
-          transform: 'translateX(-50%)',
-          transition: 'bottom 180ms cubic-bezier(0.4, 0, 0.2, 1)',
-          width: 14, height: 22,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 0,
-        }}>
-          {/* Bat head */}
-          <div style={{
-            width: 14, height: 14,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 38% 32%, #706860 0%, #3a3530 50%, #1c1a16 100%)',
-            boxShadow: [
-              'inset 0 2px 3px rgba(255,255,255,0.20)',
-              'inset 0 -2px 5px rgba(0,0,0,0.85)',
-              '0 2px 6px rgba(0,0,0,0.8)',
-            ].join(', '),
-            flexShrink: 0,
-          }} />
-          {/* Stem */}
-          <div style={{
-            width: 5, height: 10,
-            background: 'linear-gradient(180deg, #4a4540 0%, #252220 100%)',
-            borderRadius: '0 0 3px 3px',
-            boxShadow: '1px 0 2px rgba(0,0,0,0.5), -1px 0 2px rgba(0,0,0,0.5)',
-            flexShrink: 0,
-          }} />
-        </div>
-        {/* ON/OFF pip labels */}
-        <span style={{
-          position: 'absolute', top: 5, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 5, letterSpacing: '0.05em', color: value ? '#d4cfc4' : '#3a3835',
-          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
-          userSelect: 'none',
-        }}>I</span>
-        <span style={{
-          position: 'absolute', bottom: 5, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 5, letterSpacing: '0.05em', color: value ? '#3a3835' : '#d4cfc4',
-          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
-          userSelect: 'none',
-        }}>O</span>
-      </div>
-    </div>
-  );
-}
-
 /* ── Round TV knob ── */
 function TvKnob({
   size = 38,
@@ -422,7 +324,6 @@ export default function Home() {
   const [isDark, setIsDark]           = useState(false);
   const [view, setView]               = useState<'home' | 'cars'>('home');
   const [channelId, setChannelId]     = useState('cars');
-  const [homeLayout, setHomeLayout]   = useState<'grid' | 'list'>('grid');
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
@@ -514,12 +415,6 @@ export default function Home() {
     [],
   );
 
-  // Flat roller for the List layout — one long scroll through every channel.
-  const channelOptions = useMemo<BrandOption[]>(
-    () => CHANNELS.map((ch) => ({ manufacturer: ch.id, mark: ch.mark, count: 0 })),
-    [],
-  );
-
   const selectHomeColumn = useCallback((id: string | null) => {
     if (id) setChannelId(id);
   }, []);
@@ -534,10 +429,6 @@ export default function Home() {
   }, [homeCol]);
 
   const goHome = useCallback(() => setView('home'), []);
-
-  const toggleHomeLayout = useCallback(() => {
-    setHomeLayout((l) => (l === 'grid' ? 'list' : 'grid'));
-  }, []);
 
   // Theme init — controls the ambient page backdrop behind the TV, not the
   // screen content. Toggled from the Display tile.
@@ -744,7 +635,6 @@ export default function Home() {
                         <HomeScreen
                           rows={HOME_ROWS}
                           selectedId={channelId}
-                          layout={homeLayout}
                           onSelect={setChannelId}
                           onOpen={openChannel}
                         />
@@ -864,7 +754,7 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                {view === 'home' && homeLayout === 'grid' && (
+                {view === 'home' ? (
                   <BrandKnob
                     brands={homeColumnOptions}
                     selectedBrand={channelId}
@@ -873,22 +763,11 @@ export default function Home() {
                     showAll={false}
                     ariaLabel="Desktop column selector"
                   />
-                )}
-                {view === 'home' && homeLayout === 'list' && (
-                  <BrandKnob
-                    brands={channelOptions}
-                    selectedBrand={channelId}
-                    onBrandSelect={(id) => id && setChannelId(id)}
-                    embedded
-                    showAll={false}
-                    ariaLabel="Channel selector"
-                  />
-                )}
-                {view === 'cars' && (
+                ) : (
                   <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded ariaLabel="Brand selector" />
                 )}
 
-                {view === 'home' && homeLayout === 'grid' ? (
+                {view === 'home' ? (
                   <BrandKnob
                     brands={homeRowOptions}
                     selectedBrand={String(homeRow)}
@@ -897,10 +776,8 @@ export default function Home() {
                     showAll={false}
                     ariaLabel="Desktop row selector"
                   />
-                ) : view === 'cars' ? (
-                  <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
                 ) : (
-                  <div style={{ height: '126px', width: '100%' }} aria-hidden="true" />
+                  <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
                 )}
 
                 {/* Knob plate */}
@@ -949,9 +826,9 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* MODE: grid/list switch at Home; back-to-Home button inside a channel */}
+                    {/* MODE: back-to-Home button inside a channel; inert spacer at Home */}
                     {view === 'home' ? (
-                      <BatToggle label="MODE" value={homeLayout === 'list'} onChange={toggleHomeLayout} />
+                      <div style={{ width: 40, height: 40 + 7.5 + 3 }} aria-hidden="true" />
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                         <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>HOME</div>

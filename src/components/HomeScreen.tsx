@@ -12,7 +12,6 @@ export interface Channel {
 interface HomeScreenProps {
   rows: Channel[][];
   selectedId: string;
-  layout: 'grid' | 'list';
   onSelect: (id: string) => void;
   onOpen: (id: string) => void;
 }
@@ -92,7 +91,7 @@ function FolderIcon({ channel }: { channel: Channel }) {
   );
 }
 
-function GridHome({ rows, selectedId, onSelect, onOpen }: Omit<HomeScreenProps, 'layout'>) {
+export default function HomeScreen({ rows, selectedId, onSelect, onOpen }: HomeScreenProps) {
   return (
     <div
       className="cv-home cv-home--grid"
@@ -168,73 +167,8 @@ function GridHome({ rows, selectedId, onSelect, onOpen }: Omit<HomeScreenProps, 
         fontFamily: 'var(--font-sans)', fontSize: 9.5, letterSpacing: '0.08em',
         color: '#8a8274',
       }}>
-        ROLLERS MOVE · INFO OPENS · MODE = LIST VIEW
+        ROLLERS MOVE · INFO OPENS
       </div>
     </div>
   );
-}
-
-function ListHome({ rows, selectedId, onSelect, onOpen }: Omit<HomeScreenProps, 'layout'>) {
-  const channels = rows.flat();
-  return (
-    <div className="cv-home cv-home--list" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120% 120% at 50% 0%, #1b1813 0%, #0d0c0a 70%)', display: 'flex', flexDirection: 'column', padding: '22px 26px 18px' }}>
-      <div style={{ textAlign: 'center', marginBottom: 18 }}>
-        <div style={{ display: 'inline-flex', gap: 3, verticalAlign: 'middle', marginRight: 8 }}>
-          <span style={{ display: 'inline-block', width: 6, height: 14, background: '#9a2a2a' }} />
-          <span style={{ display: 'inline-block', width: 6, height: 14, background: '#d4a017' }} />
-          <span style={{ display: 'inline-block', width: 6, height: 14, background: '#1f6f3e' }} />
-          <span style={{ display: 'inline-block', width: 6, height: 14, background: '#2a4a8a' }} />
-        </div>
-        <span style={{ fontFamily: 'var(--font-crt)', fontSize: 22, letterSpacing: '0.14em', color: '#fff', textShadow: '0 0 10px rgba(255,255,255,0.2)' }}>
-          CLASSICVERSE
-        </span>
-      </div>
-
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr', gap: 10, alignContent: 'center' }}>
-        {channels.map((ch) => {
-          const active = ch.id === selectedId;
-          return (
-            <button
-              key={ch.id}
-              type="button"
-              onMouseEnter={() => onSelect(ch.id)}
-              onClick={() => { onSelect(ch.id); if (ch.enabled) onOpen(ch.id); }}
-              aria-label={`${ch.name}${ch.enabled ? '' : ' (coming soon)'}`}
-              aria-current={active ? 'true' : undefined}
-              disabled={!ch.enabled}
-              style={{
-                position: 'relative',
-                textAlign: 'left',
-                padding: '12px 16px',
-                borderRadius: 10,
-                cursor: ch.enabled ? 'pointer' : 'default',
-                background: active ? 'rgba(212,160,23,0.10)' : 'rgba(255,255,255,0.03)',
-                border: `1px solid ${active ? 'rgba(212,160,23,0.75)' : 'rgba(255,255,255,0.10)'}`,
-                boxShadow: active ? '0 0 18px rgba(212,160,23,0.28), inset 0 0 12px rgba(212,160,23,0.10)' : 'none',
-                opacity: ch.enabled ? 1 : 0.5,
-                display: 'flex', alignItems: 'baseline', gap: 12,
-                transition: 'background 160ms, border-color 160ms, box-shadow 160ms',
-              }}
-            >
-              <span style={{ fontFamily: 'var(--font-crt)', fontSize: 18, color: active ? '#ffe08a' : '#e8e4dc', minWidth: 30 }}>{ch.mark}</span>
-              <span style={{ fontFamily: 'var(--font-crt)', fontSize: 20, color: '#fff', letterSpacing: '0.03em' }}>{ch.name}</span>
-              <span style={{ fontFamily: 'var(--font-crt)', fontSize: 14, color: 'rgba(255,255,255,0.55)', marginLeft: 'auto' }}>
-                {ch.enabled ? ch.tagline : 'SOON'}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      <div style={{ textAlign: 'center', marginTop: 14, fontFamily: 'var(--font-crt)', fontSize: 15, letterSpacing: '0.16em', color: 'rgba(255,255,255,0.55)' }}>
-        SCROLL TO BROWSE · INFO TO OPEN · MODE = GRID VIEW
-      </div>
-    </div>
-  );
-}
-
-export default function HomeScreen({ rows, selectedId, layout, onSelect, onOpen }: HomeScreenProps) {
-  return layout === 'grid'
-    ? <GridHome rows={rows} selectedId={selectedId} onSelect={onSelect} onOpen={onOpen} />
-    : <ListHome rows={rows} selectedId={selectedId} onSelect={onSelect} onOpen={onOpen} />;
 }
