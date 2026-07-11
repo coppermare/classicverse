@@ -37,14 +37,12 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
 
-const START_ANGLE = -135;
-const END_ANGLE = 135;
-const TICK_STEPS = 20; // audible tick every 5%
-const RIDGE_COUNT = 32;
-const MAJOR_TICKS = 11; // 0,10,...,100
-const MINOR_TICKS_PER_MAJOR = 4;
+const START_ANGLE = -160;
+const END_ANGLE = 160;
+const TICK_STEPS = 10; // one tick per numbered position, 0-10
 const KEY_STEP = 0.05;
 const KEY_STEP_BIG = 0.10;
+const LABELS = Array.from({ length: TICK_STEPS + 1 }, (_, i) => i); // 0..10
 
 interface VolumeDialProps {
   value: number;
@@ -54,8 +52,9 @@ interface VolumeDialProps {
 }
 
 /**
- * A big circular volume knob — knurled ridged rim, tick-marked faceplate,
- * raised center hub and pointer indicator. Supports drag, scroll, keyboard
+ * A rotary channel-selector style knob — chrome bezel, black face with
+ * printed numerals fixed in place, and a flat metal lever that rotates to
+ * point at the current position. Supports drag, scroll, keyboard
  * (arrow/page/home/end), and double-click/space to mute.
  */
 export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Volume' }: VolumeDialProps) {
@@ -181,15 +180,13 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
     }
   }, [value, commit, toggleMute]);
 
-  const size = embedded ? 96 : 128;
-  const pad = 16;
+  const size = embedded ? 108 : 140;
+  const pad = 20;
   const total = size + pad * 2;
   const cx = total / 2;
   const cy = total / 2;
-  const arcR = total / 2 - 4;
-  const tickOuterR = size / 2 + 6;
-  const tickInnerRMajor = size / 2 + 1;
-  const tickInnerRMinor = size / 2 + 3;
+  const labelR = size / 2 + 11;
+  const dotR = size / 2 + 11;
 
   // Rounded to a fixed precision so server- and client-rendered markup match
   // exactly — raw trig output can differ in its last bit between environments.
@@ -200,25 +197,8 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
       y: Number((cy + r * Math.sin(rad)).toFixed(3)),
     };
   };
-  const p0 = toXY(START_ANGLE, arcR);
-  const p1 = toXY(END_ANGLE, arcR);
-  const pV = toXY(angle, arcR);
-  const sweep = (END_ANGLE - START_ANGLE) * value;
-  const trackD = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} A ${arcR} ${arcR} 0 1 1 ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
-  const valD = value > 0.01
-    ? `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} A ${arcR} ${arcR} 0 ${sweep > 180 ? 1 : 0} 1 ${pV.x.toFixed(2)} ${pV.y.toFixed(2)}`
-    : null;
 
-  const loud = value >= 0.85;
-  const accent = muted ? '#5e5c5a' : loud ? '#e05050' : 'var(--timeline-accent, #cfcfcf)';
-
-  const majorTicks = Array.from({ length: MAJOR_TICKS }, (_, i) => i / (MAJOR_TICKS - 1));
-  const minorTicks: number[] = [];
-  for (let i = 0; i < MAJOR_TICKS - 1; i++) {
-    for (let j = 1; j <= MINOR_TICKS_PER_MAJOR; j++) {
-      minorTicks.push(i / (MAJOR_TICKS - 1) + (j / (MINOR_TICKS_PER_MAJOR + 1)) * (1 / (MAJOR_TICKS - 1)));
-    }
-  }
+  const dotPos = toXY(START_ANGLE - 9, dotR);
 
   return (
     <section className={embedded ? 'w-full' : 'brand-knob-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label={ariaLabel}>
@@ -246,12 +226,12 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
           style={{
             position: 'absolute',
             left: '50%',
-            top: -20,
+            top: -18,
             transform: 'translateX(-50%)',
             fontSize: 10,
             fontWeight: 700,
             letterSpacing: '0.08em',
-            color: accent,
+            color: muted ? '#8a8480' : '#cfcfcf',
             fontFamily: 'var(--font-sans)',
             fontVariantNumeric: 'tabular-nums',
             opacity: showReadout || isDragging ? 1 : 0,
@@ -263,107 +243,104 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
           {muted ? 'MUTE' : `${Math.round(value * 100)}%`}
         </div>
 
-        {/* Tick faceplate + level arc */}
+        {/* Fixed printed numerals (do not rotate) + reference dot */}
         <svg width={total} height={total} style={{ position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none' }}>
-          {minorTicks.map((t, i) => {
+          <circle cx={dotPos.x} cy={dotPos.y} r={1.6} fill="#e8e4dc" opacity={0.85} />
+          {LABELS.map((n) => {
+            const t = n / TICK_STEPS;
             const a = START_ANGLE + (END_ANGLE - START_ANGLE) * t;
-            const o = toXY(a, tickOuterR - 3);
-            const inn = toXY(a, tickInnerRMinor);
-            return <line key={`mn-${i}`} x1={inn.x} y1={inn.y} x2={o.x} y2={o.y} stroke="rgba(255,255,255,0.16)" strokeWidth={1} />;
-          })}
-          {majorTicks.map((t, i) => {
-            const a = START_ANGLE + (END_ANGLE - START_ANGLE) * t;
-            const o = toXY(a, tickOuterR);
-            const inn = toXY(a, tickInnerRMajor);
+            const p = toXY(a, labelR);
             const lit = t <= value + 0.001;
             return (
-              <line
-                key={`mj-${i}`}
-                x1={inn.x} y1={inn.y} x2={o.x} y2={o.y}
-                stroke={lit ? accent : 'rgba(255,255,255,0.28)'}
-                strokeWidth={1.6}
-                strokeLinecap="round"
-              />
+              <text
+                key={n}
+                x={p.x}
+                y={p.y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={embedded ? 13 : 16}
+                fontWeight={800}
+                fontFamily="var(--font-sans)"
+                fill={lit && !muted ? '#f0ece2' : '#8a857e'}
+              >
+                {n}
+              </text>
             );
           })}
-          <path d={trackD} fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth={3} strokeLinecap="round" />
-          {valD && <path d={valD} fill="none" stroke={accent} strokeWidth={3} strokeLinecap="round" opacity={0.85} />}
         </svg>
 
-        {/* Knurled ridged rim — rotates as one rigid body with the face and pointer */}
-        <div
-          style={{
-            position: 'absolute',
-            top: pad, left: pad,
-            width: size, height: size,
-            borderRadius: '50%',
-            background: `repeating-conic-gradient(from 0deg, #050403 0deg ${360 / RIDGE_COUNT * 0.5}deg, #2c2822 ${360 / RIDGE_COUNT * 0.5}deg ${360 / RIDGE_COUNT}deg)`,
-            boxShadow: [
-              'inset 0 2px 3px rgba(255,255,255,0.10)',
-              'inset 0 -4px 8px rgba(0,0,0,0.90)',
-              '0 6px 12px rgba(0,0,0,0.62)',
-              '0 1px 0 rgba(255,255,255,0.06)',
-            ].join(', '),
-            transform: `rotate(${angle}deg)`,
-            transition: isDragging ? 'none' : 'transform 120ms ease',
-          }}
-        >
-          {/* Flat brushed-metal face */}
-          <div style={{
-            position: 'absolute', inset: '14%',
-            borderRadius: '50%',
-            background: 'linear-gradient(155deg, #3e3a34 0%, #29261f 48%, #1c1a15 100%)',
-            boxShadow: [
-              'inset 0 1px 0 rgba(255,255,255,0.14)',
-              'inset 0 0 0 1px rgba(0,0,0,0.55)',
-              'inset 0 -3px 6px rgba(0,0,0,0.75)',
-            ].join(', '),
-          }}>
-            {/* Pointer groove — carved indent, not a glowing LED bar */}
-            <div style={{
-              position: 'absolute', left: '50%', top: '9%',
-              width: 4, height: '30%',
-              transform: 'translateX(-50%)',
-              borderRadius: 2,
-              background: 'linear-gradient(180deg, #080706, #080706)',
-              boxShadow: [
-                'inset 1px 0 0 rgba(255,255,255,0.10)',
-                'inset -1px 0 0 rgba(0,0,0,0.6)',
-              ].join(', '),
-              opacity: muted ? 0.45 : 1,
-            }} />
-            <div style={{
-              position: 'absolute', left: '50%', top: '10%',
-              width: 4, height: 4,
-              background: accent,
-              borderRadius: '50%',
-              transform: 'translate(-50%, -35%)',
-              opacity: muted ? 0.45 : 1,
-            }} />
-
-            {/* Raised center hub */}
-            <div style={{
-              position: 'absolute', inset: '38%',
-              borderRadius: '50%',
-              background: 'linear-gradient(155deg, #4a453e 0%, #211f1a 100%)',
-              boxShadow: [
-                'inset 0 1px 0 rgba(255,255,255,0.20)',
-                'inset 0 -2px 3px rgba(0,0,0,0.80)',
-                '0 1px 2px rgba(0,0,0,0.6)',
-              ].join(', '),
-            }} />
-          </div>
-        </div>
-
-        {/* Fixed specular highlight — simulates a static light source, doesn't rotate with the knob */}
+        {/* Black face — static, numerals painted on it are fixed */}
         <div style={{
           position: 'absolute',
           top: pad, left: pad,
           width: size, height: size,
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse 46% 30% at 32% 24%, rgba(255,255,255,0.16), transparent 72%)',
-          pointerEvents: 'none',
+          background: 'radial-gradient(circle at 50% 42%, #1c1c1c 0%, #0a0a0a 70%, #000 100%)',
+          boxShadow: [
+            'inset 0 2px 4px rgba(0,0,0,0.9)',
+            'inset 0 0 0 2px #cfcfcc',
+            'inset 0 0 0 4px #1a1a1a',
+          ].join(', '),
         }} />
+
+        {/* Inner chrome ring — thick polished band around a black center, static, sits under the lever */}
+        <div style={{
+          position: 'absolute',
+          left: '50%', top: '50%',
+          width: size * 0.6, height: size * 0.6,
+          transform: 'translate(-50%, -50%)',
+          borderRadius: '50%',
+          background: 'conic-gradient(from 40deg, #eeeeea 0deg, #6c6c68 45deg, #f4f4f0 90deg, #585854 120deg, #eeeeea 150deg, #7c7c78 190deg, #f6f6f2 235deg, #64645f 265deg, #eeeeea 300deg, #86867f 330deg, #eeeeea 360deg)',
+          boxShadow: [
+            'inset 0 2px 2px rgba(255,255,255,0.6)',
+            'inset 0 -2px 3px rgba(0,0,0,0.5)',
+            '0 1px 2px rgba(0,0,0,0.4)',
+          ].join(', '),
+        }}>
+          <div style={{
+            position: 'absolute', inset: '19%',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 50% 42%, #1c1c1c 0%, #0a0a0a 70%, #000 100%)',
+            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.95)',
+          }} />
+        </div>
+
+        {/* Rotating lever — spans the full diameter through the pivot, like a real channel lever */}
+        <div style={{
+          position: 'absolute',
+          top: pad, left: pad,
+          width: size, height: size,
+          transform: `rotate(${angle}deg)`,
+          transition: isDragging ? 'none' : 'transform 140ms ease',
+          pointerEvents: 'none',
+        }}>
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '-6%',
+            width: 17,
+            height: '112%',
+            transform: 'translateX(-50%)',
+            borderRadius: 4,
+            background: muted
+              ? 'linear-gradient(90deg, #262626 0%, #363636 45%, #2c2c2c 55%, #1c1c1c 100%)'
+              : 'linear-gradient(90deg, #4a4846 0%, #57534e 40%, #34322f 52%, #201f1c 100%)',
+            boxShadow: [
+              '0 2px 5px rgba(0,0,0,0.75)',
+              'inset 2px 0 0 rgba(255,255,255,0.22)',
+              'inset -2px 0 0 rgba(0,0,0,0.55)',
+            ].join(', '),
+          }} />
+          {/* Rivet near the outer tip */}
+          <div style={{
+            position: 'absolute',
+            left: '50%', top: '4%',
+            width: 4, height: 4,
+            transform: 'translateX(-50%)',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 35% 30%, #e8e4dc, #6a6864)',
+            opacity: muted ? 0.5 : 0.9,
+          }} />
+        </div>
       </div>
     </section>
   );
