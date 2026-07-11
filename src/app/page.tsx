@@ -3,15 +3,34 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { CARS, getCarForYear } from '@/data/cars';
-import { getBrandLogo } from '@/data/brandLogos';
-import TimelineScrubber from '@/components/TimelineScrubber';
-import BrandKnob, { type BrandOption } from '@/components/BrandKnob';
+import RollerDial, { type RollerDialOption } from '@/components/RollerDial';
+import VolumeDial from '@/components/VolumeDial';
 import ConfidenceBadge from '@/components/ConfidenceBadge';
 import SearchCommand from '@/components/SearchCommand';
+import HomeScreen, { FolderIcon, type Channel } from '@/components/HomeScreen';
+import { playPowerOn, playPowerOff } from '@/lib/crtSound';
 import type { CarRecord } from '@/types/car';
 
 const MIN_YEAR = 1885;
 const MAX_YEAR = 2000;
+
+const HOME_COLS = 2;
+
+// Home "channels" — the desktop of the Classicverse set. Only Cars is live.
+const CHANNELS: Channel[] = [
+  { id: 'cars', name: 'Cars', tagline: '1885 to 2000 archive', mark: '01', accent: '#9a2a2a', enabled: true },
+  { id: 'guide', name: 'Guide', tagline: "What's on", mark: '02', accent: '#d4a017', enabled: false },
+  { id: 'radio', name: 'Radio', tagline: 'Period sound', mark: '03', accent: '#1f6f3e', enabled: false },
+  { id: 'about', name: 'About', tagline: 'The project', mark: '04', accent: '#2a4a8a', enabled: false },
+];
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+const HOME_ROWS: Channel[][] = chunk(CHANNELS, HOME_COLS);
 
 const REVIEW_LABEL: Record<string, string> = {
   pending: 'Pending review',
@@ -27,40 +46,6 @@ const SELECTION_BASIS_LABEL: Record<string, string> = {
   motorsport_breakthrough: 'Motorsport breakthrough',
   cultural_breakthrough: 'Cultural breakthrough',
 };
-
-const COUNTRY_FLAG_CLASS: Record<string, string> = {
-  Germany: 'cv-flag--germany',
-  France: 'cv-flag--france',
-  Italy: 'cv-flag--italy',
-  'United States': 'cv-flag--united-states',
-  'United Kingdom': 'cv-flag--united-kingdom',
-};
-
-const MANUFACTURER_MARK: Record<string, string> = {
-  'Benz & Cie.': 'B',
-  'Ford Motor Company': 'F',
-  'Austin Motor Company': 'A',
-  'Citroën': 'C',
-  'Volkswagenwerk GmbH': 'VW',
-  'Alfa Romeo': 'AR',
-  'Rover Company': 'R',
-  'British Motor Corporation (BMC)': 'BMC',
-  'Volkswagen': 'VW',
-  'McLaren Automotive': 'McL',
-};
-
-function getManufacturerMark(manufacturer: string) {
-  if (MANUFACTURER_MARK[manufacturer]) return MANUFACTURER_MARK[manufacturer];
-  const cleaned = manufacturer
-    .replace(/\([^)]*\)/g, '')
-    .replace(/&/g, ' ')
-    .replace(/\b(company|corporation|motor|motors|automotive|gmbh|cie)\b/gi, ' ')
-    .trim();
-  const words = cleaned.split(/\s+/).filter(Boolean);
-  if (words.length === 0) return manufacturer.slice(0, 2).toUpperCase();
-  if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
-  return words.slice(0, 3).map(word => word[0]).join('').toUpperCase();
-}
 
 function clampYear(year: number) {
   return Math.max(MIN_YEAR, Math.min(MAX_YEAR, year));
@@ -166,104 +151,6 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
   );
 }
 
-/* ── Bat-handle toggle switch ── */
-function BatToggle({
-  value,
-  onChange,
-  label,
-}: {
-  value: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
-        {label}
-      </div>
-      {/* Mount plate */}
-      <div
-        onClick={() => onChange(!value)}
-        style={{
-          position: 'relative',
-          width: 28, height: 44,
-          borderRadius: 6,
-          background: 'linear-gradient(180deg, #1a1814 0%, #0d0b09 100%)',
-          boxShadow: [
-            'inset 0 2px 5px rgba(0,0,0,0.9)',
-            'inset 0 -1px 2px rgba(255,255,255,0.04)',
-            '0 3px 8px rgba(0,0,0,0.7)',
-            '0 1px 0 rgba(255,255,255,0.06)',
-          ].join(', '),
-          cursor: 'pointer',
-          userSelect: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {/* Slot recess */}
-        <div style={{
-          position: 'absolute',
-          left: '50%', top: '14%', bottom: '14%',
-          width: 6,
-          transform: 'translateX(-50%)',
-          borderRadius: 3,
-          background: 'rgba(0,0,0,0.7)',
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.9)',
-        }} />
-        {/* Lever */}
-        <div style={{
-          position: 'absolute',
-          left: '50%',
-          bottom: value ? '52%' : '10%',
-          transform: 'translateX(-50%)',
-          transition: 'bottom 180ms cubic-bezier(0.4, 0, 0.2, 1)',
-          width: 14, height: 22,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 0,
-        }}>
-          {/* Bat head */}
-          <div style={{
-            width: 14, height: 14,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 38% 32%, #706860 0%, #3a3530 50%, #1c1a16 100%)',
-            boxShadow: [
-              'inset 0 2px 3px rgba(255,255,255,0.20)',
-              'inset 0 -2px 5px rgba(0,0,0,0.85)',
-              '0 2px 6px rgba(0,0,0,0.8)',
-            ].join(', '),
-            flexShrink: 0,
-          }} />
-          {/* Stem */}
-          <div style={{
-            width: 5, height: 10,
-            background: 'linear-gradient(180deg, #4a4540 0%, #252220 100%)',
-            borderRadius: '0 0 3px 3px',
-            boxShadow: '1px 0 2px rgba(0,0,0,0.5), -1px 0 2px rgba(0,0,0,0.5)',
-            flexShrink: 0,
-          }} />
-        </div>
-        {/* ON/OFF pip labels */}
-        <span style={{
-          position: 'absolute', top: 5, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 5, letterSpacing: '0.05em', color: value ? '#d4cfc4' : '#3a3835',
-          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
-          userSelect: 'none',
-        }}>I</span>
-        <span style={{
-          position: 'absolute', bottom: 5, left: '50%', transform: 'translateX(-50%)',
-          fontSize: 5, letterSpacing: '0.05em', color: value ? '#3a3835' : '#d4cfc4',
-          fontFamily: 'var(--font-sans)', fontWeight: 700, transition: 'color 180ms',
-          userSelect: 'none',
-        }}>O</span>
-      </div>
-    </div>
-  );
-}
-
 /* ── Round TV knob ── */
 function TvKnob({
   size = 38,
@@ -334,7 +221,7 @@ function TvKnob({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
+      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#ffffff', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
         {label}
       </div>
       <div style={{ position: 'relative', width: total, height: total }}>
@@ -403,9 +290,9 @@ function TvKnob({
 
 export default function Home() {
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [searchOpen, setSearchOpen]   = useState(false);
-  const [isDark, setIsDark]           = useState(false);
+  const [view, setView]               = useState<'home' | 'cars'>('home');
+  const [channelId, setChannelId]     = useState('cars');
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
@@ -422,61 +309,64 @@ export default function Home() {
   const [screenCursor, setScreenCursor] = useState<{ x: number; y: number; pointer: boolean } | null>(null);
   const screenContentRef = useRef<HTMLDivElement>(null);
   const powerRef = useRef({ on: true, turningOff: false, turningOn: false });
+  const volumeRef = useRef(0.5);
   const volumeHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const glitchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const displayCar = getCarForYear(currentYear);
 
-  const brandOptions = useMemo<BrandOption[]>(() => {
-    const byManufacturer = new Map<string, { count: number; firstYear: number }>();
-    CARS.forEach((car) => {
-      const existing = byManufacturer.get(car.manufacturer);
-      if (existing) {
-        existing.count += 1;
-        existing.firstYear = Math.min(existing.firstYear, car.year);
-        return;
-      }
-      byManufacturer.set(car.manufacturer, { count: 1, firstYear: car.year });
-    });
-    return Array.from(byManufacturer.entries())
-      .sort(([, a], [, b]) => a.firstYear - b.firstYear)
-      .map(([manufacturer, details]) => ({
-        manufacturer,
-        mark: getManufacturerMark(manufacturer),
-        count: details.count,
-        logoSrc: getBrandLogo(manufacturer)?.src,
-      }));
+  // Home is a flat, numbered channel list (01-05), like a real tuner dial —
+  // one knob steps straight through it. The desktop grid is just a 2-column
+  // layout of those channels, not a control axis of its own.
+  const homeChannelOptions = useMemo<RollerDialOption[]>(
+    () => CHANNELS.map((ch) => ({
+      id: ch.id,
+      mark: ch.mark,
+      count: 0,
+      icon: (
+        <div style={{ transform: 'scale(0.56)', transformOrigin: 'center' }}>
+          <FolderIcon channel={ch} />
+        </div>
+      ),
+    })),
+    [],
+  );
+
+  // The Cars top knob works exactly like the Home channel knob — it scrolls
+  // through content (car images), not a bare year number.
+  const carRollerOptions = useMemo<RollerDialOption[]>(
+    () => [...CARS]
+      .sort((a, b) => a.year - b.year)
+      .map((car) => ({
+        id: String(car.year),
+        mark: car.hero_car_name.slice(0, 3).toUpperCase(),
+        count: 0,
+        logoSrc: car.image_url,
+      })),
+    [],
+  );
+
+  const selectChannel = useCallback((id: string | null) => {
+    if (id) setChannelId(id);
   }, []);
 
-  // Theme init
-  useEffect(() => {
-    queueMicrotask(() => {
-      const saved = localStorage.getItem('cv-theme');
-      if (saved === 'dark') {
-        setIsDark(true);
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else if (saved === 'light') {
-        setIsDark(false);
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setIsDark(true);
-      }
-    });
-  }, []);
+  const goHome = useCallback(() => setView('home'), []);
 
-  const toggleTheme = useCallback(() => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
-    localStorage.setItem('cv-theme', next ? 'dark' : 'light');
-  }, [isDark]);
+  const openChannel = useCallback((id: string) => {
+    const ch = CHANNELS.find((c) => c.id === id);
+    if (!ch?.enabled) return;
+    if (ch.id === 'cars') { setScreenMode('image'); setView('cars'); return; }
+  }, []);
 
   const goToYear        = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
   const goToPrevYear    = useCallback(() => setCurrentYear(y => clampYear(y - 1)), []);
   const goToNextYear    = useCallback(() => setCurrentYear(y => clampYear(y + 1)), []);
   const goToPrevDecade  = useCallback(() => setCurrentYear(y => clampYear(y - 10)), []);
   const goToNextDecade  = useCallback(() => setCurrentYear(y => clampYear(y + 10)), []);
-  const selectSearchResult = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
+  const selectSearchResult = useCallback((year: number) => {
+    setCurrentYear(clampYear(year));
+    setView('cars');
+  }, []);
 
   // Glitch on year/mode change
   useEffect(() => {
@@ -492,30 +382,37 @@ export default function Home() {
       cancelAnimationFrame(activate);
       clearTimeout(glitchTimeout.current);
     };
-  }, [currentYear, screenMode]);
+  }, [currentYear, screenMode, view]);
 
   // Keyboard nav
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (e.key === 'Escape') {
+        if (searchOpen) { setSearchOpen(false); return; }
+        if (view === 'cars') { e.preventDefault(); goHome(); return; }
+        return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(o => !o);
+        return;
+      }
+      if (view !== 'cars') return;
       if (e.key === 'ArrowLeft'  && e.shiftKey) { e.preventDefault(); goToPrevDecade(); return; }
       if (e.key === 'ArrowRight' && e.shiftKey) { e.preventDefault(); goToNextDecade(); return; }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); goToPrevYear(); return; }
       if (e.key === 'ArrowRight') { e.preventDefault(); goToNextYear(); return; }
-      if (e.key === 'Escape') { setSearchOpen(false); return; }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchOpen(o => !o);
-      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade]);
+  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade, view, searchOpen, goHome]);
 
   // TV power control
   const setPowerState = useCallback((newOn: boolean) => {
     if (newOn === powerRef.current.on) return;
     if (newOn && !powerRef.current.turningOn) {
+      playPowerOn(volumeRef.current);
       setScreenOn(true);
       setTurningOn(true);
       setBootPhase('scanning');
@@ -529,6 +426,7 @@ export default function Home() {
         powerRef.current.turningOn = false;
       }, 2500);
     } else if (!newOn && !powerRef.current.turningOff) {
+      playPowerOff(volumeRef.current);
       setBootPhase('idle');
       setTurningOff(true);
       setScreenOn(false);
@@ -540,6 +438,7 @@ export default function Home() {
 
   const handleVolumeChange = useCallback((v: number) => {
     setVolume(v);
+    volumeRef.current = v;
     setVolumeChanging(true);
     clearTimeout(volumeHideTimer.current);
     volumeHideTimer.current = setTimeout(() => setVolumeChanging(false), 1600);
@@ -569,7 +468,9 @@ export default function Home() {
       </a>
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {currentYear}: {displayCar ? `${displayCar.hero_car_name} by ${displayCar.manufacturer}` : 'Record in progress'}
+        {view === 'home'
+          ? `Home: ${CHANNELS.find(c => c.id === channelId)?.name ?? 'Classicverse'} highlighted`
+          : `${currentYear}: ${displayCar ? `${displayCar.hero_car_name} by ${displayCar.manufacturer}` : 'Record in progress'}`}
       </div>
 
       {/* ── TV Stage ── */}
@@ -627,7 +528,16 @@ export default function Home() {
                         </div>
                       )}
 
-                      {screenOn && (
+                      {screenOn && view === 'home' && (
+                        <HomeScreen
+                          rows={HOME_ROWS}
+                          selectedId={channelId}
+                          onSelect={setChannelId}
+                          onOpen={openChannel}
+                        />
+                      )}
+
+                      {screenOn && view === 'cars' && (
                         <>
                           {screenMode === 'info' && displayCar ? (
                             <CarScreenInfo car={displayCar} />
@@ -658,7 +568,6 @@ export default function Home() {
                               {/* Lower-third car title */}
                               {displayCar && (
                                 <div className="cv-tv-title-overlay" aria-hidden="true">
-                                  <span className="cv-tv-era-label">{displayCar.era}</span>
                                   <span className="cv-tv-car-name">{displayCar.hero_car_name}</span>
                                   <span className="cv-tv-car-meta">
                                     {displayCar.manufacturer} · {displayCar.year} · {displayCar.country}
@@ -667,27 +576,29 @@ export default function Home() {
                               )}
                             </>
                           )}
-
-                          {screenCursor && (
-                            <div style={{
-                              position: 'absolute',
-                              left: screenCursor.pointer ? screenCursor.x - 6 : screenCursor.x,
-                              top: screenCursor.pointer ? screenCursor.y - 2 : screenCursor.y,
-                              pointerEvents: 'none', zIndex: 99,
-                            }}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'}
-                                alt=""
-                                width={48}
-                                height={48}
-                                style={{ display: 'block', imageRendering: 'pixelated' }}
-                              />
-                            </div>
-                          )}
-
-                          <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />
                         </>
+                      )}
+
+                      {screenOn && screenCursor && (
+                        <div style={{
+                          position: 'absolute',
+                          left: screenCursor.pointer ? screenCursor.x - 6 : screenCursor.x,
+                          top: screenCursor.pointer ? screenCursor.y - 2 : screenCursor.y,
+                          pointerEvents: 'none', zIndex: 99,
+                        }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'}
+                            alt=""
+                            width={48}
+                            height={48}
+                            style={{ display: 'block', imageRendering: 'pixelated' }}
+                          />
+                        </div>
+                      )}
+
+                      {screenOn && (
+                        <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />
                       )}
 
                       <SearchCommand
@@ -740,23 +651,54 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
-                <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={setSelectedBrand} embedded />
-
-                {/* Knob plate */}
-                <div className="cv-tv-knob-plate">
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
-                    <TvKnob label="BRIGHT" value={brightness} onChange={setBrightness} />
-                    <TvKnob label="CONTRAST" value={contrast} onChange={setContrast} />
-                    <TvKnob label="VOLUME" value={volume} onChange={handleVolumeChange} />
+                {/* Brand plate — full width, top of the column */}
+                <div className="cv-tv-brand-plate" style={{ margin: '0 4px' }}>
+                  <div className="cv-tv-brand-mark-strip">
+                    <span style={{ background: '#9a2a2a' }} />
+                    <span style={{ background: '#d4a017' }} />
+                    <span style={{ background: '#1f6f3e' }} />
+                    <span style={{ background: '#2a4a8a' }} />
                   </div>
+                  <span className="cv-tv-brand-name">Classicverse</span>
+                </div>
 
-                  {/* SRCH · MODE · INFO row */}
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center' }}>
+                {/* Top knob: always the primary tuning/navigation control —
+                    steps through channels at Home, cars (by image) inside Cars.
+                    Same roller, same interaction, in both places. */}
+                {view === 'home' ? (
+                  <RollerDial
+                    options={homeChannelOptions}
+                    selectedId={channelId}
+                    onSelect={selectChannel}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Channel selector"
+                  />
+                ) : (
+                  <RollerDial
+                    options={carRollerOptions}
+                    selectedId={String(currentYear)}
+                    onSelect={(id) => { if (id) goToYear(Number(id)); }}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Car selector"
+                  />
+                )}
+
+                {/* Bottom knob: always Volume, regardless of screen. */}
+                <VolumeDial value={volume} onChange={handleVolumeChange} embedded ariaLabel="Volume" />
+
+                {/* BRIGHT / CONTRAST — sit on the bezel, outside the knob plate */}
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
+                  <TvKnob size={54} label="BRIGHT" value={brightness} onChange={setBrightness} />
+                  <TvKnob size={54} label="CONTRAST" value={contrast} onChange={setContrast} />
+                </div>
+
+                {/* SRCH · HOME · INFO row */}
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center', marginTop: 'auto' }}>
 
                     {/* Search button */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>SRCH</div>
                       <button
                         type="button"
                         onClick={() => setSearchOpen(o => !o)}
@@ -789,21 +731,51 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* Theme toggle switch */}
-                    <BatToggle label="MODE" value={isDark} onChange={toggleTheme} />
-
-                    {/* Info / Image toggle button */}
+                    {/* HOME: always visible; highlighted whenever the Home desktop is showing */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>INFO</div>
                       <button
                         type="button"
-                        onClick={() => setScreenMode(m => m === 'image' ? 'info' : 'image')}
-                        aria-label={screenMode === 'image' ? 'Show car info' : 'Show car image'}
-                        aria-pressed={screenMode === 'info'}
+                        onClick={goHome}
+                        aria-label="Back to Home"
+                        aria-pressed={view === 'home'}
                         style={{
                           width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                          background: screenMode === 'info' ? '#181614' : '#232120',
-                          boxShadow: screenMode === 'info' ? [
+                          background: view === 'home' ? '#181614' : '#232120',
+                          boxShadow: view === 'home' ? [
+                            'inset 0 4px 10px rgba(0,0,0,0.95)',
+                            'inset 0 2px 4px rgba(0,0,0,0.85)',
+                            '0 1px 0 rgba(255,255,255,0.04)',
+                          ].join(', ') : [
+                            'inset 0 1px 0 rgba(255,255,255,0.18)',
+                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                            '0 6px 0 rgba(0,0,0,0.85)',
+                            '0 8px 16px rgba(0,0,0,0.65)',
+                            '0 2px 4px rgba(0,0,0,0.50)',
+                          ].join(', '),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          transition: 'box-shadow 200ms, background 200ms',
+                        }}
+                      >
+                        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                          <g style={{ filter: view === 'home' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* INFO: open highlighted channel at Home; toggle car detail inside Cars */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <button
+                        type="button"
+                        onClick={() => view === 'home' ? openChannel(channelId) : setScreenMode(m => m === 'image' ? 'info' : 'image')}
+                        aria-label={view === 'home' ? 'Open highlighted channel' : (screenMode === 'image' ? 'Show car info' : 'Show car image')}
+                        aria-pressed={view === 'cars' && screenMode === 'info'}
+                        style={{
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                          background: (view === 'cars' && screenMode === 'info') ? '#181614' : '#232120',
+                          boxShadow: (view === 'cars' && screenMode === 'info') ? [
                             'inset 0 4px 10px rgba(0,0,0,0.95)',
                             'inset 0 2px 4px rgba(0,0,0,0.85)',
                             '0 1px 0 rgba(255,255,255,0.04)',
@@ -819,36 +791,18 @@ export default function Home() {
                         }}
                       >
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                          <g style={{ filter: screenMode === 'info' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
-                            <circle cx="9" cy="4.5" r="1.2" fill={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
-                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={screenMode === 'info' ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          <g style={{ filter: (view === 'cars' && screenMode === 'info') ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="9" cy="4.5" r="1.2" fill={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
+                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
                           </g>
                         </svg>
                       </button>
                     </div>
 
-                  </div>
-
-                  {/* Speaker grille */}
-                  <div className="cv-tv-grille">
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <div key={i} className="cv-tv-grille-slot" />
-                    ))}
-                  </div>
                 </div>
 
-                {/* Brand plate row: logo + PWR button as siblings */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '0 4px' }}>
-                  <div className="cv-tv-brand-plate" style={{ flex: 1 }}>
-                    <div className="cv-tv-brand-mark-strip">
-                      <span style={{ background: '#9a2a2a' }} />
-                      <span style={{ background: '#d4a017' }} />
-                      <span style={{ background: '#1f6f3e' }} />
-                      <span style={{ background: '#2a4a8a' }} />
-                    </div>
-                    <span className="cv-tv-brand-name">Classicverse</span>
-                  </div>
-
+                {/* Power button row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', margin: '0 4px' }}>
                   {/* Power button — rectangular, outside logo frame */}
                   <button
                     type="button"
