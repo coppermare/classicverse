@@ -1,11 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import BrandBadge from '@/components/BrandBadge';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import RollerBadge from '@/components/RollerBadge';
 
 const SLOT_WIDTH = 34;
 const DISPLAY_SLOT_W = 112;
-const RIDGES_PER_BRAND = 0.54;
+const RIDGES_PER_STEP = 0.54;
 
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
@@ -76,7 +76,7 @@ function WheelSVG({
 }) {
   if (width <= 0 || height <= 0) return null;
 
-  const id = 'cv-brand-wheel';
+  const id = 'cv-roller-wheel';
   const ridgeCount = 16;
   const ridgeSpacing = width / ridgeCount;
   const rotMod = ((rotation % 1) + 1) % 1;
@@ -160,31 +160,32 @@ function WheelSVG({
   );
 }
 
-export interface BrandOption {
-  manufacturer: string | null;
+export interface RollerOption {
+  id: string | null;
   mark: string;
   count: number;
   logoSrc?: string;
+  icon?: ReactNode;
 }
 
-interface BrandKnobProps {
-  brands: BrandOption[];
-  selectedBrand: string | null;
-  onBrandSelect: (brand: string | null) => void;
+interface RollerKnobProps {
+  options: RollerOption[];
+  selectedId: string | null;
+  onSelect: (id: string | null) => void;
   embedded?: boolean;
-  /** Prepend an "ALL" cell (brand mode). Off for generic rollers e.g. channels. */
+  /** Prepend an "ALL" cell. Off for plain rollers e.g. channels, years. */
   showAll?: boolean;
   ariaLabel?: string;
 }
 
-export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedded, showAll = true, ariaLabel = 'Brand selector' }: BrandKnobProps) {
-  const options = useMemo<BrandOption[]>(() => (
+export default function RollerKnob({ options: rawOptions, selectedId, onSelect, embedded, showAll = true, ariaLabel = 'Selector' }: RollerKnobProps) {
+  const options = useMemo<RollerOption[]>(() => (
     showAll
-      ? [{ manufacturer: null, mark: 'ALL', count: brands.reduce((sum, brand) => sum + brand.count, 0) }, ...brands]
-      : brands
-  ), [brands, showAll]);
+      ? [{ id: null, mark: 'ALL', count: rawOptions.reduce((sum, opt) => sum + opt.count, 0) }, ...rawOptions]
+      : rawOptions
+  ), [rawOptions, showAll]);
 
-  const selectedIndex = Math.max(0, options.findIndex(option => option.manufacturer === selectedBrand));
+  const selectedIndex = Math.max(0, options.findIndex(option => option.id === selectedId));
   const pillRef = useRef<HTMLDivElement>(null);
   const [pillSize, setPillSize] = useState({ width: 0, height: 0 });
 
@@ -263,8 +264,8 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
   const selectIndex = useCallback((index: number) => {
     const option = options[clamp(index, 0, options.length - 1)];
     if (!option) return;
-    onBrandSelect(option.manufacturer);
-  }, [onBrandSelect, options]);
+    onSelect(option.id);
+  }, [onSelect, options]);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -302,7 +303,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
   const activeIndex = clamp(Math.round(smoothIndex), 0, options.length - 1);
   const displayTrackX = -(smoothIndex * DISPLAY_SLOT_W + DISPLAY_SLOT_W / 2);
   const wheelTheme = isDark ? WHEEL_THEME_DARK : WHEEL_THEME_LIGHT;
-  const wheelRotation = smoothIndex * RIDGES_PER_BRAND;
+  const wheelRotation = smoothIndex * RIDGES_PER_STEP;
 
   return (
     <section className={embedded ? 'w-full' : 'brand-knob-frame timeline-scrubber-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label={ariaLabel}>
@@ -321,7 +322,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
         aria-valuemin={0}
         aria-valuemax={options.length - 1}
         aria-valuenow={selectedIndex}
-        aria-valuetext={selectedBrand ?? 'All brands'}
+        aria-valuetext={selectedId ?? 'All'}
         aria-label={ariaLabel}
         tabIndex={0}
       >
@@ -352,7 +353,7 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
 
                 return (
                   <button
-                    key={option.manufacturer ?? 'all'}
+                    key={option.id ?? 'all'}
                     type="button"
                     className="brand-knob-cell relative flex h-full shrink-0 flex-col items-center justify-center border-0 bg-transparent px-2"
                     style={{
@@ -365,13 +366,14 @@ export default function BrandKnob({ brands, selectedBrand, onBrandSelect, embedd
                       e.stopPropagation();
                       selectIndex(index);
                     }}
-                    aria-label={option.manufacturer ? `Select ${option.manufacturer}` : 'Select all brands'}
+                    aria-label={option.id ? `Select ${option.id}` : 'Select all'}
                     aria-current={isActive ? 'true' : undefined}
                   >
-                    <BrandBadge
+                    <RollerBadge
                       mark={option.mark}
                       logoSrc={option.logoSrc}
-                      logoAlt={option.manufacturer ? `${option.manufacturer} logo` : 'All brands'}
+                      logoAlt={option.id ? `${option.id} logo` : 'All'}
+                      icon={option.icon}
                       className={`brand-knob-mark${isActive ? ' brand-knob-mark--active' : ''}`}
                     />
                   </button>

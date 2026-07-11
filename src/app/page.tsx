@@ -3,12 +3,11 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { CARS, getCarForYear } from '@/data/cars';
-import { getBrandLogo } from '@/data/brandLogos';
-import TimelineScrubber from '@/components/TimelineScrubber';
-import BrandKnob, { type BrandOption } from '@/components/BrandKnob';
+import RollerDial, { type RollerDialOption } from '@/components/RollerDial';
+import VolumeDial from '@/components/VolumeDial';
 import ConfidenceBadge from '@/components/ConfidenceBadge';
 import SearchCommand from '@/components/SearchCommand';
-import HomeScreen, { type Channel } from '@/components/HomeScreen';
+import HomeScreen, { FolderIcon, type Channel } from '@/components/HomeScreen';
 import { playPowerOn, playPowerOff } from '@/lib/crtSound';
 import type { CarRecord } from '@/types/car';
 
@@ -17,15 +16,12 @@ const MAX_YEAR = 2000;
 
 const HOME_COLS = 2;
 
-// Home "channels" — the desktop of the Classicverse set. Only Cars and
-// Display are live; Display is an instant action (toggles the ambient
-// page theme) rather than a screen you navigate into.
+// Home "channels" — the desktop of the Classicverse set. Only Cars is live.
 const CHANNELS: Channel[] = [
   { id: 'cars', name: 'Cars', tagline: '1885 to 2000 archive', mark: '01', accent: '#9a2a2a', enabled: true },
   { id: 'guide', name: 'Guide', tagline: "What's on", mark: '02', accent: '#d4a017', enabled: false },
   { id: 'radio', name: 'Radio', tagline: 'Period sound', mark: '03', accent: '#1f6f3e', enabled: false },
   { id: 'about', name: 'About', tagline: 'The project', mark: '04', accent: '#2a4a8a', enabled: false },
-  { id: 'display', name: 'Display', tagline: 'Room light', mark: '05', accent: '#7a746a', enabled: true },
 ];
 
 function chunk<T>(arr: T[], size: number): T[][] {
@@ -50,32 +46,6 @@ const SELECTION_BASIS_LABEL: Record<string, string> = {
   motorsport_breakthrough: 'Motorsport breakthrough',
   cultural_breakthrough: 'Cultural breakthrough',
 };
-
-const MANUFACTURER_MARK: Record<string, string> = {
-  'Benz & Cie.': 'B',
-  'Ford Motor Company': 'F',
-  'Austin Motor Company': 'A',
-  'Citroën': 'C',
-  'Volkswagenwerk GmbH': 'VW',
-  'Alfa Romeo': 'AR',
-  'Rover Company': 'R',
-  'British Motor Corporation (BMC)': 'BMC',
-  'Volkswagen': 'VW',
-  'McLaren Automotive': 'McL',
-};
-
-function getManufacturerMark(manufacturer: string) {
-  if (MANUFACTURER_MARK[manufacturer]) return MANUFACTURER_MARK[manufacturer];
-  const cleaned = manufacturer
-    .replace(/\([^)]*\)/g, '')
-    .replace(/&/g, ' ')
-    .replace(/\b(company|corporation|motor|motors|automotive|gmbh|cie)\b/gi, ' ')
-    .trim();
-  const words = cleaned.split(/\s+/).filter(Boolean);
-  if (words.length === 0) return manufacturer.slice(0, 2).toUpperCase();
-  if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
-  return words.slice(0, 3).map(word => word[0]).join('').toUpperCase();
-}
 
 function clampYear(year: number) {
   return Math.max(MIN_YEAR, Math.min(MAX_YEAR, year));
@@ -251,7 +221,7 @@ function TvKnob({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
+      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#ffffff', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>
         {label}
       </div>
       <div style={{ position: 'relative', width: total, height: total }}>
@@ -321,7 +291,6 @@ function TvKnob({
 export default function Home() {
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
   const [searchOpen, setSearchOpen]   = useState(false);
-  const [isDark, setIsDark]           = useState(false);
   const [view, setView]               = useState<'home' | 'cars'>('home');
   const [channelId, setChannelId]     = useState('cars');
   const [screenMode, setScreenMode]   = useState<'image' | 'info'>('image');
@@ -346,120 +315,48 @@ export default function Home() {
   const glitchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const displayCar = getCarForYear(currentYear);
 
-  const brandOptions = useMemo<BrandOption[]>(() => {
-    const byManufacturer = new Map<string, { count: number; firstYear: number }>();
-    CARS.forEach((car) => {
-      const existing = byManufacturer.get(car.manufacturer);
-      if (existing) {
-        existing.count += 1;
-        existing.firstYear = Math.min(existing.firstYear, car.year);
-        return;
-      }
-      byManufacturer.set(car.manufacturer, { count: 1, firstYear: car.year });
-    });
-    return Array.from(byManufacturer.entries())
-      .sort(([, a], [, b]) => a.firstYear - b.firstYear)
-      .map(([manufacturer, details]) => ({
-        manufacturer,
-        mark: getManufacturerMark(manufacturer),
-        count: details.count,
-        logoSrc: getBrandLogo(manufacturer)?.src,
-      }));
-  }, []);
-
-  // Each manufacturer mapped to its hero-car years (sorted), so selecting a
-  // brand can jump the timeline to that brand's car(s).
-  const brandYears = useMemo(() => {
-    const map = new Map<string, number[]>();
-    CARS.forEach((car) => {
-      const list = map.get(car.manufacturer);
-      if (list) list.push(car.year);
-      else map.set(car.manufacturer, [car.year]);
-    });
-    map.forEach((list) => list.sort((a, b) => a - b));
-    return map;
-  }, []);
-
-  // The knob always reflects the currently displayed car's brand.
-  const selectedBrand = displayCar?.manufacturer ?? null;
-
-  // Selecting a brand jumps to its next car after the current year (wrapping),
-  // which changes the displayed record and image.
-  const handleBrandSelect = useCallback((brand: string | null) => {
-    if (!brand) return;
-    const years = brandYears.get(brand);
-    if (!years || years.length === 0) return;
-    setCurrentYear((cur) => years.find((y) => y > cur) ?? years[0]);
-  }, [brandYears]);
-
-  // The Home desktop is a grid; the two rollers become its two axes.
-  // Top roller = column (items in the highlighted row), bottom roller = row.
-  // This mirrors how the same two rollers work inside Cars (brand x year) —
-  // one control always reads across, the other always reads down/through.
-  const homePosition = useMemo(() => {
-    const rowIndex = HOME_ROWS.findIndex((r) => r.some((ch) => ch.id === channelId));
-    const safeRow = rowIndex === -1 ? 0 : rowIndex;
-    const colIndex = HOME_ROWS[safeRow].findIndex((ch) => ch.id === channelId);
-    return { row: safeRow, col: colIndex === -1 ? 0 : colIndex };
-  }, [channelId]);
-  const homeRow = homePosition.row;
-  const homeCol = homePosition.col;
-
-  const homeColumnOptions = useMemo<BrandOption[]>(
-    () => HOME_ROWS[homeRow].map((ch) => ({ manufacturer: ch.id, mark: ch.mark, count: 0 })),
-    [homeRow],
-  );
-
-  const homeRowOptions = useMemo<BrandOption[]>(
-    () => HOME_ROWS.map((r, i) => ({ manufacturer: String(i), mark: `R${i + 1}`, count: 0 })),
+  // Home is a flat, numbered channel list (01-05), like a real tuner dial —
+  // one knob steps straight through it. The desktop grid is just a 2-column
+  // layout of those channels, not a control axis of its own.
+  const homeChannelOptions = useMemo<RollerDialOption[]>(
+    () => CHANNELS.map((ch) => ({
+      id: ch.id,
+      mark: ch.mark,
+      count: 0,
+      icon: (
+        <div style={{ transform: 'scale(0.56)', transformOrigin: 'center' }}>
+          <FolderIcon channel={ch} />
+        </div>
+      ),
+    })),
     [],
   );
 
-  const selectHomeColumn = useCallback((id: string | null) => {
+  // The Cars top knob works exactly like the Home channel knob — it scrolls
+  // through content (car images), not a bare year number.
+  const carRollerOptions = useMemo<RollerDialOption[]>(
+    () => [...CARS]
+      .sort((a, b) => a.year - b.year)
+      .map((car) => ({
+        id: String(car.year),
+        mark: car.hero_car_name.slice(0, 3).toUpperCase(),
+        count: 0,
+        logoSrc: car.image_url,
+      })),
+    [],
+  );
+
+  const selectChannel = useCallback((id: string | null) => {
     if (id) setChannelId(id);
   }, []);
 
-  const selectHomeRow = useCallback((rowKey: string | null) => {
-    if (rowKey === null) return;
-    const r = Number(rowKey);
-    const targetRow = HOME_ROWS[r];
-    if (!targetRow) return;
-    const clampedCol = Math.min(homeCol, targetRow.length - 1);
-    setChannelId(targetRow[clampedCol].id);
-  }, [homeCol]);
-
   const goHome = useCallback(() => setView('home'), []);
-
-  // Theme init — controls the ambient page backdrop behind the TV, not the
-  // screen content. Toggled from the Display tile.
-  useEffect(() => {
-    queueMicrotask(() => {
-      const saved = localStorage.getItem('cv-theme');
-      if (saved === 'dark') {
-        setIsDark(true);
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else if (saved === 'light') {
-        setIsDark(false);
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setIsDark(true);
-      }
-    });
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
-    localStorage.setItem('cv-theme', next ? 'dark' : 'light');
-  }, [isDark]);
 
   const openChannel = useCallback((id: string) => {
     const ch = CHANNELS.find((c) => c.id === id);
     if (!ch?.enabled) return;
-    if (ch.id === 'display') { toggleTheme(); return; }
-    if (ch.id === 'cars') { setView('cars'); return; }
-  }, [toggleTheme]);
+    if (ch.id === 'cars') { setScreenMode('image'); setView('cars'); return; }
+  }, []);
 
   const goToYear        = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
   const goToPrevYear    = useCallback(() => setCurrentYear(y => clampYear(y - 1)), []);
@@ -754,46 +651,54 @@ export default function Home() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                {view === 'home' ? (
-                  <BrandKnob
-                    brands={homeColumnOptions}
-                    selectedBrand={channelId}
-                    onBrandSelect={selectHomeColumn}
-                    embedded
-                    showAll={false}
-                    ariaLabel="Desktop column selector"
-                  />
-                ) : (
-                  <BrandKnob brands={brandOptions} selectedBrand={selectedBrand} onBrandSelect={handleBrandSelect} embedded ariaLabel="Brand selector" />
-                )}
-
-                {view === 'home' ? (
-                  <BrandKnob
-                    brands={homeRowOptions}
-                    selectedBrand={String(homeRow)}
-                    onBrandSelect={selectHomeRow}
-                    embedded
-                    showAll={false}
-                    ariaLabel="Desktop row selector"
-                  />
-                ) : (
-                  <TimelineScrubber currentYear={currentYear} onYearSelect={goToYear} embedded />
-                )}
-
-                {/* Knob plate */}
-                <div className="cv-tv-knob-plate">
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
-                    <TvKnob label="BRIGHT" value={brightness} onChange={setBrightness} />
-                    <TvKnob label="CONTRAST" value={contrast} onChange={setContrast} />
-                    <TvKnob label="VOLUME" value={volume} onChange={handleVolumeChange} />
+                {/* Brand plate — full width, top of the column */}
+                <div className="cv-tv-brand-plate" style={{ margin: '0 4px' }}>
+                  <div className="cv-tv-brand-mark-strip">
+                    <span style={{ background: '#9a2a2a' }} />
+                    <span style={{ background: '#d4a017' }} />
+                    <span style={{ background: '#1f6f3e' }} />
+                    <span style={{ background: '#2a4a8a' }} />
                   </div>
+                  <span className="cv-tv-brand-name">Classicverse</span>
+                </div>
 
-                  {/* SRCH · MODE · INFO row */}
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center' }}>
+                {/* Top knob: always the primary tuning/navigation control —
+                    steps through channels at Home, cars (by image) inside Cars.
+                    Same roller, same interaction, in both places. */}
+                {view === 'home' ? (
+                  <RollerDial
+                    options={homeChannelOptions}
+                    selectedId={channelId}
+                    onSelect={selectChannel}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Channel selector"
+                  />
+                ) : (
+                  <RollerDial
+                    options={carRollerOptions}
+                    selectedId={String(currentYear)}
+                    onSelect={(id) => { if (id) goToYear(Number(id)); }}
+                    embedded
+                    showAll={false}
+                    ariaLabel="Car selector"
+                  />
+                )}
+
+                {/* Bottom knob: always Volume, regardless of screen. */}
+                <VolumeDial value={volume} onChange={handleVolumeChange} embedded ariaLabel="Volume" />
+
+                {/* BRIGHT / CONTRAST — sit on the bezel, outside the knob plate */}
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
+                  <TvKnob size={54} label="BRIGHT" value={brightness} onChange={setBrightness} />
+                  <TvKnob size={54} label="CONTRAST" value={contrast} onChange={setContrast} />
+                </div>
+
+                {/* SRCH · HOME · INFO row */}
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center', marginTop: 'auto' }}>
 
                     {/* Search button */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>SRCH</div>
                       <button
                         type="button"
                         onClick={() => setSearchOpen(o => !o)}
@@ -826,46 +731,47 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* MODE: back-to-Home button inside a channel; inert spacer at Home */}
-                    {view === 'home' ? (
-                      <div style={{ width: 40, height: 40 + 7.5 + 3 }} aria-hidden="true" />
-                    ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                        <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>HOME</div>
-                        <button
-                          type="button"
-                          onClick={goHome}
-                          aria-label="Back to Home"
-                          style={{
-                            width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                            background: '#232120',
-                            boxShadow: [
-                              'inset 0 1px 0 rgba(255,255,255,0.18)',
-                              'inset 0 -1px 2px rgba(255,255,255,0.06)',
-                              '0 6px 0 rgba(0,0,0,0.85)',
-                              '0 8px 16px rgba(0,0,0,0.65)',
-                              '0 2px 4px rgba(0,0,0,0.50)',
-                            ].join(', '),
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                            transition: 'box-shadow 200ms, background 200ms',
-                          }}
-                        >
-                          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke="#5e5c5a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke="#5e5c5a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </button>
-                      </div>
-                    )}
+                    {/* HOME: always visible; highlighted whenever the Home desktop is showing */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <button
+                        type="button"
+                        onClick={goHome}
+                        aria-label="Back to Home"
+                        aria-pressed={view === 'home'}
+                        style={{
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                          background: view === 'home' ? '#181614' : '#232120',
+                          boxShadow: view === 'home' ? [
+                            'inset 0 4px 10px rgba(0,0,0,0.95)',
+                            'inset 0 2px 4px rgba(0,0,0,0.85)',
+                            '0 1px 0 rgba(255,255,255,0.04)',
+                          ].join(', ') : [
+                            'inset 0 1px 0 rgba(255,255,255,0.18)',
+                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
+                            '0 6px 0 rgba(0,0,0,0.85)',
+                            '0 8px 16px rgba(0,0,0,0.65)',
+                            '0 2px 4px rgba(0,0,0,0.50)',
+                          ].join(', '),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          transition: 'box-shadow 200ms, background 200ms',
+                        }}
+                      >
+                        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                          <g style={{ filter: view === 'home' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
+                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
 
                     {/* INFO: open highlighted channel at Home; toggle car detail inside Cars */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                      <div style={{ fontSize: 7.5, letterSpacing: '0.16em', color: '#8a8480', textTransform: 'uppercase', fontFamily: 'var(--font-sans)', fontWeight: 600 }}>INFO</div>
                       <button
                         type="button"
                         onClick={() => view === 'home' ? openChannel(channelId) : setScreenMode(m => m === 'image' ? 'info' : 'image')}
                         aria-label={view === 'home' ? 'Open highlighted channel' : (screenMode === 'image' ? 'Show car info' : 'Show car image')}
-                        aria-pressed={view === 'cars' ? screenMode === 'info' : undefined}
+                        aria-pressed={view === 'cars' && screenMode === 'info'}
                         style={{
                           width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
                           background: (view === 'cars' && screenMode === 'info') ? '#181614' : '#232120',
@@ -893,28 +799,10 @@ export default function Home() {
                       </button>
                     </div>
 
-                  </div>
-
-                  {/* Speaker grille */}
-                  <div className="cv-tv-grille">
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <div key={i} className="cv-tv-grille-slot" />
-                    ))}
-                  </div>
                 </div>
 
-                {/* Brand plate row: logo + PWR button as siblings */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '0 4px' }}>
-                  <div className="cv-tv-brand-plate" style={{ flex: 1 }}>
-                    <div className="cv-tv-brand-mark-strip">
-                      <span style={{ background: '#9a2a2a' }} />
-                      <span style={{ background: '#d4a017' }} />
-                      <span style={{ background: '#1f6f3e' }} />
-                      <span style={{ background: '#2a4a8a' }} />
-                    </div>
-                    <span className="cv-tv-brand-name">Classicverse</span>
-                  </div>
-
+                {/* Power button row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', margin: '0 4px' }}>
                   {/* Power button — rectangular, outside logo frame */}
                   <button
                     type="button"

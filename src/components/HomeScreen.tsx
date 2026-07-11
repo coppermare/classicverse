@@ -56,19 +56,12 @@ function ChannelGlyph({ id }: { id: string }) {
           <circle cx="13" cy="8.3" r="1.3" fill={stroke} stroke="none" />
         </svg>
       );
-    case 'display':
-      return (
-        <svg width="26" height="26" viewBox="0 0 26 26">
-          <circle cx="13" cy="13" r="8.5" {...common} />
-          <path d="M13 4.5 A8.5 8.5 0 0 1 13 21.5 Z" fill={stroke} stroke="none" />
-        </svg>
-      );
     default:
       return null;
   }
 }
 
-function FolderIcon({ channel }: { channel: Channel }) {
+export function FolderIcon({ channel }: { channel: Channel }) {
   const { accent, enabled } = channel;
   return (
     <div style={{ position: 'relative', width: 64, height: 54, opacity: enabled ? 1 : 0.55 }}>

@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${vt323.variable} h-full`}>
+    <html lang="en" data-theme="light" className={`${inter.variable} ${vt323.variable} h-full`}>
       <body className="h-full min-h-screen antialiased" style={{ fontFamily: 'var(--font-sans)' }}>
         {children}
       </body>
