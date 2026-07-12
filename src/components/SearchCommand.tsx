@@ -69,10 +69,10 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '12px 16px',
-        borderBottom: `1px solid ${inline ? 'rgba(212,160,23,0.18)' : 'var(--cv-brass-19)'}`,
+        borderBottom: `1px solid ${inline ? 'rgba(255,255,255,0.10)' : 'var(--cv-brass-19)'}`,
       }}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-          style={{ color: inline ? '#6a6460' : 'var(--cv-text-steel)', flexShrink: 0 }}
+          style={{ color: inline ? '#948f86' : 'var(--cv-text-steel)', flexShrink: 0 }}
           stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -94,7 +94,7 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
         <kbd style={{
           fontSize: 10, padding: '2px 5px', borderRadius: 4,
           border: `1px solid ${inline ? 'rgba(255,255,255,0.12)' : 'var(--cv-steel-25)'}`,
-          color: inline ? '#6a6460' : 'var(--cv-text-steel)',
+          color: inline ? '#948f86' : 'var(--cv-text-steel)',
         }}>Esc</kbd>
       </div>
 
@@ -102,7 +102,7 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
       <div style={{ flex: 1, overflowY: 'auto' }} role="listbox" aria-label="Search results">
         {filtered.length === 0 ? (
           <div style={{ padding: '32px 16px', textAlign: 'center' }}>
-            <p style={{ fontSize: 13, color: inline ? '#6a6460' : 'var(--cv-text-steel)' }}>
+            <p style={{ fontSize: 13, color: inline ? '#948f86' : 'var(--cv-text-steel)' }}>
               No records found for &ldquo;{query}&rdquo;
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
               aria-selected="false"
             >
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, flexShrink: 0, color: inline ? '#d4a017' : 'var(--cv-red)' }}>
+                <span style={{ fontSize: 12, fontWeight: 700, flexShrink: 0, color: inline ? '#b0a898' : 'var(--cv-red)' }}>
                   {car.year}
                 </span>
                 <span style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: inline ? '#d4cfc4' : 'var(--cv-text)' }}>
@@ -138,7 +138,7 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
                   {car.country}
                 </span>
               </div>
-              <p style={{ fontSize: 11, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: inline ? '#6a6460' : 'var(--cv-text-muted)' }}>
+              <p style={{ fontSize: 11, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: inline ? '#948f86' : 'var(--cv-text-muted)' }}>
                 {car.era} · {car.category}
               </p>
             </button>
@@ -149,12 +149,12 @@ export default function SearchCommand({ open, onClose, cars, onSelect, inline }:
       {/* Footer */}
       <div style={{
         padding: '8px 16px', display: 'flex', justifyContent: 'space-between',
-        borderTop: `1px solid ${inline ? 'rgba(212,160,23,0.12)' : 'var(--cv-brass-12)'}`,
+        borderTop: `1px solid ${inline ? 'rgba(255,255,255,0.08)' : 'var(--cv-brass-12)'}`,
       }}>
-        <p style={{ fontSize: 11, color: inline ? '#6a6460' : 'var(--cv-text-steel)' }}>
+        <p style={{ fontSize: 11, color: inline ? '#948f86' : 'var(--cv-text-steel)' }}>
           {filtered.length} {filtered.length === 1 ? 'record' : 'records'}
         </p>
-        <p style={{ fontSize: 11, color: inline ? '#6a6460' : 'var(--cv-text-steel)' }}>
+        <p style={{ fontSize: 11, color: inline ? '#948f86' : 'var(--cv-text-steel)' }}>
           ↩ to select
         </p>
       </div>

@@ -94,24 +94,6 @@ export default function HomeScreen({ rows, selectedId, onSelect, onOpen }: HomeS
         display: 'flex', flexDirection: 'column',
       }}
     >
-      {/* Menu bar */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '8px 14px',
-        borderBottom: '1px solid rgba(44,40,32,0.14)',
-        background: 'rgba(255,255,255,0.35)',
-      }}>
-        <div style={{ display: 'inline-flex', gap: 2.5 }}>
-          <span style={{ width: 5, height: 12, background: '#9a2a2a', borderRadius: 1 }} />
-          <span style={{ width: 5, height: 12, background: '#d4a017', borderRadius: 1 }} />
-          <span style={{ width: 5, height: 12, background: '#1f6f3e', borderRadius: 1 }} />
-          <span style={{ width: 5, height: 12, background: '#2a4a8a', borderRadius: 1 }} />
-        </div>
-        <span style={{ fontFamily: 'var(--font-crt)', fontSize: 17, letterSpacing: '0.1em', color: '#2c2620' }}>
-          CLASSICVERSE
-        </span>
-      </div>
-
       {/* Icon grid */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 20, padding: '10px 24px' }}>
         {rows.map((row, ri) => (
@@ -153,14 +135,6 @@ export default function HomeScreen({ rows, selectedId, onSelect, onOpen }: HomeS
             })}
           </div>
         ))}
-      </div>
-
-      <div style={{
-        textAlign: 'center', padding: '6px 0 9px',
-        fontFamily: 'var(--font-sans)', fontSize: 9.5, letterSpacing: '0.08em',
-        color: '#8a8274',
-      }}>
-        ROLLERS MOVE · INFO OPENS
       </div>
     </div>
   );

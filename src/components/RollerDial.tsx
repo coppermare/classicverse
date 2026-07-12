@@ -306,46 +306,36 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
   const wheelRotation = smoothIndex * RIDGES_PER_STEP;
 
   return (
-    <section className={embedded ? 'w-full' : 'brand-knob-frame timeline-scrubber-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label={ariaLabel}>
-      <div
-        className="brand-knob relative select-none touch-none w-full"
-        style={{
-          height: embedded ? '64px' : '88px',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          outline: 'none',
-        }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-        role="slider"
-        aria-valuemin={0}
-        aria-valuemax={options.length - 1}
-        aria-valuenow={selectedIndex}
-        aria-valuetext={selectedId ?? 'All'}
-        aria-label={ariaLabel}
-        tabIndex={0}
-      >
-        <div className={embedded
-          ? 'timeline-roller-shell absolute inset-x-1 inset-y-0 rounded-[18px]'
-          : 'timeline-roller-shell absolute inset-x-20 inset-y-0 rounded-[30px] sm:inset-x-32'
-        }>
-          <div className={embedded ? 'timeline-roller-cavity absolute inset-[6px] rounded-[16px]' : 'timeline-roller-cavity absolute inset-[10px] rounded-[22px]'}>
-            <div
-              ref={pillRef}
-              className={embedded ? 'timeline-roller-pill absolute inset-[5px_10px] overflow-hidden' : 'timeline-roller-pill absolute inset-[7px_13px] overflow-hidden'}
-              style={{ borderRadius: 999 }}
-            >
-              <WheelSVG
-                width={pillSize.width}
-                height={pillSize.height}
-                rotation={wheelRotation}
-                theme={wheelTheme}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div
+      ref={pillRef}
+      className={embedded
+        ? 'brand-knob timeline-roller-well relative select-none touch-none mx-6'
+        : 'brand-knob timeline-roller-well brand-knob-frame relative select-none touch-none mx-28 sm:mx-40'
+      }
+      style={{
+        height: embedded ? '46px' : '64px',
+        padding: embedded ? '6px 14px' : '9px 20px',
+        cursor: isDragging ? 'grabbing' : 'grab',
+        outline: 'none',
+      }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      role="slider"
+      aria-valuemin={0}
+      aria-valuemax={options.length - 1}
+      aria-valuenow={selectedIndex}
+      aria-valuetext={selectedId ?? 'All'}
+      aria-label={ariaLabel}
+      tabIndex={0}
+    >
+      <WheelSVG
+        width={pillSize.width}
+        height={pillSize.height}
+        rotation={wheelRotation}
+        theme={wheelTheme}
+      />
+    </div>
   );
 }
