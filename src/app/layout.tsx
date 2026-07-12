@@ -20,11 +20,11 @@ const vt323 = VT323({
 export const metadata: Metadata = {
   title: 'Classicverse — Interactive Classic Car Timeline',
   description:
-    'An interactive timeline archive of iconic automobiles from 1885 to 2000. One landmark car per year, in context.',
+    'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
   openGraph: {
     title: 'Classicverse — Interactive Classic Car Timeline',
     description:
-      'An interactive timeline archive of iconic automobiles from 1885 to 2000. One landmark car per year, in context.',
+      'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
     siteName: 'Classicverse',
     type: 'website',
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Classicverse — Interactive Classic Car Timeline',
     description:
-      'An interactive timeline archive of iconic automobiles from 1885 to 2000. One landmark car per year, in context.',
+      'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
   },
 };
 

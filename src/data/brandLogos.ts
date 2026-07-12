@@ -12,7 +12,7 @@ export interface BrandLogo {
  */
 export const BRAND_LOGOS: Record<string, BrandLogo> = {
   benz: {
-    src: '/brand-logos/benz-cie.svg',
+    src: '/brand-logos/benz-cie.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Benz_1883.svg',
   },
   daimler: {
@@ -40,7 +40,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://simpleicons.org/?q=citroen',
   },
   dkw: {
-    src: '/brand-logos/dkw.svg',
+    src: '/brand-logos/dkw.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:DKW-logo.svg',
   },
   volkswagen: {
@@ -140,7 +140,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Willys-knight.svg',
   },
   'auto-union': {
-    src: '/brand-logos/auto-union.svg',
+    src: '/brand-logos/auto-union.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Auto_Union.svg',
   },
   bmw: {
@@ -192,7 +192,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:NSU_1960_Logo.svg',
   },
   lamborghini: {
-    src: '/brand-logos/lamborghini.svg',
+    src: '/brand-logos/lamborghini.png',
     sourceUrl: 'https://en.wikipedia.org/wiki/File:Lamborghini_Logo.svg',
   },
   lotus: {

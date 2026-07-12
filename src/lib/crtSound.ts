@@ -142,3 +142,38 @@ export function playPowerOff(volume = 1) {
   thunk.start(t);
   thunk.stop(t + 0.18);
 }
+
+/** UI button click: a short plasticky tick — filtered noise snap plus a tiny tock. */
+export function playButtonClick(volume = 1) {
+  const ac = getCtx();
+  if (!ac) return;
+  const t = ac.currentTime;
+  const out = master(ac, volume * 0.55);
+
+  const n = ac.createBufferSource();
+  n.buffer = noiseBuffer(ac, 0.02);
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 2600;
+  bp.Q.value = 1.1;
+  const ng = ac.createGain();
+  ng.gain.setValueAtTime(0.5, t);
+  ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
+  n.connect(bp);
+  bp.connect(ng);
+  ng.connect(out);
+  n.start(t);
+  n.stop(t + 0.02);
+
+  const tock = ac.createOscillator();
+  tock.type = 'square';
+  tock.frequency.setValueAtTime(1400, t);
+  tock.frequency.exponentialRampToValueAtTime(600, t + 0.015);
+  const tg = ac.createGain();
+  tg.gain.setValueAtTime(0.2, t);
+  tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.018);
+  tock.connect(tg);
+  tg.connect(out);
+  tock.start(t);
+  tock.stop(t + 0.02);
+}
