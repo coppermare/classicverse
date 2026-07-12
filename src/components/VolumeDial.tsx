@@ -185,8 +185,9 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
   const total = size + pad * 2;
   const cx = total / 2;
   const cy = total / 2;
-  const labelR = size / 2 + 11;
-  const dotR = size / 2 + 11;
+  const knobSize = size * 0.52;
+  const labelR = size * 0.405;
+  const dotR = labelR;
 
   // Rounded to a fixed precision so server- and client-rendered markup match
   // exactly — raw trig output can differ in its last bit between environments.
@@ -201,10 +202,9 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
   const dotPos = toXY(START_ANGLE - 9, dotR);
 
   return (
-    <section className={embedded ? 'w-full' : 'brand-knob-frame mx-auto w-full px-3 pb-3 sm:px-5'} aria-label={ariaLabel}>
       <div
         ref={ref}
-        className="relative select-none touch-none"
+        className={embedded ? 'relative select-none touch-none' : 'relative select-none touch-none brand-knob-frame mx-auto px-3 pb-3 sm:px-5'}
         style={{ width: total, height: total, margin: '0 auto', cursor: isDragging ? 'grabbing' : 'grab', outline: 'none' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -243,7 +243,16 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
           {muted ? 'MUTE' : `${Math.round(value * 100)}%`}
         </div>
 
-        {/* Fixed printed numerals (do not rotate) + reference dot */}
+        {/* Black face — static, numerals are printed inside it near the rim */}
+        <div style={{
+          position: 'absolute',
+          top: pad, left: pad,
+          width: size, height: size,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle at 50% 42%, #1c1c1c 0%, #0a0a0a 70%, #000 100%)',
+        }} />
+
+        {/* Fixed printed numerals (do not rotate) + reference dot, sit on the black face */}
         <svg width={total} height={total} style={{ position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none' }}>
           <circle cx={dotPos.x} cy={dotPos.y} r={1.6} fill="#e8e4dc" opacity={0.85} />
           {LABELS.map((n) => {
@@ -258,10 +267,10 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
                 y={p.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={embedded ? 13 : 16}
+                fontSize={embedded ? 11 : 13}
                 fontWeight={800}
                 fontFamily="var(--font-sans)"
-                fill={lit && !muted ? '#f0ece2' : '#8a857e'}
+                fill={lit && !muted ? '#f0ece2' : '#6f6b66'}
               >
                 {n}
               </text>
@@ -269,79 +278,65 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
           })}
         </svg>
 
-        {/* Black face — static, numerals painted on it are fixed */}
-        <div style={{
-          position: 'absolute',
-          top: pad, left: pad,
-          width: size, height: size,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle at 50% 42%, #1c1c1c 0%, #0a0a0a 70%, #000 100%)',
-          boxShadow: [
-            'inset 0 2px 4px rgba(0,0,0,0.9)',
-            'inset 0 0 0 2px #cfcfcc',
-            'inset 0 0 0 4px #1a1a1a',
-          ].join(', '),
-        }} />
-
-        {/* Inner chrome ring — thick polished band around a black center, static, sits under the lever */}
+        {/* Ambient contact shadow — grounds the knob so it reads as raised off the flat face */}
         <div style={{
           position: 'absolute',
           left: '50%', top: '50%',
-          width: size * 0.6, height: size * 0.6,
-          transform: 'translate(-50%, -50%)',
+          width: knobSize * 1.14, height: knobSize * 1.14,
+          transform: 'translate(-50%, -42%)',
           borderRadius: '50%',
-          background: 'conic-gradient(from 40deg, #eeeeea 0deg, #6c6c68 45deg, #f4f4f0 90deg, #585854 120deg, #eeeeea 150deg, #7c7c78 190deg, #f6f6f2 235deg, #64645f 265deg, #eeeeea 300deg, #86867f 330deg, #eeeeea 360deg)',
-          boxShadow: [
-            'inset 0 2px 2px rgba(255,255,255,0.6)',
-            'inset 0 -2px 3px rgba(0,0,0,0.5)',
-            '0 1px 2px rgba(0,0,0,0.4)',
-          ].join(', '),
-        }}>
-          <div style={{
-            position: 'absolute', inset: '19%',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 50% 42%, #1c1c1c 0%, #0a0a0a 70%, #000 100%)',
-            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.95)',
-          }} />
-        </div>
+          background: 'radial-gradient(circle, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none',
+        }} />
 
-        {/* Rotating lever — spans the full diameter through the pivot, like a real channel lever */}
+        {/* Rotating knob — simple flat-top cylinder: a lit side wall under one flat disc */}
         <div style={{
           position: 'absolute',
-          top: pad, left: pad,
-          width: size, height: size,
-          transform: `rotate(${angle}deg)`,
+          left: '50%', top: '50%',
+          width: knobSize, height: knobSize,
+          transform: `translate(-50%, -50%) rotate(${angle}deg)`,
           transition: isDragging ? 'none' : 'transform 140ms ease',
           pointerEvents: 'none',
+          borderRadius: '50%',
+          filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.75))',
         }}>
+          {/* Cylinder wall — silver, so it separates from the near-black face */}
           <div style={{
             position: 'absolute',
-            left: '50%', top: '-6%',
-            width: 17,
-            height: '112%',
-            transform: 'translateX(-50%)',
-            borderRadius: 4,
-            background: muted
-              ? 'linear-gradient(90deg, #262626 0%, #363636 45%, #2c2c2c 55%, #1c1c1c 100%)'
-              : 'linear-gradient(90deg, #4a4846 0%, #57534e 40%, #34322f 52%, #201f1c 100%)',
-            boxShadow: [
-              '0 2px 5px rgba(0,0,0,0.75)',
-              'inset 2px 0 0 rgba(255,255,255,0.22)',
-              'inset -2px 0 0 rgba(0,0,0,0.55)',
-            ].join(', '),
-          }} />
-          {/* Rivet near the outer tip */}
-          <div style={{
-            position: 'absolute',
-            left: '50%', top: '4%',
-            width: 4, height: 4,
-            transform: 'translateX(-50%)',
+            inset: 0,
             borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 30%, #e8e4dc, #6a6864)',
-            opacity: muted ? 0.5 : 0.9,
-          }} />
+            background: '#a8a8a0',
+            boxShadow: [
+              'inset 0 1px 1px rgba(255,255,255,0.35)',
+              'inset 0 -2px 3px rgba(0,0,0,0.35)',
+            ].join(', '),
+          }}>
+            {/* Flat top — silver, uniform matte fill, not a gradient (gradients across a full
+                disc read as spherical shading no matter how "flat" the geometry is) */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              borderRadius: '50%',
+              background: '#c4c4bc',
+              boxShadow: [
+                'inset 0 1px 0 rgba(255,255,255,0.45)',
+                'inset 0 0 0 1px rgba(0,0,0,0.08)',
+                '0 1px 0 rgba(255,255,255,0.15)',
+              ].join(', '),
+            }}>
+              {/* Pointer — a clear solid line, indicates the selected position */}
+              <div style={{
+                position: 'absolute',
+                left: '50%', top: '10%',
+                width: 3,
+                height: '44%',
+                transform: 'translateX(-50%)',
+                borderRadius: 2,
+                background: muted ? '#9a968e' : '#2a2824',
+                opacity: muted ? 0.55 : 1,
+              }} />
+            </div>
+          </div>
         </div>
       </div>
-    </section>
   );
 }

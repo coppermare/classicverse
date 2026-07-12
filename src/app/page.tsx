@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { CARS, getCarForYear } from '@/data/cars';
 import RollerDial, { type RollerDialOption } from '@/components/RollerDial';
 import VolumeDial from '@/components/VolumeDial';
-import ConfidenceBadge from '@/components/ConfidenceBadge';
 import SearchCommand from '@/components/SearchCommand';
 import HomeScreen, { FolderIcon, type Channel } from '@/components/HomeScreen';
 import { playPowerOn, playPowerOff } from '@/lib/crtSound';
@@ -13,6 +12,26 @@ import type { CarRecord } from '@/types/car';
 
 const MIN_YEAR = 1885;
 const MAX_YEAR = 2000;
+
+// Same shadow layers in both states (just scaled down when pressed) so toggling a
+// circular chrome button doesn't collapse/expand its visual footprint and appear to move.
+function circleButtonShadow(pressed: boolean) {
+  return pressed
+    ? [
+      'inset 0 3px 6px rgba(0,0,0,0.9)',
+      'inset 0 1px 3px rgba(0,0,0,0.8)',
+      '0 1px 0 rgba(0,0,0,0.75)',
+      '0 2px 3px rgba(0,0,0,0.40)',
+      '0 1px 1px rgba(0,0,0,0.30)',
+    ].join(', ')
+    : [
+      'inset 0 1px 0 rgba(255,255,255,0.18)',
+      'inset 0 -1px 2px rgba(255,255,255,0.06)',
+      '0 3px 0 rgba(0,0,0,0.75)',
+      '0 4px 6px rgba(0,0,0,0.50)',
+      '0 1px 2px rgba(0,0,0,0.35)',
+    ].join(', ');
+}
 
 const HOME_COLS = 2;
 
@@ -32,13 +51,6 @@ function chunk<T>(arr: T[], size: number): T[][] {
 
 const HOME_ROWS: Channel[][] = chunk(CHANNELS, HOME_COLS);
 
-const REVIEW_LABEL: Record<string, string> = {
-  pending: 'Pending review',
-  in_review: 'Under review',
-  reviewed: 'Reviewed',
-  approved: 'Approved',
-};
-
 const SELECTION_BASIS_LABEL: Record<string, string> = {
   production_start: 'Production start',
   public_debut: 'Public debut',
@@ -57,10 +69,7 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
     <div className="cv-screen-info absolute inset-0 overflow-y-auto p-5" style={{ background: 'rgba(10,10,8,0.96)' }}>
       <div className="space-y-5 pb-8">
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>
-            Archive record
-          </p>
-          <h2 className="mt-2 text-xl font-extrabold" style={{ color: '#e8e4dc', lineHeight: 1.1 }}>
+          <h2 className="text-xl font-extrabold" style={{ color: '#e8e4dc', lineHeight: 1.1 }}>
             {car.hero_car_name}
           </h2>
           <p className="mt-3 text-sm leading-relaxed" style={{ color: '#b0a898' }}>
@@ -77,39 +86,23 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
           <span><strong style={{ color: '#d4cfc4' }}>Selection</strong> {SELECTION_BASIS_LABEL[car.selection_basis] ?? car.selection_basis}</span>
         </div>
 
-        <div className="flex flex-wrap gap-2 items-center">
-          <ConfidenceBadge level={car.confidence_level} />
-          <span className="cv-tactile-chip inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style={{ color: '#8a8680' }}>
-            {REVIEW_LABEL[car.review_status]}
-          </span>
-        </div>
-
         <section className="space-y-1">
-          <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>Why This Year</h3>
           <p className="text-sm leading-relaxed italic" style={{ color: '#c8c2b8' }}>{car.why_this_year}</p>
         </section>
 
         <section className="space-y-1">
-          <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>Historical Context</h3>
           <p className="text-sm leading-relaxed" style={{ color: '#c8c2b8' }}>{car.historical_context}</p>
         </section>
 
         {car.verified_facts.length > 0 && (
           <section className="space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>Verified Facts</h3>
-            <div className="space-y-2">
-              {car.verified_facts.map((fact, i) => (
-                <div key={i} className="cv-tactile-chip p-3 rounded-lg">
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#8a8680' }}>Fact {String(i + 1).padStart(2, '0')}</p>
-                  <p className="text-sm leading-relaxed" style={{ color: '#c8c2b8' }}>{fact}</p>
-                </div>
-              ))}
-            </div>
+            {car.verified_facts.map((fact, i) => (
+              <p key={i} className="text-sm leading-relaxed" style={{ color: '#c8c2b8' }}>{fact}</p>
+            ))}
           </section>
         )}
 
         <section className="space-y-1">
-          <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>In Detail</h3>
           <div className="text-sm leading-relaxed space-y-3" style={{ color: '#c8c2b8' }}>
             {car.long_description.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
           </div>
@@ -117,14 +110,13 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
 
         {car.source_urls.length > 0 && (
           <section className="space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>Sources</h3>
             <ol className="space-y-1.5">
               {car.source_urls.map((src, i) => (
                 <li key={i} className="flex gap-2 text-sm">
                   <span className="shrink-0 text-xs pt-0.5" style={{ color: '#8a8680' }}>{i + 1}.</span>
                   <a href={src.url} target="_blank" rel="noopener noreferrer"
                     className="underline underline-offset-2 decoration-dotted hover:decoration-solid transition-all"
-                    style={{ color: 'var(--cv-red)' }}>
+                    style={{ color: '#c8c2b8' }}>
                     {src.title}
                   </a>
                 </li>
@@ -135,7 +127,6 @@ function CarScreenInfo({ car }: { car: CarRecord }) {
 
         {car.alternate_cars.length > 0 && (
           <section className="space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--cv-brass)' }}>Considered Alternatives</h3>
             <div className="space-y-3">
               {car.alternate_cars.map((alt, i) => (
                 <div key={i} className="text-sm space-y-0.5">
@@ -243,45 +234,32 @@ function TvKnob({
             top: pad, left: pad,
             width: size, height: size,
             borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 28%, #60584e 0%, #26221e 46%, #121008 100%)',
+            background: '#c4c4bc',
             boxShadow: [
-              'inset 0 2px 2px rgba(255,255,255,0.22)',
-              'inset 0 -3px 6px rgba(0,0,0,0.90)',
+              'inset 0 1px 1px rgba(255,255,255,0.45)',
+              'inset 0 -2px 3px rgba(0,0,0,0.35)',
               '0 4px 8px rgba(0,0,0,0.62)',
-              '0 1px 0 rgba(255,255,255,0.06)',
             ].join(', '),
             cursor: 'grab',
             userSelect: 'none',
             touchAction: 'none',
           }}
         >
-          {/* Rotating cap */}
+          {/* Invisible rotating hand — no visible cap layer, just pivots the indicator line */}
           <div style={{
-            position: 'absolute', inset: 5,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 32% 24%, #4a4640 0%, #18160f 62%, #0a0806 100%)',
-            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.14), inset 0 -3px 7px rgba(0,0,0,0.92)',
+            position: 'absolute', inset: 0,
             transform: `rotate(${angle}deg)`,
+            pointerEvents: 'none',
           }}>
-            {/* Indicator line */}
+            {/* Indicator line — a clear solid line, dark for contrast against the silver top */}
             <div style={{
-              position: 'absolute', left: '50%', top: '5%',
-              width: 3, height: '40%',
-              background: `linear-gradient(180deg, ${accent}, ${accent}44)`,
+              position: 'absolute', left: '50%', top: '9%',
+              width: 3, height: '38%',
+              background: '#2a2824',
               transform: 'translateX(-50%)',
               borderRadius: 2,
-              boxShadow: `0 0 5px ${accent}cc`,
             }} />
           </div>
-          {/* Gloss highlight */}
-          <div style={{
-            position: 'absolute', top: '9%', left: '17%',
-            width: '37%', height: '22%',
-            background: 'radial-gradient(ellipse, rgba(255,255,255,0.40), transparent 70%)',
-            borderRadius: '50%',
-            pointerEvents: 'none',
-            filter: 'blur(0.5px)',
-          }} />
         </div>
       </div>
     </div>
@@ -350,12 +328,16 @@ export default function Home() {
     if (id) setChannelId(id);
   }, []);
 
-  const goHome = useCallback(() => setView('home'), []);
+  const goHome = useCallback(() => {
+    setView('home');
+    setSearchOpen(false);
+    setScreenMode('image');
+  }, []);
 
-  const openChannel = useCallback((id: string) => {
+  const openChannel = useCallback((id: string, mode: 'image' | 'info' = 'image') => {
     const ch = CHANNELS.find((c) => c.id === id);
     if (!ch?.enabled) return;
-    if (ch.id === 'cars') { setScreenMode('image'); setView('cars'); return; }
+    if (ch.id === 'cars') { setScreenMode(mode); setView('cars'); return; }
   }, []);
 
   const goToYear        = useCallback((year: number) => setCurrentYear(clampYear(year)), []);
@@ -388,6 +370,7 @@ export default function Home() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (!screenOn) return;
       if (e.key === 'Escape') {
         if (searchOpen) { setSearchOpen(false); return; }
         if (view === 'cars') { e.preventDefault(); goHome(); return; }
@@ -406,7 +389,7 @@ export default function Home() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade, view, searchOpen, goHome]);
+  }, [goToPrevYear, goToNextYear, goToPrevDecade, goToNextDecade, view, searchOpen, goHome, screenOn]);
 
   // TV power control
   const setPowerState = useCallback((newOn: boolean) => {
@@ -430,6 +413,8 @@ export default function Home() {
       setBootPhase('idle');
       setTurningOff(true);
       setScreenOn(false);
+      setSearchOpen(false);
+      setScreenMode('image');
       powerRef.current.on = false;
       powerRef.current.turningOff = true;
       setTimeout(() => { setTurningOff(false); powerRef.current.turningOff = false; }, 700);
@@ -456,6 +441,11 @@ export default function Home() {
     turningOff ? 'turning-off' : '',
     turningOn  ? 'turning-on'  : '',
   ].filter(Boolean).join(' ');
+
+  // Only one of Home / Search / Info can read as "active" at a time — search
+  // overlays everything, so it takes priority whenever it's open.
+  const activeButton: 'home' | 'search' | 'info' | null =
+    searchOpen ? 'search' : view === 'home' ? 'home' : screenMode === 'info' ? 'info' : null;
 
   return (
     <>
@@ -489,23 +479,19 @@ export default function Home() {
 
               {/* ── CRT Screen ── */}
               <div id="main-content" className="cv-tv-screen-well" style={{ cursor: 'none' }}>
-                <div className="cv-tv-screen-dome" />
-                <div className="cv-tv-screen-frame">
-                  <div className={screenClassNames}>
-
-                    <div
-                      ref={screenContentRef}
-                      className="cv-tv-screen-content"
-                      style={{ filter: screenOn ? screenFilter : 'none' }}
-                      onMouseMove={e => {
-                        const r = screenContentRef.current?.getBoundingClientRect();
-                        if (r) {
-                          const pointer = !!(e.target as Element).closest('button, a, [role="option"]');
-                          setScreenCursor({ x: e.clientX - r.left, y: e.clientY - r.top, pointer });
-                        }
-                      }}
-                      onMouseLeave={() => setScreenCursor(null)}
-                    >
+                <div
+                  ref={screenContentRef}
+                  className={screenClassNames}
+                  style={{ filter: screenOn ? screenFilter : 'none' }}
+                  onMouseMove={e => {
+                    const r = screenContentRef.current?.getBoundingClientRect();
+                    if (r) {
+                      const pointer = !!(e.target as Element).closest('button, a, [role="option"]');
+                      setScreenCursor({ x: e.clientX - r.left, y: e.clientY - r.top, pointer });
+                    }
+                  }}
+                  onMouseLeave={() => setScreenCursor(null)}
+                >
                       {/* Boot overlay — always full-size, covers content during startup */}
                       {screenOn && bootPhase !== 'idle' && (
                         <div className={`cv-boot-overlay cv-boot-overlay--${bootPhase}`} aria-hidden="true">
@@ -608,7 +594,6 @@ export default function Home() {
                         onSelect={selectSearchResult}
                         inline
                       />
-                    </div>
 
                     {/* Volume OSD */}
                     {screenOn && (
@@ -645,24 +630,15 @@ export default function Home() {
                     <div className="cv-tv-screen-glare" />
                     <div className="cv-tv-screen-curve" />
                     {!screenOn && <div key="off-dot" className="cv-tv-off-dot" />}
-                  </div>
                 </div>
               </div>
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                {/* Brand plate — full width, top of the column */}
-                <div className="cv-tv-brand-plate" style={{ margin: '0 4px' }}>
-                  <div className="cv-tv-brand-mark-strip">
-                    <span style={{ background: '#9a2a2a' }} />
-                    <span style={{ background: '#d4a017' }} />
-                    <span style={{ background: '#1f6f3e' }} />
-                    <span style={{ background: '#2a4a8a' }} />
-                  </div>
-                  <span className="cv-tv-brand-name">Classicverse</span>
-                </div>
+                {/* Top knob: always Volume, regardless of screen. */}
+                <VolumeDial value={volume} onChange={handleVolumeChange} embedded ariaLabel="Volume" />
 
-                {/* Top knob: always the primary tuning/navigation control —
+                {/* Bottom knob: the primary tuning/navigation control —
                     steps through channels at Home, cars (by image) inside Cars.
                     Same roller, same interaction, in both places. */}
                 {view === 'home' ? (
@@ -685,172 +661,146 @@ export default function Home() {
                   />
                 )}
 
-                {/* Bottom knob: always Volume, regardless of screen. */}
-                <VolumeDial value={volume} onChange={handleVolumeChange} embedded ariaLabel="Volume" />
-
                 {/* BRIGHT / CONTRAST — sit on the bezel, outside the knob plate */}
-                <div style={{ display: 'flex', flexDirection: 'row', gap: 24, justifyContent: 'center' }}>
-                  <TvKnob size={54} label="BRIGHT" value={brightness} onChange={setBrightness} />
-                  <TvKnob size={54} label="CONTRAST" value={contrast} onChange={setContrast} />
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'center' }}>
+                  <TvKnob size={30} label="BRIGHT" value={brightness} onChange={setBrightness} />
+                  <TvKnob size={30} label="CONTRAST" value={contrast} onChange={setContrast} />
                 </div>
 
-                {/* SRCH · HOME · INFO row */}
-                <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center', marginTop: 'auto' }}>
-
-                    {/* Search button */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                      <button
-                        type="button"
-                        onClick={() => setSearchOpen(o => !o)}
-                        aria-label="Search cars"
-                        aria-pressed={searchOpen}
-                        style={{
-                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                          background: searchOpen ? '#181614' : '#232120',
-                          boxShadow: searchOpen ? [
-                            'inset 0 4px 10px rgba(0,0,0,0.95)',
-                            'inset 0 2px 4px rgba(0,0,0,0.85)',
-                            '0 1px 0 rgba(255,255,255,0.04)',
-                          ].join(', ') : [
-                            'inset 0 1px 0 rgba(255,255,255,0.18)',
-                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
-                            '0 6px 0 rgba(0,0,0,0.85)',
-                            '0 8px 16px rgba(0,0,0,0.65)',
-                            '0 2px 4px rgba(0,0,0,0.50)',
-                          ].join(', '),
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                          transition: 'box-shadow 200ms, background 200ms',
-                        }}
-                      >
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={{ overflow: 'visible' }}>
-                          <g style={{ filter: searchOpen ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
-                            <circle cx="11" cy="11" r="7" stroke={searchOpen ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" style={{ transition: 'stroke 200ms' }} />
-                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke={searchOpen ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
-                          </g>
-                        </svg>
-                      </button>
+                {/* Speaker grille — perforated dot panel, brand plate centered on it */}
+                <div className="cv-tv-speaker-grille" style={{ margin: '0 4px', flex: 1, minHeight: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div className="cv-tv-brand-plate">
+                    <div className="cv-tv-brand-mark-strip">
+                      <span style={{ background: '#9a2a2a' }} />
+                      <span style={{ background: '#d4a017' }} />
+                      <span style={{ background: '#1f6f3e' }} />
+                      <span style={{ background: '#2a4a8a' }} />
                     </div>
+                    <span className="cv-tv-brand-name">Classicverse</span>
+                  </div>
+                </div>
+
+                {/* HOME · SRCH · INFO · power — all buttons, same row, bottom of the column */}
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', margin: '0 4px', marginTop: 'auto' }}>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: 12 }}>
 
                     {/* HOME: always visible; highlighted whenever the Home desktop is showing */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                       <button
                         type="button"
                         onClick={goHome}
+                        disabled={!screenOn}
                         aria-label="Back to Home"
-                        aria-pressed={view === 'home'}
+                        aria-pressed={activeButton === 'home'}
                         style={{
-                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                          background: view === 'home' ? '#181614' : '#232120',
-                          boxShadow: view === 'home' ? [
-                            'inset 0 4px 10px rgba(0,0,0,0.95)',
-                            'inset 0 2px 4px rgba(0,0,0,0.85)',
-                            '0 1px 0 rgba(255,255,255,0.04)',
-                          ].join(', ') : [
-                            'inset 0 1px 0 rgba(255,255,255,0.18)',
-                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
-                            '0 6px 0 rgba(0,0,0,0.85)',
-                            '0 8px 16px rgba(0,0,0,0.65)',
-                            '0 2px 4px rgba(0,0,0,0.50)',
-                          ].join(', '),
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: screenOn ? 'pointer' : 'default',
+                          background: activeButton === 'home' ? '#1c1512' : '#3a2f26',
+                          boxShadow: circleButtonShadow(activeButton === 'home'),
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                           transition: 'box-shadow 200ms, background 200ms',
                         }}
                       >
                         <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                          <g style={{ filter: view === 'home' ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
-                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
-                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke={view === 'home' ? '#4a9eda' : '#5e5c5a'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                          <g style={{ filter: activeButton === 'home' ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
+                            <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke={activeButton === 'home' ? '#ffffff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
+                            <path d="M4.5 7.5 V15 H13.5 V7.5" stroke={activeButton === 'home' ? '#ffffff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
                           </g>
                         </svg>
                       </button>
                     </div>
 
-                    {/* INFO: open highlighted channel at Home; toggle car detail inside Cars */}
+                    {/* Search button */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
                       <button
                         type="button"
-                        onClick={() => view === 'home' ? openChannel(channelId) : setScreenMode(m => m === 'image' ? 'info' : 'image')}
-                        aria-label={view === 'home' ? 'Open highlighted channel' : (screenMode === 'image' ? 'Show car info' : 'Show car image')}
-                        aria-pressed={view === 'cars' && screenMode === 'info'}
+                        onClick={() => setSearchOpen(true)}
+                        disabled={!screenOn}
+                        aria-label="Search cars"
+                        aria-pressed={activeButton === 'search'}
                         style={{
-                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
-                          background: (view === 'cars' && screenMode === 'info') ? '#181614' : '#232120',
-                          boxShadow: (view === 'cars' && screenMode === 'info') ? [
-                            'inset 0 4px 10px rgba(0,0,0,0.95)',
-                            'inset 0 2px 4px rgba(0,0,0,0.85)',
-                            '0 1px 0 rgba(255,255,255,0.04)',
-                          ].join(', ') : [
-                            'inset 0 1px 0 rgba(255,255,255,0.18)',
-                            'inset 0 -1px 2px rgba(255,255,255,0.06)',
-                            '0 6px 0 rgba(0,0,0,0.85)',
-                            '0 8px 16px rgba(0,0,0,0.65)',
-                            '0 2px 4px rgba(0,0,0,0.50)',
-                          ].join(', '),
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: screenOn ? 'pointer' : 'default',
+                          background: activeButton === 'search' ? '#1c1512' : '#3a2f26',
+                          boxShadow: circleButtonShadow(activeButton === 'search'),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                          transition: 'box-shadow 200ms, background 200ms',
+                        }}
+                      >
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={{ overflow: 'visible' }}>
+                          <g style={{ filter: activeButton === 'search' ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="11" cy="11" r="7" stroke={activeButton === 'search' ? '#ffffff' : '#b8ada2'} strokeWidth="2" style={{ transition: 'stroke 200ms' }} />
+                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke={activeButton === 'search' ? '#ffffff' : '#b8ada2'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* INFO: open highlighted channel at Home; show car detail inside Cars */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchOpen(false);
+                          if (view === 'home') openChannel(channelId, 'info');
+                          else setScreenMode('info');
+                        }}
+                        disabled={!screenOn}
+                        aria-label={view === 'home' ? 'Open highlighted channel' : 'Show car info'}
+                        aria-pressed={activeButton === 'info'}
+                        style={{
+                          width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: screenOn ? 'pointer' : 'default',
+                          background: activeButton === 'info' ? '#1c1512' : '#3a2f26',
+                          boxShadow: circleButtonShadow(activeButton === 'info'),
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                           transition: 'box-shadow 200ms, background 200ms',
                         }}
                       >
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                          <g style={{ filter: (view === 'cars' && screenMode === 'info') ? 'drop-shadow(0 0 2.5px #4a9edabb)' : 'none', transition: 'filter 200ms' }}>
-                            <circle cx="9" cy="4.5" r="1.2" fill={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} style={{ transition: 'fill 200ms' }} />
-                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={(view === 'cars' && screenMode === 'info') ? '#4a9eda' : '#5e5c5a'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
+                          <g style={{ filter: activeButton === 'info' ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
+                            <circle cx="9" cy="4.5" r="1.2" fill={activeButton === 'info' ? '#ffffff' : '#b8ada2'} style={{ transition: 'fill 200ms' }} />
+                            <line x1="9" y1="7.5" x2="9" y2="14" stroke={activeButton === 'info' ? '#ffffff' : '#b8ada2'} strokeWidth="2" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
                           </g>
                         </svg>
                       </button>
                     </div>
 
-                </div>
+                  </div>
 
-                {/* Power button row */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', margin: '0 4px' }}>
-                  {/* Power button — rectangular, outside logo frame */}
-                  <button
-                    type="button"
-                    onClick={() => setPowerState(!screenOn)}
-                    aria-label={screenOn ? 'Turn off' : 'Turn on'}
-                    aria-pressed={screenOn}
-                    style={{
-                      width: 44, height: 28,
-                      borderRadius: 8,
-                      border: 'none',
-                      cursor: 'pointer',
-                      background: screenOn ? '#181614' : '#232120',
-                      boxShadow: screenOn ? [
-                        'inset 0 4px 10px rgba(0,0,0,0.95)',
-                        'inset 0 2px 4px rgba(0,0,0,0.85)',
-                        '0 1px 0 rgba(255,255,255,0.04)',
-                      ].join(', ') : [
-                        'inset 0 1px 0 rgba(255,255,255,0.18)',
-                        'inset 0 -1px 2px rgba(255,255,255,0.06)',
-                        '0 4px 0 rgba(0,0,0,0.85)',
-                        '0 6px 12px rgba(0,0,0,0.65)',
-                        '0 2px 4px rgba(0,0,0,0.50)',
-                      ].join(', '),
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0,
-                      transition: 'box-shadow 200ms, background 200ms',
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                      <g style={{ filter: screenOn ? 'drop-shadow(0 0 2.5px #d4a017bb)' : 'none', transition: 'filter 200ms' }}>
-                        <path
-                          d="M 5.5 4.2 A 6 6 0 1 0 12.5 4.2"
-                          stroke={screenOn ? '#d4a017' : '#5e5c5a'}
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          fill="none"
-                          style={{ transition: 'stroke 200ms' }}
-                        />
-                        <line
-                          x1="9" y1="2" x2="9" y2="7"
-                          stroke={screenOn ? '#d4a017' : '#5e5c5a'}
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          style={{ transition: 'stroke 200ms' }}
-                        />
-                      </g>
-                    </svg>
-                  </button>
+                  {/* Power button — squared off (rounded corners) to stand apart from search/home/info */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                    <button
+                      type="button"
+                      onClick={() => setPowerState(!screenOn)}
+                      aria-label={screenOn ? 'Turn off' : 'Turn on'}
+                      aria-pressed={screenOn}
+                      style={{
+                        width: 40, height: 40, borderRadius: 12, border: 'none', cursor: 'pointer',
+                        background: screenOn ? '#1c1512' : '#3a2f26',
+                        boxShadow: circleButtonShadow(screenOn),
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                        transition: 'box-shadow 200ms, background 200ms',
+                      }}
+                    >
+                      <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
+                        <g style={{ filter: screenOn ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
+                          <path
+                            d="M 5.5 4.2 A 6 6 0 1 0 12.5 4.2"
+                            stroke={screenOn ? '#ffffff' : '#b8ada2'}
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            fill="none"
+                            style={{ transition: 'stroke 200ms' }}
+                          />
+                          <line
+                            x1="9" y1="2" x2="9" y2="7"
+                            stroke={screenOn ? '#ffffff' : '#b8ada2'}
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            style={{ transition: 'stroke 200ms' }}
+                          />
+                        </g>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
 
