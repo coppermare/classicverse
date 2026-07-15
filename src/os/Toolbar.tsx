@@ -1,6 +1,6 @@
 'use client';
 
-import { RetroButton, Divider, RADIUS, FACE, RAISED, WELL } from './ui';
+import { RetroButton, Divider, RADIUS, FACE, WELL } from './ui';
 import type { OSNode } from './types';
 import * as sfx from './sound';
 
@@ -28,10 +28,21 @@ export default function Toolbar({
     <div style={{
       position: 'absolute', top: 0, left: 0, right: 0, zIndex: 12,
       display: 'flex', alignItems: 'center', gap: 4,
-      padding: '5px 7px',
+      // Generous at the sides: the bar runs the full width of a tube with 16px
+      // rounded corners, so anything tight to the edge sits in the curve.
+      padding: '5px 16px',
       background: FACE,
-      boxShadow: RAISED,
-      borderRadius: `${RADIUS}px ${RADIUS}px 0 0`,
+      // Deliberately NOT the RAISED bevel. That wraps an outer ring around all
+      // four sides and casts a drop shadow, which turned the bar into a discrete
+      // panel sitting on the glass — and its own corner radius left the screen
+      // showing through at the top corners, where the tube's radius is far
+      // larger. Running edge to edge with only a lit top and a shaded bottom
+      // makes it part of the picture; the screen's own corners clip it.
+      boxShadow: [
+        'inset 0 1px 0 rgba(255,255,255,0.7)',
+        '0 1px 0 #6f6b64',
+        '0 2px 4px rgba(0,0,0,0.22)',
+      ].join(', '),
     }}>
       <RetroButton icon label="Back" disabled={!canGoBack} onClick={onBack} title="Back">
         <Arrow dir="left" muted={!canGoBack} />
@@ -62,7 +73,7 @@ export default function Toolbar({
           const last = i === trail.length - 1;
           return (
             <span key={n.id + i} style={{ display: 'flex', alignItems: 'center', gap: 2, minWidth: 0 }}>
-              {i > 0 && <span aria-hidden="true" style={{ color: '#9a958c', fontSize: 11 }}>›</span>}
+              {i > 0 && <span aria-hidden="true" style={{ color: '#9a958c', fontSize: 12 }}>/</span>}
               <button
                 type="button"
                 disabled={last}

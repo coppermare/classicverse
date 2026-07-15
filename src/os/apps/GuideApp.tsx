@@ -2,7 +2,7 @@
 
 import { isFolder, type AppProps, type OSNode } from '../types';
 import { childPath } from '../path';
-import { Bevel, TitleBar, RetroButton, RADIUS, WELL } from '../ui';
+import { RetroButton, RADIUS } from '../ui';
 import * as sfx from '../sound';
 
 /**
@@ -12,6 +12,9 @@ import * as sfx from '../sound';
  * Guide, correctly counted, with no edit to this file. That is the point of it —
  * it's the proof that the registry is the system rather than a lookup table the
  * screens happen to agree with.
+ *
+ * The page IS the screen, not a card floating on it — and the address trail
+ * already names it, so it carries no title bar of its own.
  */
 
 function countLeaves(node: OSNode, depth = 0): number {
@@ -24,13 +27,11 @@ export default function GuideApp({ os }: AppProps) {
   const top = os.root.children();
 
   return (
-    <div style={{ position: 'absolute', inset: 0, padding: '40px 12px 12px', display: 'flex' }}>
-      <Bevel style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, padding: 3 }}>
-        <TitleBar title="Guide — What's on" />
-        <div style={{
-          flex: 1, minHeight: 0, overflowY: 'auto', background: '#fff',
-          borderRadius: `0 0 ${RADIUS}px ${RADIUS}px`, boxShadow: WELL, padding: 10,
-        }}>
+    <div style={{
+      position: 'absolute', inset: 0, paddingTop: 44, overflowY: 'auto',
+      background: 'linear-gradient(180deg, #fdfbf5 0%, #f4efe2 100%)',
+    }}>
+        <div style={{ padding: '18px 22px 26px' }}>
           {top.map((node) => {
             const path = childPath('/', node.id);
             const children = isFolder(node) ? node.children() : [];
@@ -86,7 +87,6 @@ export default function GuideApp({ os }: AppProps) {
             );
           })}
         </div>
-      </Bevel>
     </div>
   );
 }

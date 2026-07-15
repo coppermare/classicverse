@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef, Suspense } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore, Suspense } from 'react';
 import RollerDial, { type RollerDialOption } from '@/components/RollerDial';
 import VolumeDial from '@/components/VolumeDial';
 import { DESKTOP } from '@/os/registry';
@@ -10,6 +10,8 @@ import { isFolder, type OSApi, type OSNode } from '@/os/types';
 import FolderView from '@/os/FolderView';
 import Toolbar from '@/os/Toolbar';
 import SearchPanel from '@/os/SearchPanel';
+import ScreenCursor from '@/os/ScreenCursor';
+import { getTuner, getServerTuner, subscribeTuner } from '@/os/tuner';
 import * as sfx from '@/os/sound';
 
 /* ── Round TV knob (BRIGHT / CONTRAST) ── */
@@ -111,7 +113,6 @@ function Classicverse() {
   const [selection, setSelection] = useState<{ path: string; id: string } | null>(null);
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [volumeChanging, setVolumeChanging] = useState(false);
-  const [screenCursor, setScreenCursor] = useState<{ x: number; y: number; pointer: boolean } | null>(null);
 
   const [screenOn, setScreenOn] = useState(true);
   const [turningOff, setTurningOff] = useState(false);
@@ -187,25 +188,36 @@ function Classicverse() {
   }, [nav.path]);
 
   /* ── The tuning roller ── */
-  // In a folder it steps the folder's contents; in an app it steps that app's
-  // siblings (the next car, the next win). One control, always tuning "the list
-  // you're looking at".
+  // An app can claim the roller for its own list (the Radio publishes its
+  // stations). Otherwise it steps whatever the screen is a list of: a folder's
+  // contents, or an app's siblings — the next car, the next win. One control,
+  // always tuning "the list you're looking at".
+  const appTuner = useSyncExternalStore(subscribeTuner, getTuner, getServerTuner);
+
   const rollerNodes = useMemo(
     () => (isFolder(node) ? node.children() : siblings),
     [node, siblings],
   );
-  const rollerOptions = useMemo<RollerDialOption[]>(
+  const nodeOptions = useMemo<RollerDialOption[]>(
     () => rollerNodes.map((n) => ({ id: n.id, mark: n.name.slice(0, 3).toUpperCase(), count: 0 })),
     [rollerNodes],
   );
-  const rollerSelected = isFolder(node) ? selectedId : node.id;
+  const tunerOptions = useMemo<RollerDialOption[]>(
+    () => (appTuner ? appTuner.options.map((o) => ({ id: o.id, mark: o.mark, count: 0 })) : []),
+    [appTuner],
+  );
+
+  const rollerOptions = appTuner ? tunerOptions : nodeOptions;
+  const rollerSelected = appTuner ? appTuner.selectedId : isFolder(node) ? selectedId : node.id;
+  const rollerLabel = appTuner ? appTuner.ariaLabel : 'Tuning';
 
   const onRoller = useCallback((id: string | null) => {
     if (!id) return;
+    if (appTuner) { appTuner.onSelect(id); return; }
     if (isFolder(node)) { setSelectedId(id); return; }
     // Inside an app the roller navigates directly — there is nothing to preview.
     navigate(`../${id}`);
-  }, [node, navigate, setSelectedId]);
+  }, [appTuner, node, navigate, setSelectedId]);
 
   /* ── Keyboard ── */
   useEffect(() => {
@@ -358,14 +370,6 @@ function Classicverse() {
                   ref={screenContentRef}
                   className={screenClass}
                   style={{ filter: screenOn ? screenFilter : 'none' }}
-                  onMouseMove={(e) => {
-                    const r = screenContentRef.current?.getBoundingClientRect();
-                    if (r) {
-                      const pointer = !!(e.target as Element).closest('button, a, input, [role="option"], [role="slider"]');
-                      setScreenCursor({ x: e.clientX - r.left, y: e.clientY - r.top, pointer });
-                    }
-                  }}
-                  onMouseLeave={() => setScreenCursor(null)}
                 >
                   {screenOn && bootPhase === 'idle' && (
                     <>
@@ -443,18 +447,7 @@ function Classicverse() {
                     </div>
                   )}
 
-                  {screenOn && screenCursor && (
-                    <div style={{
-                      position: 'absolute',
-                      left: screenCursor.pointer ? screenCursor.x - 4 : screenCursor.x,
-                      top: screenCursor.pointer ? screenCursor.y - 1 : screenCursor.y,
-                      pointerEvents: 'none', zIndex: 99,
-                    }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={screenCursor.pointer ? '/cursors/pointer.png' : '/cursors/arrow.png'} alt=""
-                        width={32} height={32} style={{ display: 'block', imageRendering: 'pixelated' }} />
-                    </div>
-                  )}
+                  <ScreenCursor hostRef={screenContentRef} enabled={screenOn} />
 
                   {screenOn && <div className={`cv-screen-glitch${screenGlitch ? ' cv-screen-glitch--active' : ''}`} aria-hidden="true" />}
 
@@ -476,7 +469,7 @@ function Classicverse() {
                   onSelect={onRoller}
                   embedded
                   showAll={false}
-                  ariaLabel="Tuning"
+                  ariaLabel={rollerLabel}
                 />
 
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'center' }}>

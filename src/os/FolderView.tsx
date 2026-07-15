@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import PixelFolder from '@/components/PixelFolder';
-import ChannelIcon from '@/components/ChannelIcon';
-import { isFolder, type FolderNode, type IconSpec, type OSNode } from './types';
-import { RADIUS, RAISED } from './ui';
+import { useEffect, useMemo, useRef } from 'react';
+import { isFolder, type FolderNode, type OSNode } from './types';
+import PixelArt from './PixelArt';
+import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
 import * as sfx from './sound';
 
 /**
@@ -13,78 +12,60 @@ import * as sfx from './sound';
  *
  * Two layouts: `icons` for a desktop of folders and apps, `gallery` for a dense
  * grid of photographs. Folders and apps are drawn differently on purpose — a
- * folder is a manila folder you go *into*, an app is a program tile you *run* —
- * which is the distinction every desktop OS makes and the one that tells you
- * what a click will do before you make it.
+ * folder is a manila folder you go *into*, an app is the program's own icon that
+ * you *run* — which is the distinction every desktop of the era made, and the one
+ * that tells you what a click will do before you make it.
  */
 
-const FOLDER_SCALE = 2.6;
-/** Emblem sized off the folder's own 44×36 pixel grid so it scales with it. */
-const EMBLEM = 19 * FOLDER_SCALE;
-
-function Emblem({ icon, size }: { icon?: IconSpec; size: number }) {
-  if (!icon) return null;
-  switch (icon.kind) {
-    case 'glyph':
-      return <ChannelIcon id={icon.id} size={size} />;
-    case 'image':
-      return (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={icon.src} alt="" style={{
-          maxWidth: size * 1.7, maxHeight: size, width: 'auto', height: 'auto',
-          objectFit: 'contain', display: 'block',
-        }} />
-      );
-    case 'label':
-      return (
-        <span style={{
-          font: `800 ${Math.round(size * 0.46)}px/1 var(--font-sans)`,
-          color: '#2b2013', letterSpacing: '-0.02em',
-        }}>
-          {icon.text}
-        </span>
-      );
-    case 'photo':
-      return (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={icon.src} alt="" loading="lazy" style={{
-          width: size * 1.5, height: size, objectFit: 'cover', display: 'block',
-          borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.5)',
-        }} />
-      );
-  }
-}
-
-/** An app tile — a beveled program face, so it never reads as a folder. */
-function AppTile({ node }: { node: OSNode }) {
-  return (
-    <div style={{
-      width: 44 * FOLDER_SCALE, height: 36 * FOLDER_SCALE,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      opacity: node.enabled === false ? 0.5 : 1,
-    }}>
-      <div style={{
-        width: 34 * FOLDER_SCALE * 0.86, height: 30 * FOLDER_SCALE * 0.86,
-        borderRadius: RADIUS + 1,
-        background: 'linear-gradient(180deg, #e8e4dc 0%, #cbc6bd 100%)',
-        boxShadow: `${RAISED}, 0 3px 6px rgba(0,0,0,0.35)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <Emblem icon={node.icon} size={EMBLEM * 0.82} />
-      </div>
-    </div>
-  );
-}
+/** One CSS pixel per grid cell × this. Small enough to read as fine pixel art. */
+const PX = 1.8;
+/** Apps are drawn from a 32×32 emblem, so they need a bigger multiplier to carry
+ *  the same visual weight as a folder. */
+const APP_PX = 2.9;
 
 function NodeArt({ node }: { node: OSNode }) {
-  if (isFolder(node)) {
+  const icon = node.icon;
+  const enabled = node.enabled !== false;
+
+  // A marque or a photograph can't be redrawn as pixel art — those stay as
+  // images, letterboxed onto the folder body.
+  if (icon?.kind === 'image' || icon?.kind === 'photo') {
+    const box = isFolder(node) ? { w: FOLDER_W * PX, h: FOLDER_H * PX } : { w: 40 * APP_PX, h: 34 * APP_PX };
     return (
-      <PixelFolder enabled={node.enabled !== false} scale={FOLDER_SCALE}>
-        <Emblem icon={node.icon} size={EMBLEM} />
-      </PixelFolder>
+      <div style={{ position: 'relative', width: box.w, height: box.h, opacity: enabled ? 1 : 0.5 }}>
+        {isFolder(node) && <PixelArt grid={folderGrid(null, enabled)} scale={PX} />}
+        <div style={{
+          position: 'absolute', inset: 0, top: isFolder(node) ? 15 * PX : 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
+        }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={icon.src}
+            alt=""
+            loading="lazy"
+            style={icon.kind === 'photo'
+              ? { width: 48 * PX, height: 32 * PX, objectFit: 'cover', display: 'block', boxShadow: '0 0 0 1px #241c0a' }
+              // Bounded by the body's height, not a fixed square: a tall badge
+              // (the Ferrari shield) and a wide wordmark (Williams) each fill
+              // what they can of the same box.
+              : { maxWidth: 46 * PX, maxHeight: 34 * PX, width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }}
+          />
+        </div>
+      </div>
     );
   }
-  return <AppTile node={node} />;
+
+  const emblem = icon?.kind === 'label' ? labelEmblem(icon.text)
+    : icon?.kind === 'glyph' ? emblemFor(icon.id)
+    : null;
+
+  // Folder: emblem composited into the folder's own grid, so the whole icon is
+  // one drawing on one lattice.
+  if (isFolder(node)) return <PixelArt grid={folderGrid(emblem, enabled)} scale={PX} />;
+
+  // App: just its icon, the way a program icon sat on a real desktop.
+  if (!emblem) return <div style={{ width: 32 * APP_PX, height: 32 * APP_PX }} />;
+  return <PixelArt grid={emblem} scale={APP_PX} style={{ opacity: enabled ? 1 : 0.5 }} />;
 }
 
 interface Props {
@@ -95,7 +76,10 @@ interface Props {
 }
 
 export default function FolderView({ folder, selectedId, onSelect, onOpen }: Props) {
-  const children = folder.children();
+  // Children are built lazily, so calling this on every render rebuilt the whole
+  // list — 250 nodes for a Ferrari season, each re-deriving its thumbnail URL —
+  // every time anything re-rendered, hovering a tile included.
+  const children = useMemo(() => folder.children(), [folder]);
   const activeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -121,7 +105,9 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
   if (gallery) {
     return (
       <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', background: '#14110d', paddingTop: 44 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        {/* Gutters, so the tiles read as separate photographs rather than one
+            butted-together sheet — and so the selection ring has room to sit. */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7, padding: '7px 8px 10px' }}>
           {children.map((node) => {
             const active = node.id === selectedId;
             const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
@@ -137,7 +123,10 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
                 style={{
                   position: 'relative', display: 'block', padding: 0, border: 'none',
                   aspectRatio: '4 / 3', overflow: 'hidden', cursor: 'pointer', background: '#1a1612',
-                  boxShadow: active ? 'inset 0 0 0 2px #d4a017' : 'inset 0 0 0 1px rgba(255,255,255,0.08)',
+                  borderRadius: 3,
+                  boxShadow: active
+                    ? 'inset 0 0 0 2px #d4a017, 0 0 0 1px rgba(0,0,0,0.5)'
+                    : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
                 }}
               >
                 {photo ? (
@@ -193,17 +182,16 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
                 }}
               >
                 <NodeArt node={node} />
+                {/* Name only. The subtitle repeated what the icon and the folder
+                    already said, and a second line under every icon turned the
+                    desktop into a wall of text. It still rides along in search
+                    results and the Guide, where it disambiguates. */}
                 <span style={{
                   font: '600 14px/1.25 var(--font-sans)',
                   color: off ? '#6f675c' : '#2c2620', textAlign: 'center',
                 }}>
                   {node.name}
                 </span>
-                {node.subtitle && (
-                  <span style={{ font: '400 12px/1.2 var(--font-sans)', color: '#6f675c', textAlign: 'center' }}>
-                    {off ? 'Coming soon' : node.subtitle}
-                  </span>
-                )}
               </button>
             );
           })}

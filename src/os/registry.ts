@@ -41,34 +41,23 @@ function carNode(car: CarRecord): AppNode {
   };
 }
 
-function decadeFolders(): FolderNode[] {
-  const byDecade = new Map<number, CarRecord[]>();
-  for (const car of [...CARS].sort((a, b) => a.year - b.year)) {
-    const d = Math.floor(car.year / 10) * 10;
-    if (!byDecade.has(d)) byDecade.set(d, []);
-    byDecade.get(d)!.push(car);
-  }
-  return [...byDecade.entries()].map(([decade, cars]) => ({
-    id: `${decade}s`,
-    kind: 'folder',
-    name: `${decade}s`,
-    subtitle: `${cars.length} ${cars.length === 1 ? 'car' : 'cars'}`,
-    icon: { kind: 'label', text: `${String(decade).slice(2)}s` },
-    layout: 'gallery',
-    keywords: cars.map((c) => `${c.hero_car_name} ${c.manufacturer}`).join(' '),
-    children: () => cars.map(carNode),
-  }));
-}
-
+/**
+ * The century opens straight onto every car, as one gallery.
+ *
+ * It used to sit behind a row of decade folders, which meant two clicks and a
+ * near-empty screen before you saw a single car — and the decades carried no
+ * information the year on each photo didn't already give you. The archive's whole
+ * point is the run of a hundred machines in order, so show it.
+ */
 const carsFolder: FolderNode = {
   id: 'cars',
   kind: 'folder',
   name: 'A century of cars',
   subtitle: '1885–1984',
   icon: { kind: 'glyph', id: 'cars' },
-  layout: 'icons',
-  keywords: 'archive automobile timeline history century',
-  children: decadeFolders,
+  layout: 'gallery',
+  keywords: 'archive automobile timeline history century decade',
+  children: () => [...CARS].sort((a, b) => a.year - b.year).map(carNode),
 };
 
 /* ── F1 Archive: team folders → one win each ── */

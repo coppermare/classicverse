@@ -5,14 +5,14 @@ import { childPath, ROOT } from './path';
  * Global search over the whole node tree.
  *
  * The index is built by walking the registry, so everything in the system is
- * searchable the moment it's registered — cars, wins, decades, stations, apps.
+ * searchable the moment it's registered — cars, wins, stations, apps.
  * There is no per-module search code and no separate list to keep in step.
  */
 
 export interface Entry {
   path: string;
   node: OSNode;
-  /** Where it lives, e.g. "A century of cars › 1960s". */
+  /** Where it lives, e.g. "F1 Archive / Ferrari". */
   context: string;
   haystack: string;
   /** Depth from root — used to prefer places over individual items. */
@@ -27,7 +27,7 @@ export function buildIndex(root: FolderNode, maxDepth = 3): Entry[] {
       out.push({
         path,
         node,
-        context: trail.join(' › '),
+        context: trail.join(' / '),
         depth,
         haystack: [node.name, node.subtitle, node.keywords, node.id].filter(Boolean).join(' ').toLowerCase(),
       });

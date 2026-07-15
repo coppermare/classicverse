@@ -16,7 +16,7 @@ import type { ComponentType } from 'react';
  */
 
 export type IconSpec =
-  /** A drawn glyph from ChannelIcon. */
+  /** A pixel-art emblem from the icon set (see os/icons.ts). */
   | { kind: 'glyph'; id: string }
   /** A logo/marque asset — letterboxed, keeps its own aspect ratio. */
   | { kind: 'image'; src: string }

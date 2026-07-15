@@ -8,25 +8,53 @@ import * as sfx from './sound';
  *
  * Every control in the OS is built from these, so the whole set looks and sounds
  * like one machine rather than a collection of screens. The look is the classic
- * 90s bevel: a raised face lit from the top-left that inverts to a sunken one
- * while held — the depth is drawn with box-shadow rings rather than borders, so
- * a control never changes size when pressed and the row can't jitter.
+ * 90s bevel: a raised face lit from above that inverts to a sunken one while
+ * held — the depth is drawn with box-shadow rings rather than borders, so a
+ * control never changes size when pressed and the row can't jitter.
  */
 
 /** One radius, applied to all four corners of every control in the system. */
 export const RADIUS = 4;
 
 export const FACE = '#c8c4bc';
-export const FACE_LIT = '#d6d2ca';
 export const INK = '#1c1a17';
 
-export const RAISED =
-  'inset -1px -1px 0 0 #0a0a0a, inset 1px 1px 0 0 #ffffff, inset -2px -2px 0 0 #85817a, inset 2px 2px 0 0 #eeeae2';
-export const SUNKEN =
-  'inset 1px 1px 0 0 #0a0a0a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #85817a, inset -2px -2px 0 0 #eeeae2';
+/**
+ * The bevels.
+ *
+ * The obvious way to draw a 90s bevel is four hard-edged inset shadows offset by
+ * 1px and 2px — but an inset shadow with an offset and no blur does not follow a
+ * rounded corner. It's the shape translated, so each corner is left with a
+ * crescent: the top-left reads square while the bottom-right reads round, and the
+ * radius looks inconsistent even though every corner is set to the same value.
+ *
+ * So the crisp edges here are spread-only rings (`0 0 0 Npx`), which trace the
+ * border radius exactly on all four corners, and the direction of the light comes
+ * from the face gradient rather than from offset shadows. Blurred shadows are
+ * fine to offset — the blur hides the crescent — so depth still comes from those.
+ */
+const EDGE = '#6f6b64';
+
+export const FACE_RAISED = 'linear-gradient(180deg, #efebe3 0%, #dad6ce 52%, #c5c1b9 100%)';
+export const FACE_SUNKEN = 'linear-gradient(180deg, #b4b0a8 0%, #c7c3bb 55%, #d3cfc7 100%)';
+
+export const RAISED = [
+  'inset 0 0 0 1px rgba(255,255,255,0.75)',
+  `0 0 0 1px ${EDGE}`,
+  '0 1px 2px rgba(0,0,0,0.30)',
+].join(', ');
+
+export const SUNKEN = [
+  'inset 0 1px 3px rgba(0,0,0,0.42)',
+  'inset 0 0 0 1px rgba(0,0,0,0.16)',
+  `0 0 0 1px ${EDGE}`,
+].join(', ');
+
 /** A recessed well for content — the inverse of a button face. */
-export const WELL =
-  'inset 1px 1px 0 0 #85817a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 3px rgba(0,0,0,0.22)';
+export const WELL = [
+  'inset 0 1px 3px rgba(0,0,0,0.24)',
+  `inset 0 0 0 1px rgba(0,0,0,0.20)`,
+].join(', ');
 
 interface ButtonProps {
   onClick?: () => void;
@@ -70,7 +98,7 @@ export function RetroButton({
         padding: icon ? 0 : '0 12px',
         border: 'none',
         borderRadius: RADIUS,
-        background: disabled ? '#bdb9b1' : down ? FACE : FACE_LIT,
+        background: disabled ? '#c2beb6' : down ? FACE_SUNKEN : FACE_RAISED,
         boxShadow: down ? SUNKEN : RAISED,
         color: disabled ? '#87837c' : INK,
         font: '600 12px/1 var(--font-sans)',
