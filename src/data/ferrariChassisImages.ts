@@ -1,5 +1,6 @@
 import type { ChassisImage, FerrariWin } from '@/types/f1';
 import { WIN_IMAGES } from '@/data/ferrariWinImages';
+import { toThumb } from '@/lib/wikimedia';
 
 // One freely-licensed Wikimedia Commons photo per winning Ferrari chassis (58 total).
 // Every one of the 250 wins maps to its chassis here, so each win entry shows a real
@@ -67,35 +68,13 @@ export const CHASSIS_IMAGES: Record<string, ChassisImage> = {
   'SF-26': { src: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Ferrari_SF-26_-_Charles_Leclerc_approaches_Spoon_Curve_at_Suzuka_during_the_2026_Japanese_GP_%2855194289242%29.jpg', license: 'CC BY-SA 4.0', creator: 'Martin Lee from London, UK', attribution_url: 'https://commons.wikimedia.org/wiki/File:Ferrari_SF-26_-_Charles_Leclerc_approaches_Spoon_Curve_at_Suzuka_during_the_2026_Japanese_GP_(55194289242).jpg' },
 };
 
-// Wikimedia serves full-resolution originals (often several MB) which load
-// slowly when scrubbing through wins. Rewrite each original upload URL to its
-// scaled thumbnail (`/thumb/<h>/<hh>/<file>/<width>px-<file>`) so images are
-// ~10–30× smaller and CDN-cached — they change near-instantly. The data files
-// keep the canonical original URLs (for attribution); compression is applied
-// only at read time.
-// 960 is one of Commons' standard responsive thumbnail buckets, so these
-// thumbnails are the ones it reliably pre-generates and CDN-caches.
-const THUMB_WIDTH = 960;
-export function toThumb(src: string, width = THUMB_WIDTH): string {
-  const m = src.match(
-    /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/commons)\/([0-9a-f])\/([0-9a-f]{2})\/(.+)$/,
-  );
-  if (!m) return src; // already a thumb or a non-Commons URL — leave as is
-  const [, base, h1, h2, file] = m;
-  return `${base}/thumb/${h1}/${h2}/${file}/${width}px-${file}`;
+function compress(img: ChassisImage | null, width?: number): ChassisImage | null {
+  return img ? { ...img, src: toThumb(img.src, width) } : null;
 }
 
-function compress(img: ChassisImage | null): ChassisImage | null {
-  return img ? { ...img, src: toThumb(img.src) } : null;
-}
-
-export function getChassisImage(chassis: string): ChassisImage | null {
-  return compress(CHASSIS_IMAGES[chassis] ?? null);
-}
-
-export function getWinImage(win: FerrariWin): ChassisImage | null {
+export function getWinImage(win: FerrariWin, width?: number): ChassisImage | null {
   // Prefer a photo specific to this individual win; fall back to the car's
-  // per-chassis image if no per-win image was sourced. Both are served as
-  // compressed thumbnails.
-  return compress(WIN_IMAGES[win.number] ?? CHASSIS_IMAGES[win.chassis] ?? null);
+  // per-chassis image if no per-win image was sourced. Win images are already
+  // local and pre-compressed, so toThumb is a no-op for them.
+  return compress(WIN_IMAGES[win.number] ?? CHASSIS_IMAGES[win.chassis] ?? null, width);
 }

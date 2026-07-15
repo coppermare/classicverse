@@ -453,55 +453,6 @@ export const CARS: CarRecord[] = [
     review_status: 'reviewed',
   },
   {
-    year: 1994,
-    hero_car_name: 'F1',
-    manufacturer: 'McLaren Automotive',
-    country: 'United Kingdom',
-    era: 'Modern Classic',
-    category: 'Road-going supercar',
-    production_start_year: 1992,
-    production_end_year: 1998,
-    exact_date: '1994-03-31',
-    date_precision: 'month',
-    selection_basis: 'production_start',
-    why_this_year:
-      'Although deliveries of the McLaren F1 began in 1992, the car achieved its defining milestone in 1994 when it set an unrestricted production car top speed record of 386.4 km/h at Volkswagen\'s Ehra-Lessien test track — a record that stood for nine years.',
-    why_iconic:
-      'The McLaren F1 held the production car top speed record from 1994 to 2005. Its central driving position, gold-lined engine bay, and carbon-fibre monocoque construction pushed the boundaries of what a road car could be without racing-car regulations to guide it. Gordon Murray designed it with the explicit aim that it should need no successor.',
-    verified_facts: [
-      'The McLaren F1\'s central driver\'s seat position — with one passenger seat to each side and slightly behind the driver — was Gordon Murray\'s solution to placing the driver on the car\'s centreline for optimal weight distribution and visibility.',
-      'The engine bay is lined with gold foil: gold\'s thermal reflectivity is superior to aluminium or other metals at low weight, and the quantity required cost approximately £7,000 per car.',
-      'The BMW S70/2 engine, developed specifically for the F1 by BMW Motorsport engineer Paul Rosche, displaces 6,064 cc and produced 627 hp in naturally aspirated form — no turbocharger was permitted by Murray\'s brief.',
-    ],
-    historical_context:
-      'The early 1990s saw the Ferrari F40 and Lamborghini Diablo competing for the title of fastest road car, both relying on turbocharged engines and relatively conventional construction. Gordon Murray, fresh from designing Ayrton Senna\'s world championship-winning McLaren MP4/4 Formula One car, believed a road car could be designed to a purer engineering standard than a racing car constrained by regulations. The F1 was conceived without a cost ceiling or homologation requirement — a condition that allowed Murray and his team to adopt solutions (gold-lined engine bay, titanium wheel bolts, bespoke carbon-fibre weave) that no production car had previously employed.',
-    short_description:
-      'Gordon Murray designed the McLaren F1 without a budget ceiling or racing regulations to constrain him, producing a naturally aspirated 627-hp road car with a central driving seat, gold-lined engine bay, and a top speed record that stood for nine years. Only 106 were built.',
-    long_description:
-      'Gordon Murray had been thinking about his ideal road car since the 1970s and finally had the resources to build it when McLaren\'s Ron Dennis agreed to back the project in 1988. Murray\'s specification list was absolute: no turbocharger (forced induction compromised throttle response and felt dishonest), no traction control, no anti-lock brakes in the original configuration, and a three-seat layout with the driver on the centreline — a position that gave the driver equal peripheral vision on each side and symbolic priority over passengers.\n\nThe BMW S70/2 engine was purpose-developed after Murray approached several manufacturers. Paul Rosche at BMW Motorsport agreed to produce a 6.1-litre naturally aspirated V12 that met Murray\'s specific requirements: narrow angle between cylinder banks (to fit the engine bay), a high redline, and complete reliability without modification. The engine produces 627 hp and 479 lb-ft of torque through a 6-speed manual gearbox driving the rear wheels.\n\nThe carbon-fibre monocoque was engineered to racing-car standards and manufactured at McLaren\'s Woking facility. Every component was weighed before installation; the kerb weight of 1,138 kg was achieved without recourse to stripped trim or absent sound insulation — the car was designed to be genuinely comfortable for long journeys. The gold foil in the engine bay reflects heat away from the carbon-fibre structure rather than into it, a solution Murray adopted after testing showed conventional insulation added unacceptable weight. Only 106 road cars and 28 racing variants were completed.',
-    source_urls: [
-      {
-        title: 'McLaren Automotive — F1 heritage',
-        url: 'https://www.mclaren.com/automotive/heritage/f1/',
-        tier: 2,
-      },
-    ],
-    image_url: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Mclaren_F1_1.jpg',
-    image_license: 'CC BY-SA 4.0',
-    image_creator: 'Calreyn88',
-    image_attribution_url: 'https://commons.wikimedia.org/wiki/File:Mclaren_F1_1.jpg',
-    alternate_cars: [
-      {
-        name: 'Ferrari F40',
-        manufacturer: 'Ferrari',
-        reason:
-          'The Ferrari F40 (1987) preceded the McLaren F1 as the definitive road-legal supercar of its era, using a twin-turbocharged V8, but was surpassed in speed and engineering ambition by the F1.',
-      },
-    ],
-    confidence_level: 'medium',
-    review_status: 'reviewed',
-  },
-  {
     "year": 1886,
     "hero_car_name": "Daimler Motor Carriage",
     "manufacturer": "Daimler",

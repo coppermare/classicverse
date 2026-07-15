@@ -177,8 +177,14 @@ interface RollerDialProps {
 }
 
 /**
- * Same roller-drum physics and visuals as RollerKnob, but without the
- * display-glass "screen" above it — just the ridged wheel itself.
+ * The ridged roller wheel — the TV's physical tuning drum.
+ *
+ * The wheel is a pure INPUT: its rotation is driven only by dragging it, never
+ * by `selectedId`. Navigating on the screen (clicking a folder, hovering a
+ * tile) changes the selection without spinning the drum, so the data flow stays
+ * one-way — knob → screen — exactly like the chrome buttons. The selection is
+ * still tracked logically, so grabbing the wheel always resumes from whatever
+ * is currently selected rather than from a stale position.
  */
 export default function RollerDial({ options: rawOptions, selectedId, onSelect, embedded, showAll = true, ariaLabel = 'Selector' }: RollerDialProps) {
   const options = useMemo<RollerDialOption[]>(() => (
@@ -192,12 +198,15 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
   const [pillSize, setPillSize] = useState({ width: 0, height: 0 });
 
   const selectedIndexRef = useRef(selectedIndex);
-  const smoothIndexRef = useRef<number>(selectedIndex);
-  const [smoothIndex, setSmoothIndex] = useState<number>(selectedIndex);
+
+  // Continuous wheel rotation, in "steps". Only a drag ever writes to this.
+  const rotationRef = useRef(0);
+  const [rotation, setRotation] = useState(0);
 
   const dragRef = useRef<{
     startX: number;
-    startSmoothIndex: number;
+    startIndex: number;
+    startRotation: number;
     lastIndex: number;
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -224,28 +233,6 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
   }, []);
 
   useEffect(() => {
-    let raf: number;
-    const step = () => {
-      if (!dragRef.current) {
-        const cur = smoothIndexRef.current;
-        const tgt = selectedIndexRef.current;
-        const d = tgt - cur;
-        if (Math.abs(d) > 0.005) {
-          const next = cur + d * 0.22;
-          smoothIndexRef.current = next;
-          setSmoothIndex(next);
-        } else if (cur !== tgt) {
-          smoothIndexRef.current = tgt;
-          setSmoothIndex(tgt);
-        }
-      }
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  useEffect(() => {
     const el = pillRef.current;
     if (!el) return;
     const ro = new ResizeObserver(entries => {
@@ -256,13 +243,6 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
     return () => ro.disconnect();
   }, []);
 
-  const prevIndexRef = useRef(selectedIndex);
-  useEffect(() => {
-    if (prevIndexRef.current === selectedIndex) return;
-    prevIndexRef.current = selectedIndex;
-    if (!dragRef.current) playTick();
-  }, [selectedIndex]);
-
   const selectIndex = useCallback((index: number) => {
     const option = options[clamp(index, 0, options.length - 1)];
     if (!option) return;
@@ -271,39 +251,51 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     e.currentTarget.setPointerCapture(e.pointerId);
+    // Anchor the drag to whatever is selected RIGHT NOW, so a drag that follows
+    // an on-screen selection change continues from there instead of snapping
+    // back to where the wheel was last left.
     dragRef.current = {
       startX: e.clientX,
-      startSmoothIndex: smoothIndexRef.current,
-      lastIndex: Math.round(smoothIndexRef.current),
+      startIndex: selectedIndexRef.current,
+      startRotation: rotationRef.current,
+      lastIndex: selectedIndexRef.current,
     };
     setIsDragging(true);
   }, []);
 
+  // Rotation tracks how far the selection actually travelled, so the ridges stop
+  // turning once the drag runs past either end of the list.
+  const applyDrag = useCallback((clientX: number) => {
+    const d = dragRef.current;
+    if (!d) return null;
+    const dx = clientX - d.startX;
+    const rawIndex = clamp(d.startIndex - dx / SLOT_WIDTH, 0, options.length - 1);
+    const next = d.startRotation + (rawIndex - d.startIndex) * RIDGES_PER_STEP;
+    rotationRef.current = next;
+    setRotation(next);
+    return rawIndex;
+  }, [options.length]);
+
   const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.startX;
-    const rawIndex = clamp(dragRef.current.startSmoothIndex - dx / SLOT_WIDTH, 0, options.length - 1);
-    smoothIndexRef.current = rawIndex;
-    setSmoothIndex(rawIndex);
+    const rawIndex = applyDrag(e.clientX);
+    if (rawIndex === null || !dragRef.current) return;
     const newIndex = Math.round(rawIndex);
     if (newIndex !== dragRef.current.lastIndex) {
       playTick();
       dragRef.current.lastIndex = newIndex;
       selectIndex(newIndex);
     }
-  }, [options.length, selectIndex]);
+  }, [applyDrag, selectIndex]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.startX;
-    const finalIndex = clamp(Math.round(dragRef.current.startSmoothIndex - dx / SLOT_WIDTH), 0, options.length - 1);
+    const rawIndex = applyDrag(e.clientX);
     dragRef.current = null;
     setIsDragging(false);
-    selectIndex(finalIndex);
-  }, [options.length, selectIndex]);
+    if (rawIndex !== null) selectIndex(Math.round(rawIndex));
+  }, [applyDrag, selectIndex]);
 
   const wheelTheme = isDark ? WHEEL_THEME_DARK : WHEEL_THEME_LIGHT;
-  const wheelRotation = smoothIndex * RIDGES_PER_STEP;
+  const wheelRotation = rotation;
 
   return (
     <div

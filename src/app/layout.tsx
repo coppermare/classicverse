@@ -1,19 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, VT323 } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
+// One typeface for the whole set — chrome, screen, and every channel. A second
+// pixel "CRT" face was used for on-screen titles, which made the same product
+// speak in two voices and rendered the smaller text hard to read.
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
-  display: 'swap',
-});
-
-// Retro CRT on-screen-display face, used for text drawn on the TV screen.
-const vt323 = VT323({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-crt',
   display: 'swap',
 });
 
@@ -49,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" className={`${inter.variable} ${vt323.variable} h-full`}>
+    <html lang="en" data-theme="light" className={`${inter.variable} h-full`}>
       <body className="h-full min-h-screen antialiased" style={{ fontFamily: 'var(--font-sans)' }}>
         {children}
       </body>
