@@ -2,15 +2,12 @@ import { CARS } from '@/data/cars';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { getWinImage } from '@/data/ferrariChassisImages';
-import { RADIO_STATIONS } from '@/data/radioStations';
 import { toThumb, THUMB_TILE } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
 import type { FerrariWin } from '@/types/f1';
 import CarApp from './apps/CarApp';
 import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
-import InfoApp from './apps/InfoApp';
-import GuideApp from './apps/GuideApp';
 import type { AppNode, FolderNode, OSNode } from './types';
 
 /**
@@ -32,7 +29,7 @@ function carNode(car: CarRecord): AppNode {
     id: String(car.year),
     kind: 'app',
     name: car.hero_car_name,
-    subtitle: `${car.manufacturer} · ${car.year}`,
+    subtitle: `${car.manufacturer} - ${car.year}`,
     icon: { kind: 'photo', src: toThumb(car.image_url, THUMB_TILE) },
     component: CarApp,
     chrome: 'bleed',
@@ -68,7 +65,7 @@ function winNode(win: FerrariWin): AppNode {
     id: String(win.number),
     kind: 'app',
     name: `${win.grand_prix} Grand Prix`,
-    subtitle: `${win.year} · ${win.driver}`,
+    subtitle: `${win.year} - ${win.driver}`,
     icon: img?.src ? { kind: 'photo', src: img.src } : { kind: 'label', text: String(win.number) },
     component: WinApp,
     chrome: 'bleed',
@@ -104,40 +101,13 @@ const radioApp: AppNode = {
   id: 'radio',
   kind: 'app',
   name: 'Radio',
-  subtitle: 'Period recordings',
+  subtitle: 'Live FM',
   icon: { kind: 'glyph', id: 'radio' },
   component: RadioApp,
   chrome: 'panel',
-  // The whole programme is folded in, not just the station names — otherwise
-  // searching the composer or the piece you can actually hear ("Joplin",
-  // "Maple Leaf Rag") finds nothing, which makes the search look broken.
-  keywords: [
-    'music', 'stations', 'tuner', 'fm', 'song', 'track', 'listen',
-    ...RADIO_STATIONS.map((s) => `${s.name} ${s.era}`),
-    ...RADIO_STATIONS.flatMap((s) => s.tracks.map((t) => `${t.title} ${t.artist} ${t.year}`)),
-  ].join(' '),
-};
-
-const guideApp: AppNode = {
-  id: 'guide',
-  kind: 'app',
-  name: 'Guide',
-  subtitle: "What's on",
-  icon: { kind: 'glyph', id: 'guide' },
-  component: GuideApp,
-  chrome: 'panel',
-  keywords: 'listings contents index everything',
-};
-
-const infoApp: AppNode = {
-  id: 'info',
-  kind: 'app',
-  name: 'Info',
-  subtitle: 'The project',
-  icon: { kind: 'glyph', id: 'info' },
-  component: InfoApp,
-  chrome: 'panel',
-  keywords: 'about credits sources licence colophon',
+  // The programme is whatever is on air at the moment, so there is nothing
+  // static to index beyond the set itself.
+  keywords: 'music stations tuner fm song listen live broadcast band',
 };
 
 /** The root. Everything the set can show hangs off here. */
@@ -146,5 +116,5 @@ export const DESKTOP: FolderNode = {
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: (): OSNode[] => [carsFolder, f1Folder, radioApp, guideApp, infoApp],
+  children: (): OSNode[] => [f1Folder, carsFolder, radioApp],
 };

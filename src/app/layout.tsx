@@ -13,21 +13,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Classicverse — Interactive Classic Car Timeline',
+  title: 'Classicverse - A Universe of Classic Things',
   description:
-    'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
+    'The cars, the races and the radio, on a vintage television set you operate. Turn the dial and find a century of things people still love.',
   openGraph: {
-    title: 'Classicverse — Interactive Classic Car Timeline',
+    title: 'Classicverse - A Universe of Classic Things',
     description:
-      'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
+      'The cars, the races and the radio, on a vintage television set you operate. Turn the dial and find a century of things people still love.',
     siteName: 'Classicverse',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Classicverse — Interactive Classic Car Timeline',
+    title: 'Classicverse - A Universe of Classic Things',
     description:
-      'A century of cars — an interactive timeline archive of iconic automobiles from 1885 to 1984. One landmark car per year, in context.',
+      'The cars, the races and the radio, on a vintage television set you operate. Turn the dial and find a century of things people still love.',
   },
 };
 

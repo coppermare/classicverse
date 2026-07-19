@@ -84,7 +84,9 @@ export default function Toolbar({
                   border: 'none', background: 'none', padding: '2px 2px', borderRadius: 2,
                   cursor: last ? 'default' : 'pointer',
                   font: `${last ? 700 : 500} 12px/1 var(--font-sans)`,
-                  color: last ? '#1c1a17' : '#2a4a8a',
+                  /* Weight, not colour, marks the current crumb: the parents are
+                     a lighter ink rather than link blue. */
+                  color: last ? '#1c1a17' : '#6b665e',
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 150,
                 }}
               >

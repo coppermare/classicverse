@@ -277,6 +277,16 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
   }, [options.length]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
+    // A drag needs a button held. If a pointerup went missing — released
+    // outside the window, a capture lost, a synthetic event — the drag state
+    // survived and every later hover kept turning the knob, walking the Radio
+    // up the band on its own. Treat "moving with no button down" as the end of
+    // the drag rather than as more of it.
+    if (dragRef.current && e.buttons === 0) {
+      dragRef.current = null;
+      setIsDragging(false);
+      return;
+    }
     const rawIndex = applyDrag(e.clientX);
     if (rawIndex === null || !dragRef.current) return;
     const newIndex = Math.round(rawIndex);

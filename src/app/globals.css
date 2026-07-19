@@ -921,7 +921,7 @@ body {
   border-radius: 22px;
   corner-shape: squircle;
   background:
-    linear-gradient(180deg, #b08a5c 0%, #8f6a42 50%, #6e4e2c 100%);
+    linear-gradient(180deg, #d8b183 0%, #ba9165 50%, #99744b 100%);
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.45),
     inset 0 -3px 0 rgba(0,0,0,0.4),
@@ -961,7 +961,7 @@ body {
   border-radius: 14px;
   corner-shape: squircle;
   background:
-    linear-gradient(180deg, #5c4530 0%, #47341f 55%, #332415 100%);
+    linear-gradient(180deg, #7a5836 0%, #614327 55%, #48301b 100%);
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,0.5),
     inset 0 2px 0 rgba(255,255,255,0.06);
@@ -972,12 +972,18 @@ body {
   overflow: hidden;
 }
 
-/* Neutral texture, not wood-grained — this is the control panel the buttons/knobs sit on */
+/* Deep walnut, properly grained. The panel went pale and nearly smooth chasing
+   legibility, and a light untextured board reads as laminate. Four passes carry
+   the grain: a close pair for the fibre, a wide one for the darker streaks, and
+   a warm pass that lifts the ridges between them. Kept off the tight 5px period
+   that read as stripes at normal viewing distance. */
 .cv-tv-bezel-grain {
   position: absolute; inset: 0;
   background:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 6px);
+    repeating-linear-gradient(90.4deg, rgba(28,14,5,0.20) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(89.6deg, rgba(255,222,180,0.09) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90.8deg, rgba(20,10,3,0.16) 0 2px, transparent 2px 27px),
+    repeating-linear-gradient(89.3deg, rgba(255,214,164,0.06) 0 2px, transparent 2px 49px);
   pointer-events: none;
   mix-blend-mode: overlay;
 }
@@ -1013,6 +1019,11 @@ body {
 .cv-tv-screen {
   flex: 1;
   position: relative;
+  /* The picture is the unit of measure for anything drawn on it. Sizing the
+     lower third in cqw keeps the caption the same fraction of the screen at
+     every window width, instead of ballooning on a small tube. inline-size,
+     not size — height containment isn't needed and this element is flex:1. */
+  container-type: inline-size;
   border-radius: 36px;
   corner-shape: squircle;
   overflow: hidden;
@@ -1126,16 +1137,19 @@ body {
 }
 .cv-tv-car-name {
   font-family: var(--font-sans);
-  font-size: 30px;
+  font-size: clamp(17px, 3.3cqw, 30px);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.01em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 0, 0, 0.7);
 }
 .cv-tv-car-meta {
   font-family: var(--font-sans);
-  font-size: 15px;
+  /* The two lines read as one caption block, so they need air between them —
+     line-height alone leaves the meta line crowding the name's descenders. */
+  margin-top: clamp(3px, 0.6cqw, 6px);
+  font-size: clamp(12px, 2.3cqw, 20px);
   font-weight: 500;
   color: #ffffff;
   line-height: 1.35;
@@ -1152,9 +1166,19 @@ body {
 
 /* ── Right control column ── */
 .cv-tv-right-col {
+  /* Above the grain. The wood texture is absolutely positioned, and a static
+     block paints before positioned siblings — so the pattern was laid over the
+     knobs, the brand plate and the power button instead of behind them. The
+     controls are objects sitting on the panel, not things printed into it. */
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* One rhythm between control groups. 8px read as uneven because the volume
+     dial carries a 20px halo of its own inside its 148px box, so its neighbour
+     sat 28px away while the roller and the knobs sat 8px apart. The dial
+     cancels its halo with a negative margin where it is rendered. */
+  gap: 24px;
   overflow: hidden;
   padding-bottom: 8px;
 }
@@ -1182,14 +1206,45 @@ body {
 }
 
 
-/* Speaker grille — dot perforations directly on the panel, no boxed frame */
+/* Speaker grille — dot perforations directly on the panel, no boxed frame.
+   The panel behind the badge is left undrilled, the way a set has its nameplate
+   fixed to solid metal. */
 .cv-tv-speaker-grille {
-  background: radial-gradient(circle, rgba(0,0,0,0.55) 1.1px, transparent 1.4px) 0 0 / 7px 7px;
+  position: relative;
   flex-shrink: 0;
+}
+
+/* The perforations sit on a pseudo-element rather than the grille itself: a
+   mask applies to an element's children too, so masking the grille erased the
+   badge standing on it.
+
+   Two details make the clearing look drilled rather than smudged. The pattern
+   is anchored at 50% 50%, which puts a dot centre exactly on the middle of the
+   panel and every other centre a whole 7px step away; and the hole's edges are
+   half-steps (3.5 + 7k) from that centre, so each edge lands precisely between
+   two rows of holes. Anchored top-left instead, the edges fell half a pixel
+   from a dot centre and sliced perforations in half. */
+.cv-tv-speaker-grille::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0.55) 1.1px, transparent 1.4px) 50% 50% / 7px 7px;
+  /* A rect hole, from two gradients that are opaque outside their own band:
+     transparent only where both are. Hard stops, so the edge is a cut. */
+  -webkit-mask-image:
+    linear-gradient(to right, #000 calc(50% - 73.5px), transparent calc(50% - 73.5px) calc(50% + 73.5px), #000 calc(50% + 73.5px)),
+    linear-gradient(to bottom, #000 calc(50% - 10.5px), transparent calc(50% - 10.5px) calc(50% + 10.5px), #000 calc(50% + 10.5px));
+  mask-image:
+    linear-gradient(to right, #000 calc(50% - 73.5px), transparent calc(50% - 73.5px) calc(50% + 73.5px), #000 calc(50% + 73.5px)),
+    linear-gradient(to bottom, #000 calc(50% - 10.5px), transparent calc(50% - 10.5px) calc(50% + 10.5px), #000 calc(50% + 10.5px));
+  pointer-events: none;
 }
 
 /* Brand plate — bare mark + wordmark, no background wrapper */
 .cv-tv-brand-plate {
+  /* Above the perforations, which are painted by a positioned pseudo-element. */
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1409,4 +1464,19 @@ body {
     margin: 20px 24px !important;
     padding: 12px 22px !important;
   }
+}
+
+/* Radio station ident — fades in when the needle locks onto a station, so a new
+   station arrives rather than replacing the old one in place. Entering, so
+   ease-out; short, because tuning across the band replays it constantly. */
+.cv-radio-ident {
+  animation: cv-radio-ident-in 200ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes cv-radio-ident-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-radio-ident { animation: cv-radio-ident-fade 160ms ease-out both; }
+  @keyframes cv-radio-ident-fade { from { opacity: 0; } to { opacity: 1; } }
 }

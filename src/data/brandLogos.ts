@@ -12,7 +12,7 @@ export interface BrandLogo {
  */
 export const BRAND_LOGOS: Record<string, BrandLogo> = {
   benz: {
-    src: '/brand-logos/benz-cie.png',
+    src: '/brand-logos/benz-cie.svg',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Benz_1883.svg',
   },
   daimler: {
@@ -32,7 +32,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://en.wikipedia.org/wiki/File:Oldsmobile.png',
   },
   austin: {
-    src: '/brand-logos/austin.jpg',
+    src: '/brand-logos/austin.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Logo_Automobile_Austin.jpg',
   },
   citroen: {
@@ -84,7 +84,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://en.wikipedia.org/wiki/File:Peugeot_2021_Logo.svg',
   },
   'de-dion-bouton': {
-    src: '/brand-logos/de-dion-bouton.jpg',
+    src: '/brand-logos/de-dion-bouton.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Embl%C3%A8me_De_Dion-Bouton.jpg',
   },
   renault: {
@@ -108,19 +108,19 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Bugatti_logo.svg',
   },
   duesenberg: {
-    src: '/brand-logos/duesenberg.jpg',
+    src: '/brand-logos/duesenberg.png',
     sourceUrl: 'https://en.wikipedia.org/wiki/File:Duesenberg_logo.jpg',
   },
   cord: {
-    src: '/brand-logos/cord.jpg',
+    src: '/brand-logos/cord.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:CordCrestTalla.jpg',
   },
   chrysler: {
-    src: '/brand-logos/chrysler.jpg',
+    src: '/brand-logos/chrysler.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:ChryPly_Blue_Pentastar.jpg',
   },
   mercer: {
-    src: '/brand-logos/mercer.jpg',
+    src: '/brand-logos/mercer.png',
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:Mercer-motor_1917_logo.jpg',
   },
   dodge: {
@@ -208,7 +208,7 @@ export const BRAND_LOGOS: Record<string, BrandLogo> = {
     sourceUrl: 'https://commons.wikimedia.org/wiki/File:DeLorean_Motor_Company_logo.svg',
   },
   lanchester: {
-    src: '/brand-logos/lanchester.gif',
+    src: '/brand-logos/lanchester.png',
     sourceUrl: 'https://en.wikipedia.org/wiki/File:Lanchester_Logo.gif',
   },
 };

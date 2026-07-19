@@ -77,7 +77,7 @@ export default function GuideApp({ os }: AppProps) {
                       >
                         {c.name}
                         {isFolder(c) && c.enabled !== false && (
-                          <span style={{ opacity: 0.65, fontWeight: 400 }}> · {countLeaves(c)}</span>
+                          <span style={{ opacity: 0.65, fontWeight: 400 }}> - {countLeaves(c)}</span>
                         )}
                       </button>
                     ))}

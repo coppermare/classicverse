@@ -22,7 +22,7 @@ function TvKnob({
   accent?: string; startAngle?: number; endAngle?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ startAng: number; startVal: number; cx: number; cy: number } | null>(null);
+  const dragRef = useRef<{ lastAng: number; val: number; cx: number; cy: number } | null>(null);
   const angle = startAngle + (endAngle - startAngle) * value;
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -30,17 +30,21 @@ function TvKnob({
     const rect = ref.current!.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    dragRef.current = { startAng: Math.atan2(e.clientY - cy, e.clientX - cx), startVal: value, cx, cy };
+    dragRef.current = { lastAng: Math.atan2(e.clientY - cy, e.clientX - cx), val: Math.max(0, Math.min(1, value)), cx, cy };
     ref.current!.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     const d = dragRef.current; if (!d) return;
     const ang = Math.atan2(e.clientY - d.cy, e.clientX - d.cx);
-    let delta = ang - d.startAng;
+    // Incremental, like VolumeDial: measuring from the grab let a drag through
+    // the gap at the bottom wrap past ±π and snap the knob end to end.
+    let delta = ang - d.lastAng;
     if (delta > Math.PI) delta -= 2 * Math.PI;
     if (delta < -Math.PI) delta += 2 * Math.PI;
     const range = (endAngle - startAngle) * Math.PI / 180;
-    onChange(Math.max(0, Math.min(1, d.startVal + delta / range)));
+    d.lastAng = ang;
+    d.val = Math.max(0, Math.min(1, d.val + delta / range));
+    onChange(d.val);
   };
   const onPointerUp = () => { dragRef.current = null; };
   const onWheel = (e: React.WheelEvent) => {
@@ -118,7 +122,6 @@ function Classicverse() {
   const [turningOff, setTurningOff] = useState(false);
   const [turningOn, setTurningOn] = useState(false);
   const [bootPhase, setBootPhase] = useState<BootPhase>('idle');
-  const [pressedButton, setPressedButton] = useState<'home' | null>(null);
 
   const screenContentRef = useRef<HTMLDivElement>(null);
   const powerRef = useRef({ on: true, busy: false });
@@ -240,24 +243,27 @@ function Classicverse() {
         }
         return;
       }
-      if (!isFolder(node)) return;
 
-      const kids = node.children();
-      if (!kids.length) return;
-      const i = Math.max(0, kids.findIndex((c) => c.id === selectedId));
-      const cols = node.layout === 'gallery' ? 3 : 4;
-      let next = i;
-      if (e.key === 'ArrowRight') next = Math.min(kids.length - 1, i + 1);
-      else if (e.key === 'ArrowLeft') next = Math.max(0, i - 1);
-      else if (e.key === 'ArrowDown') next = Math.min(kids.length - 1, i + cols);
-      else if (e.key === 'ArrowUp') next = Math.max(0, i - cols);
-      else return;
+      // Inside a folder the grid handles its own arrows: it can see where the
+      // tiles actually landed, which is the only way to know how many fit on a
+      // row. Duplicating it here with a guessed column count is what made Up
+      // and Down jump the wrong distance once the desktop reflowed.
+      if (isFolder(node)) return;
+
+      // Inside an app the arrows step to the next thing in the same folder -
+      // the next car, the next win - exactly as the roller does. Unless the app
+      // has claimed the roller for a list of its own, in which case the arrows
+      // belong to it too: the Radio tunes with them.
+      if (appTuner) return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       e.preventDefault();
-      if (next !== i) { setSelectedId(kids[next].id); sfx.tick(); }
+      const step = e.key === 'ArrowRight' ? 1 : -1;
+      const to = siblings[index + step];
+      if (to) { sfx.tick(); navigate(`../${to.id}`); }
     };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
-  }, [node, selectedId, openNode, goUp, searchOpen, screenOn, setSelectedId]);
+  }, [node, selectedId, openNode, goUp, searchOpen, screenOn, appTuner, siblings, index, navigate]);
 
   /* ── Screen glitch on content change ── */
   useEffect(() => {
@@ -461,7 +467,12 @@ function Classicverse() {
 
               {/* ── Right control column ── */}
               <div className="cv-tv-right-col">
-                <VolumeDial value={volume} onChange={onVolume} embedded ariaLabel="Volume" />
+                {/* The dial's 148px box holds a 108px face, i.e. 20px of built-in
+                    halo below it. Cancel it so the optical gap to the roller
+                    matches the column's 24px rhythm. */}
+                <div style={{ marginBottom: -20 }}>
+                  <VolumeDial value={volume} onChange={onVolume} embedded ariaLabel="Volume" />
+                </div>
 
                 <RollerDial
                   options={rollerOptions}
@@ -489,48 +500,28 @@ function Classicverse() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '0 4px', marginTop: 'auto' }}>
-                  <button
-                    type="button"
-                    onClick={goHome}
-                    disabled={!screenOn}
-                    aria-label="Home"
-                    onPointerDown={() => setPressedButton('home')}
-                    onPointerUp={() => setPressedButton(null)}
-                    onPointerLeave={() => setPressedButton(null)}
-                    onPointerCancel={() => setPressedButton(null)}
-                    style={{
-                      width: 40, height: 40, borderRadius: '50%', border: 'none',
-                      cursor: screenOn ? 'pointer' : 'default',
-                      background: pressedButton === 'home' ? '#1c1512' : '#3a2f26',
-                      boxShadow: circleButtonShadow(pressedButton === 'home'),
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                      transition: 'box-shadow 200ms, background 200ms',
-                    }}
-                  >
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                      <g style={{ filter: pressedButton === 'home' ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
-                        <path d="M2.5 8.5 L9 3 L15.5 8.5" stroke={pressedButton === 'home' ? '#fff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
-                        <path d="M4.5 7.5 V15 H13.5 V7.5" stroke={pressedButton === 'home' ? '#fff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'stroke 200ms' }} />
-                      </g>
-                    </svg>
-                  </button>
-
+                {/* Power only. The Home button beside it duplicated the Home
+                    control already in the screen's own toolbar, one press away
+                    from wherever you are. */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', margin: '0 4px', marginTop: 'auto' }}>
                   <button
                     type="button"
                     onClick={() => setPower(!screenOn)}
                     aria-label={screenOn ? 'Turn off' : 'Turn on'}
                     aria-pressed={screenOn}
                     style={{
-                      width: 40, height: 40, borderRadius: 12, border: 'none', cursor: 'pointer',
+                      width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer',
                       background: screenOn ? '#1c1512' : '#3a2f26',
                       boxShadow: circleButtonShadow(screenOn),
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                       transition: 'box-shadow 200ms, background 200ms',
                     }}
                   >
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ overflow: 'visible' }}>
-                      <g style={{ filter: screenOn ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
+                    {/* The glyph is drawn from y=2 to y=15 inside an 18-high box,
+                        so it sits half a unit high of the button's true centre —
+                        nudged back down rather than left looking off-axis. */}
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={{ display: 'block', overflow: 'visible' }}>
+                      <g transform="translate(0 0.5)" style={{ filter: screenOn ? 'drop-shadow(0 0 2.5px #ffffffcc)' : 'none', transition: 'filter 200ms' }}>
                         <path d="M 5.5 4.2 A 6 6 0 1 0 12.5 4.2" stroke={screenOn ? '#fff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" fill="none" style={{ transition: 'stroke 200ms' }} />
                         <line x1="9" y1="2" x2="9" y2="7" stroke={screenOn ? '#fff' : '#b8ada2'} strokeWidth="1.8" strokeLinecap="round" style={{ transition: 'stroke 200ms' }} />
                       </g>

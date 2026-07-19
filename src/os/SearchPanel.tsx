@@ -145,7 +145,7 @@ export default function SearchPanel({
                 Nothing matches “{query}”.
               </p>
               <p style={{ font: '400 13px/1.5 var(--font-sans)', color: '#5a554d' }}>
-                Try a maker, a year, a driver, or a decade — “Ferrari”, “1962”, “Lauda”, “1930s”.
+                Try a maker, a year, a driver, or a decade - “Ferrari”, “1962”, “Lauda”, “1930s”.
               </p>
             </div>
           ) : rows.map((r, i) => {
@@ -201,7 +201,7 @@ export default function SearchPanel({
           boxShadow: RAISED, borderRadius: RADIUS,
           font: '400 11px/1.5 var(--font-sans)', color: '#3f3a33',
         }}>
-          <span>↑ ↓ to move · ↵ to open · Esc to close</span>
+          <span>↑ ↓ to move - ↵ to open - Esc to close</span>
           <span>{index.length} items indexed</span>
         </div>
       </Bevel>

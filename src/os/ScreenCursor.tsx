@@ -33,19 +33,28 @@ export default function ScreenCursor({
     const img = imgRef.current;
     if (!host || !img || !enabled) return;
 
-    let rect = host.getBoundingClientRect();
-    let x = 0, y = 0, pointer = false;
+    // Page coordinates of the last move. Converting them to host coordinates is
+    // left to draw time on purpose: the host is measured once per frame there
+    // rather than once per effect.
+    //
+    // Measuring up front looked cheaper and broke the pointer every time the set
+    // was switched off and on again. Power-on re-runs this effect while the CRT
+    // turn-on animation still has the screen scaled, so the measurement captured
+    // a transformed rectangle, and every later move was drawn against it - the
+    // cursor landed hundreds of pixels away, usually outside the glass. One
+    // layout read per animation frame, and only while the mouse is moving, is a
+    // fair price for a pointer that is always where the mouse is.
+    let px = 0, py = 0, pointer = false;
     let drawnPointer: boolean | null = null;
     let raf = 0;
 
-    const measure = () => { rect = host.getBoundingClientRect(); };
-
     const draw = () => {
       raf = 0;
+      const rect = host.getBoundingClientRect();
       // The pointer sprite's hotspot sits a couple of pixels into the glyph.
       const ox = pointer ? -4 : 0;
       const oy = pointer ? -1 : 0;
-      img.style.transform = `translate3d(${x + ox}px, ${y + oy}px, 0)`;
+      img.style.transform = `translate3d(${px - rect.left + ox}px, ${py - rect.top + oy}px, 0)`;
       if (pointer !== drawnPointer) {
         drawnPointer = pointer;
         img.src = pointer ? '/cursors/pointer.png' : '/cursors/arrow.png';
@@ -53,8 +62,8 @@ export default function ScreenCursor({
     };
 
     const onMove = (e: MouseEvent) => {
-      x = e.clientX - rect.left;
-      y = e.clientY - rect.top;
+      px = e.clientX;
+      py = e.clientY;
       const t = e.target as Element | null;
       pointer = !!t?.closest?.(HIT);
       if (img.style.opacity !== '1') img.style.opacity = '1';
@@ -66,15 +75,10 @@ export default function ScreenCursor({
 
     host.addEventListener('mousemove', onMove);
     host.addEventListener('mouseleave', onLeave);
-    // The stage can move under the pointer without the mouse moving.
-    window.addEventListener('resize', measure);
-    window.addEventListener('scroll', measure, true);
 
     return () => {
       host.removeEventListener('mousemove', onMove);
       host.removeEventListener('mouseleave', onLeave);
-      window.removeEventListener('resize', measure);
-      window.removeEventListener('scroll', measure, true);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [hostRef, enabled]);

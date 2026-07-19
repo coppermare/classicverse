@@ -5,7 +5,7 @@ import { getBrandLogo } from '@/data/brandLogos';
 import { toThumb } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
 import type { AppProps } from '../types';
-import { RetroButton, TitleBar, Bevel, RADIUS, WELL } from '../ui';
+import { RetroButton, TitleBar, Bevel, INK, RADIUS, WELL } from '../ui';
 import * as sfx from '../sound';
 
 /**
@@ -49,35 +49,51 @@ export default function CarApp({ node, os }: AppProps) {
       {!details && (
         <div style={{
           position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 4,
-          padding: '28px 22px 18px', pointerEvents: 'none',
-          display: 'flex', alignItems: 'flex-end', gap: 14,
+          /* cqw against the screen — see .cv-tv-screen. */
+          padding: 'clamp(16px, 3cqw, 28px) clamp(13px, 2.4cqw, 22px) clamp(11px, 2cqw, 18px)',
+          pointerEvents: 'none',
+          display: 'flex', alignItems: 'flex-end', gap: 'clamp(8px, 1.4cqw, 13px)',
         }}>
           {logo && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              height: 48, minWidth: 48, padding: '0 9px', flexShrink: 0,
-              background: 'rgba(244,240,229,0.94)', borderRadius: 7,
+              /* Fixed box, so the badge holds still from car to car however wide
+                 or tall the marque's logo is. Height comes from the two lines of
+                 type beside it (name × line-height + gap + meta × line-height). */
+              width: 'clamp(56px, 9.8cqw, 88px)',
+              height: 'calc(clamp(17px, 3.3cqw, 30px) * 1.15 + clamp(3px, 0.6cqw, 6px) + clamp(12px, 2.3cqw, 20px) * 1.35)',
+              padding: 'clamp(3px, 0.5cqw, 5px) clamp(5px, 0.8cqw, 8px)', flexShrink: 0,
+              background: 'rgba(248,246,241,0.96)', borderRadius: 7,
               boxShadow: '0 1px 4px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6)',
             }}>
+              {/* contain inside the fixed box — tall logos and wide ones both
+                  fit without changing the badge around them. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo.src} alt="" style={{ height: 34, width: 'auto', maxWidth: 72, objectFit: 'contain', display: 'block' }} />
+              <img src={logo.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
             </span>
           )}
           <div style={{ minWidth: 0 }}>
             <div className="cv-tv-car-name">{car.hero_car_name}</div>
-            <div className="cv-tv-car-meta">{car.manufacturer} · {car.year} · {car.country}</div>
+            <div className="cv-tv-car-meta">{car.manufacturer} - {car.year} - {car.country}</div>
           </div>
         </div>
       )}
 
-      {/* Details toggle */}
-      <div style={{ position: 'absolute', top: 12, right: 14, zIndex: 6 }}>
+      {/* Details toggle — below the toolbar, which spans the top of the tube. */}
+      <div style={{ position: 'absolute', top: 46, right: 14, zIndex: 6 }}>
         <RetroButton
+          icon
           label={details ? 'Close details' : 'Details'}
           active={details}
           onClick={() => setDetails((d) => !d)}
         >
-          {details ? 'CLOSE' : 'DETAILS'}
+          {/* An "i" in a ring - the same mark the Info channel wears, so
+              "more about this" looks the same wherever it appears. */}
+          <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.9" fill="none" stroke={INK} strokeWidth="1.3" />
+            <rect x="6.25" y="5.8" width="1.5" height="4.4" rx="0.4" fill={INK} />
+            <rect x="6.25" y="3.4" width="1.5" height="1.6" rx="0.4" fill={INK} />
+          </svg>
         </RetroButton>
       </div>
 
@@ -103,7 +119,8 @@ export default function CarApp({ node, os }: AppProps) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section style={{ marginBottom: 14 }}>
-      <h3 style={{ font: '700 13px/1 var(--font-sans)', color: '#2a4a8a', marginBottom: 5 }}>{title}</h3>
+      {/* Ink, not blue — blue is reserved for links in this file. */}
+      <h3 style={{ font: '700 13px/1 var(--font-sans)', color: '#1c1a17', marginBottom: 5 }}>{title}</h3>
       <div style={{ font: '400 13px/1.55 var(--font-sans)', color: '#1c1a17' }}>{children}</div>
     </section>
   );
@@ -127,7 +144,7 @@ function CarFile({ car, onClose }: { car: CarRecord; onClose: () => void }) {
     <div style={{ position: 'absolute', inset: 0, zIndex: 7, padding: '40px 12px 12px', display: 'flex' }}>
       <Bevel style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, padding: 3 }}>
         <TitleBar
-          title={`${car.year} — ${fullName(car)}`}
+          title={`${car.year} - ${fullName(car)}`}
           right={
             <RetroButton icon label="Close" silent onClick={() => { sfx.back(); onClose(); }} style={{ height: 18, minWidth: 18 }}>
               <span style={{ fontSize: 11, fontWeight: 700, lineHeight: 1 }}>✕</span>
@@ -157,7 +174,7 @@ function CarFile({ car, onClose }: { car: CarRecord; onClose: () => void }) {
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {car.alternate_cars.map((a, i) => (
                   <li key={i} style={{ marginBottom: 5 }}>
-                    <strong>{a.manufacturer} {a.name}</strong> — {a.reason}
+                    <strong>{a.manufacturer} {a.name}</strong> - {a.reason}
                   </li>
                 ))}
               </ul>
@@ -173,9 +190,9 @@ function CarFile({ car, onClose }: { car: CarRecord; onClose: () => void }) {
               ))}
             </ul>
             <p style={{ marginTop: 8, fontSize: 12, color: '#5a554d' }}>
-              Photograph: {car.image_creator} · {car.image_license} ·{' '}
+              Photograph: {car.image_creator} - {car.image_license} -{' '}
               <a href={car.image_attribution_url} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>
-                source
+                Source
               </a>
             </p>
           </Section>

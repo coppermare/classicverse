@@ -1,38 +1,44 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { RADIO_STATIONS } from '@/data/radioStations';
+import { fetchLiveBand } from '@/data/liveRadio';
 import type { AppProps, RadioStation, RadioTrack } from '../types';
-import { RetroButton, INK } from '../ui';
+import { RetroButton, INK, FACE } from '../ui';
 import { setTuner } from '../tuner';
 
 /**
- * The Radio.
+ * The Radio — a working FM receiver.
  *
- * You tune it across the band and find things. The knob sweeps the needle one
- * 0.5 MHz stop at a time; off a station you get static, and when the needle
- * lands on one it locks and the music comes up.
+ * The stations are real: thousands of broadcasters, each parked on the frequency
+ * it genuinely transmits on, from a snapshot of the Radio Browser index (see
+ * data/liveRadio.ts). The knob sweeps the needle a tenth of a MHz at a time; off
+ * a frequency you get static, and when the needle lands on one it locks and
+ * whatever that station is playing right now comes up.
  *
  * The glass carries the band and nothing else — no names, no markers. The only
  * way to find a station is to sweep and listen for the hiss to break, which is
  * the entire pleasure of a radio; printing the names across the dial gave it
  * away, and even dots were a map that spoiled the hunt.
  *
- * Playback is a plain <audio> element streaming public-domain recordings from
- * Wikimedia Commons, routed through a Web Audio graph so the magic eye reads the
- * true signal and the set's VOLUME knob controls the gain. The static is
- * synthesised into the same graph, so one knob rides both. If the graph can't be
- * built (a CORS failure on the media source would otherwise silence playback
- * entirely) it falls back to the element's own volume and loses the eye and the
- * static — the music always wins over the decoration.
- *
- * Every track is public domain, so no per-track credit is legally owed; the Info
- * app documents the sourcing for the whole set.
+ * Playback is a plain <audio> element on the station's stream, routed through a
+ * Web Audio graph so the signal meter reads the true output and the set's VOLUME
+ * knob controls the gain. The static is synthesised into the same graph, so one
+ * knob rides both. If the graph can't be built (a CORS failure on a stream would
+ * otherwise silence playback entirely) it falls back to the element's own volume
+ * and loses the meter and the static — the music always wins over the
+ * decoration.
  */
 
-/** Dial glass: dark, with luminous printing — taken from the reference sets. */
-const DIAL_INK = '#e8dcb0';
-const DIAL_LIT = '#ffe9a8';
+/**
+ * This is a channel on a television set, not a wooden radio sitting inside one.
+ * Drawing a cabinet on the glass meant two sets nested in each other; the page
+ * is now a broadcast graphic in the same paper-and-ink language as the rest of
+ * the shell, and the only radio left is the scale you sweep.
+ */
+const PAPER = 'linear-gradient(180deg, #F7F3E9 0%, #EFE9DA 100%)';
+const DIAL_INK = '#2c2620';
+const DIAL_MUTED = '#6f675c';
+const NEEDLE = '#b3282d';
 
 /**
  * The dial is scaled to the real FM band, so the stations sit where their
@@ -41,8 +47,12 @@ const DIAL_LIT = '#ffe9a8';
  */
 const BAND_MIN = 87;
 const BAND_MAX = 108;
-/** One detent of the knob. Stations sit on this grid, so a stop lands exactly. */
-const STEP = 0.5;
+/**
+ * One detent of the knob — a tenth of a MHz, the real spacing of the FM band.
+ * A coarser dial had to round stations onto stops they don't broadcast on, and
+ * it left the whole band with 43 places to put 6,000 stations.
+ */
+const STEP = 0.1;
 const pctFor = (freq: number) => ((freq - BAND_MIN) / (BAND_MAX - BAND_MIN)) * 100;
 
 const STOPS: number[] = (() => {
@@ -60,29 +70,150 @@ const TICKS: { pct: number; major: boolean; label?: string }[] = (() => {
   return out;
 })();
 
+/**
+ * Where the set was left. A radio you come back to is still on the station you
+ * left it on — starting again at the bottom of the band every time made the
+ * whole thing feel like a demo rather than a set you own.
+ */
+const LAST_KEY = 'cv-radio-last';
+
+interface LastTuned { freq: number; id: string }
+
+function readLastTuned(): LastTuned | null {
+  try {
+    const raw = localStorage.getItem(LAST_KEY);
+    if (!raw) return null;
+    const v = JSON.parse(raw) as Partial<LastTuned>;
+    return typeof v.freq === 'number' && typeof v.id === 'string' ? { freq: v.freq, id: v.id } : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function RadioApp({ os }: AppProps) {
-  const stations = RADIO_STATIONS;
+  const [liveBand, setLiveBand] = useState<RadioStation[] | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [bandError, setBandError] = useState(false);
+
+  /* Memoised: it feeds the station lookup and the tuner, and a fresh [] on every
+     render would re-run both continuously before the band has been scanned. */
+  const stations = useMemo(() => liveBand ?? [], [liveBand]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const graphRef = useRef<{ ctx: AudioContext; gain: GainNode; analyser: AnalyserNode } | null>(null);
   const staticRef = useRef<GainNode | null>(null);
   const graphFailed = useRef(false);
 
-  const [freq, setFreq] = useState(Number(stations[0].frequency));
+  /* The low end of the band. Where the needle rests before the set is switched
+     on and the scan has told it where anything actually is. */
+  const [freq, setFreq] = useState(BAND_MIN + 1);
   /** The user's intent — is the set on. Distinct from whether audio is flowing:
    *  between stations the set is on but the element is silent and it's all hiss. */
   const [powered, setPowered] = useState(false);
-  const [trackIndex, setTrackIndex] = useState(0);
+  /** Which of the stations sharing this frequency is playing. */
+  const [stationIndex, setStationIndex] = useState(0);
+  /**
+   * How many stations on this frequency have been tried and failed.
+   *
+   * A quarter of the streams in any snapshot of the index are off the air by the
+   * time anyone tunes in - servers move, stations fold, licences lapse - so
+   * landing on a dead one is normal rather than exceptional. Stepping to the
+   * next station on the same frequency turns that from a dead end into a pause,
+   * and the counter stops it walking the whole stack forever when every station
+   * on a frequency is down.
+   */
+  const triedRef = useRef(0);
+  /** The stream that last failed, so one dead station is not counted twice. */
+  const failedSrcRef = useRef<string | null>(null);
   const [buffering, setBuffering] = useState(false);
   const [failed, setFailed] = useState(false);
   const [level, setLevel] = useState(0);
 
-  /** Locked only when the needle is on a station's frequency. */
-  const station: RadioStation | undefined = useMemo(
-    () => stations.find((s) => Math.abs(Number(s.frequency) - freq) < 0.05),
-    [stations, freq],
+  /**
+   * The band, indexed by frequency. Thousands of stations share ~200
+   * frequencies, so scanning the flat list on every render (and every tick of
+   * the signal meter) would be wasted work.
+   */
+  const byFrequency = useMemo(() => {
+    const map = new Map<string, RadioStation[]>();
+    for (const s of stations) {
+      const list = map.get(s.frequency);
+      if (list) list.push(s);
+      else map.set(s.frequency, [s]);
+    }
+    return map;
+  }, [stations]);
+
+  /** Everything transmitting on the frequency the needle is sitting on. */
+  const atNeedle = useMemo(
+    () => byFrequency.get(freq.toFixed(1)) ?? [],
+    [byFrequency, freq],
   );
-  const track: RadioTrack | undefined = station?.tracks[trackIndex];
+
+  /** Locked only when the needle is on a frequency something broadcasts on. */
+  const station: RadioStation | undefined = atNeedle[stationIndex % Math.max(1, atNeedle.length)];
+  /* One stream per station — a live broadcast has no track list. */
+  const track: RadioTrack | undefined = station?.tracks[0];
   const live = powered && !!station;
+
+  /**
+   * Sweep the needle.
+   *
+   * The current frequency is read from a ref, not from the render closure. The
+   * knob and the arrow keys nudge by ±STEP, and presses that land in the
+   * same frame would otherwise all read the same stale `freq` and collapse into a
+   * single step — three quick presses moved the needle 0.5 MHz instead of 1.5.
+   * The ref is written here rather than in a setFreq updater so nothing has a
+   * side effect inside a reducer, which StrictMode is free to run twice.
+   */
+  const freqRef = useRef(freq);
+
+  const tuneToFreq = useCallback((f: number) => {
+    const next = Math.min(BAND_MAX, Math.max(BAND_MIN, Math.round(f * 10) / 10));
+    const prev = freqRef.current;
+    if (Math.abs(prev - next) < 0.01) return;
+    freqRef.current = next;
+    setFreq(next);
+    setStationIndex(0);
+    triedRef.current = 0;
+    failedSrcRef.current = null;
+    setFailed(false);
+  }, []);
+
+  /** One detent, from wherever the needle actually is. */
+  const nudge = useCallback((dir: 1 | -1) => {
+    tuneToFreq(freqRef.current + dir * STEP);
+  }, [tuneToFreq]);
+
+  /**
+   * Scan the band, then put the needle back where it was left.
+   *
+   * The restore happens here rather than in an effect because it can only run
+   * once the band is in hand — a saved frequency means nothing until there is
+   * something on it.
+   */
+  const scanBand = useCallback(() => {
+    if (liveBand || scanning) return;
+    setScanning(true);
+    setBandError(false);
+    // Deliberately not abortable. Cancelling on unmount looks tidy and was a
+    // trap: StrictMode's mount/cleanup/mount killed the request, the rejection
+    // left `scanning` stuck true, and the guard above then refused to scan
+    // again — the set sat on SCANNING forever. It is one cached same-origin
+    // GET; letting it land is cheaper than the bug.
+    fetchLiveBand()
+      .then((band) => {
+        setLiveBand(band);
+        const last = readLastTuned();
+        if (!last) return;
+        const here = band.filter((s) => s.frequency === last.freq.toFixed(1));
+        if (!here.length) return;
+        const i = here.findIndex((s) => s.id === last.id);
+        tuneToFreq(last.freq);
+        setStationIndex(i < 0 ? 0 : i);
+      })
+      .catch(() => setBandError(true))
+      .finally(() => setScanning(false));
+  }, [liveBand, scanning, tuneToFreq]);
 
   /* ── Audio graph ── */
   const ensureGraph = useCallback(() => {
@@ -176,60 +307,65 @@ export default function RadioApp({ os }: AppProps) {
   const power = useCallback(async (on: boolean) => {
     setPowered(on);
     if (!on) { audioRef.current?.pause(); return; }
+    scanBand();
     ensureGraph();
     const g = graphRef.current;
     if (g?.ctx.state === 'suspended') await g.ctx.resume();
-  }, [ensureGraph]);
+  }, [ensureGraph, scanBand]);
+
+  /* Remember where the set is left, so opening the Radio again comes back to
+     this station rather than to the bottom of the band. */
+  useEffect(() => {
+    if (!station) return;
+    try {
+      localStorage.setItem(LAST_KEY, JSON.stringify({ freq, id: station.id }));
+    } catch {
+      // A full or disabled localStorage costs the memory, not the radio.
+    }
+  }, [station, freq]);
+
+  /**
+   * Switch on by itself. Opening the Radio is the gesture — a set you turn to
+   * should already be playing, not waiting to be started a second time.
+   *
+   * Autoplay policies can still refuse the stream; `play()` rejecting leaves the
+   * set powered with no audio, which reads as a station that won't come in, so
+   * the failure is surfaced rather than swallowed.
+   */
+  const startedRef = useRef(false);
+  useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    void power(true);
+  }, [power]);
+
+  /**
+   * A stream that will not play: step to the next station on this frequency,
+   * unless they have all been tried, in which case say so and stop.
+   */
+  const onStreamFailure = useCallback(() => {
+    setBuffering(false);
+    // A dead stream reports itself twice - the element fires `error` and the
+    // pending play() rejects - and counting both burned two of the frequency's
+    // stations for one failure. Attribute a failure to the stream it came from.
+    const src = audioRef.current?.currentSrc || audioRef.current?.src || null;
+    if (src && src === failedSrcRef.current) return;
+    failedSrcRef.current = src;
+    if (atNeedle.length > 1 && triedRef.current < atNeedle.length - 1) {
+      triedRef.current += 1;
+      setStationIndex((i) => (i + 1) % atNeedle.length);
+      return;
+    }
+    setFailed(true);
+  }, [atNeedle.length]);
 
   // The element follows the set: playing only when powered AND locked on.
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
-    if (live) { void el.play().catch(() => {}); }
+    if (live) { void el.play().catch(onStreamFailure); }
     else el.pause();
-  }, [live, track?.src]);
-
-  /** The hour runs on and wraps — a station doesn't stop at the end of a record. */
-  const step = useCallback((dir: 1 | -1) => {
-    const n = station?.tracks.length ?? 1;
-    return (trackIndex + dir + n) % n;
-  }, [trackIndex, station]);
-
-  const goTrack = useCallback((i: number) => {
-    setTrackIndex(i);
-    setFailed(false);
-  }, []);
-
-  /**
-   * Sweep the needle. Landing on a station starts it from its first record.
-   *
-   * The current frequency is read from a ref, not from the render closure. The
-   * tune buttons and the arrow keys nudge by ±STEP, and presses that land in the
-   * same frame would otherwise all read the same stale `freq` and collapse into a
-   * single step — three quick presses moved the needle 0.5 MHz instead of 1.5.
-   * The ref is written here rather than in a setFreq updater so nothing has a
-   * side effect inside a reducer, which StrictMode is free to run twice.
-   */
-  const freqRef = useRef(freq);
-  const onStation = useCallback(
-    (f: number) => stations.some((s) => Math.abs(Number(s.frequency) - f) < 0.05),
-    [stations],
-  );
-
-  const tuneToFreq = useCallback((f: number) => {
-    const next = Math.min(BAND_MAX, Math.max(BAND_MIN, Math.round(f * 10) / 10));
-    const prev = freqRef.current;
-    if (Math.abs(prev - next) < 0.01) return;
-    if (onStation(next) && !onStation(prev)) setTrackIndex(0);
-    freqRef.current = next;
-    setFreq(next);
-    setFailed(false);
-  }, [onStation]);
-
-  /** One detent, from wherever the needle actually is. */
-  const nudge = useCallback((dir: 1 | -1) => {
-    tuneToFreq(freqRef.current + dir * STEP);
-  }, [tuneToFreq]);
+  }, [live, track?.src, onStreamFailure]);
 
   // Claim the set's tuning knob: one detent per 0.5 MHz across the whole band,
   // so the knob sweeps the dial rather than jumping station to station.
@@ -258,11 +394,9 @@ export default function RadioApp({ os }: AppProps) {
   const needlePct = pctFor(freq);
 
   return (
-    /* The screen IS the radio's front panel — no cabinet drawn inside it. The set
-       already has a wooden case around this glass. */
     <div style={{
       position: 'absolute', inset: 0, paddingTop: 44,
-      background: 'linear-gradient(180deg, #8a5a2b 0%, #6b4119 55%, #4a2c0c 100%)',
+      background: PAPER,
       fontFamily: 'var(--font-sans)',
       display: 'flex', flexDirection: 'column',
     }}>
@@ -272,175 +406,222 @@ export default function RadioApp({ os }: AppProps) {
         crossOrigin="anonymous"
         preload="auto"
         onWaiting={() => setBuffering(true)}
-        onPlaying={() => { setBuffering(false); setFailed(false); }}
+        onPlaying={() => { setBuffering(false); setFailed(false); triedRef.current = 0; failedSrcRef.current = null; }}
         onCanPlay={() => setBuffering(false)}
-        onError={() => { setFailed(true); setBuffering(false); }}
-        onEnded={() => goTrack(step(1))}
+        onError={onStreamFailure}
+        /* A live stream shouldn't end. If it does the station has dropped
+           off the air, which is the same thing as no signal. */
+        onEnded={onStreamFailure}
       />
 
-      {/* ── Tuning dial ──
-          Drawn from real sets (Nordmende Tannhäuser '57, a 1952 Telefunken
-          scale): dark glass with luminous printing, and ticks as short marks
-          hanging off a baseline rule. Stations are dots only — the names are
-          the thing you're meant to find. */}
-      <div style={{
-        flex: '0 0 50%', position: 'relative', minHeight: 0, overflow: 'hidden',
-        background: 'linear-gradient(180deg, #1a160d 0%, #0c0a06 100%)',
-        boxShadow: 'inset 0 0 60px rgba(226,183,74,0.10), inset 0 -4px 10px rgba(0,0,0,0.5)',
-        borderBottom: '2px solid #3a2410',
-      }}>
-        {(['left', 'right'] as const).map((side) => (
-          <span key={side} style={{
-            position: 'absolute', top: 'calc(46% - 9px)', [side]: 10, zIndex: 2,
-            font: '700 10px/1 var(--font-sans)', letterSpacing: '0.16em',
-            color: DIAL_LIT, border: `1px solid ${DIAL_LIT}`, borderRadius: 2, padding: '3px 5px',
-          }}>
-            FM
-          </span>
-        ))}
-
-        {/* Baseline rule + ticks hanging from it */}
+      {/* ── The scale ──
+          The one piece of the radio that survives as an instrument: a recessed
+          strip carrying the band, ticks hanging off a baseline, and the needle.
+          Stations are unmarked on purpose — a map would spoil the hunt. */}
+      <div style={{ flexShrink: 0 }}>
+        {/* Full-bleed: the band runs the width of the screen like a channel
+            strip, so the scale reads as part of the broadcast rather than a
+            control panel parked in a box. */}
         <div style={{
-          position: 'absolute', left: 46, right: 46, top: '46%', height: 1,
-          background: DIAL_INK, opacity: 0.85,
-        }} />
-        {TICKS.map((t, i) => (
-          <span key={i} style={{
-            position: 'absolute',
-            left: `calc(46px + (100% - 92px) * ${t.pct / 100})`,
-            top: '46%',
-            width: 1, marginLeft: -0.5,
-            height: t.major ? 11 : 5,
-            background: DIAL_INK,
-            opacity: t.major ? 0.9 : 0.55,
-          }} />
-        ))}
-        {TICKS.filter((t) => t.label).map((t, i) => (
-          <span key={i} style={{
-            position: 'absolute',
-            left: `calc(46px + (100% - 92px) * ${t.pct / 100})`,
-            top: 'calc(46% + 15px)',
-            transform: 'translateX(-50%)',
-            font: '700 13px/1 var(--font-sans)', color: DIAL_INK,
+          position: 'relative', height: 112,
+          background: '#FBF9F3',
+          boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12)',
+          overflow: 'hidden',
+        }}>
+          {(['left', 'right'] as const).map((side) => (
+            <span key={side} style={{
+              position: 'absolute', top: 30, [side]: 10, zIndex: 2,
+              font: '700 9px/1 var(--font-sans)', letterSpacing: '0.16em',
+              color: DIAL_MUTED, border: `1px solid ${DIAL_MUTED}`, borderRadius: 2, padding: '3px 4px',
+            }}>
+              FM
+            </span>
+          ))}
+
+          <div style={{ position: 'absolute', left: 46, right: 46, top: 44, height: 1, background: DIAL_INK, opacity: 0.75 }} />
+          {TICKS.map((t, i) => (
+            <span key={i} style={{
+              position: 'absolute',
+              left: `calc(46px + (100% - 92px) * ${t.pct / 100})`,
+              top: 44, width: 1, marginLeft: -0.5,
+              height: t.major ? 14 : 7,
+              background: DIAL_INK,
+              opacity: t.major ? 0.8 : 0.4,
+            }} />
+          ))}
+          {TICKS.filter((t) => t.label).map((t, i) => (
+            <span key={i} style={{
+              position: 'absolute',
+              left: `calc(46px + (100% - 92px) * ${t.pct / 100})`,
+              top: 64, transform: 'translateX(-50%)',
+              fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 600, lineHeight: 1,
+              color: DIAL_MUTED, fontVariantNumeric: 'tabular-nums',
+            }}>
+              {t.label}
+            </span>
+          ))}
+
+          {/* Needle: a flag at the top of a hairline, so the position reads at a
+              glance. Eased rather than linear — it steps in detents, and a hard
+              linear slide made each stop look like a jump. */}
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0,
+            left: `calc(46px + (100% - 92px) * ${needlePct / 100})`,
+            width: 1, marginLeft: -0.5, zIndex: 3,
+            background: NEEDLE,
+            transition: 'left 180ms cubic-bezier(0.23, 1, 0.32, 1)',
           }}>
-            {t.label}
-          </span>
-        ))}
-
-        {/* Nothing marks the stations. The glass carries the band and nothing
-            else, so the only way to find a station is to sweep the dial and
-            listen for the hiss to break — which is the point of the thing. The
-            markers that used to sit here were a map, and a map spoils the hunt. */}
-
-        {/* Pointer — thin and red, riding the scale. */}
-        <div style={{
-          position: 'absolute', top: 0, bottom: 0,
-          left: `calc(46px + (100% - 92px) * ${needlePct / 100})`,
-          width: 2, marginLeft: -1, zIndex: 3,
-          background: '#e03a2a',
-          boxShadow: '0 0 9px rgba(224,58,42,0.9)',
-          transition: 'left 160ms linear',
-        }} />
+            <span style={{
+              position: 'absolute', top: 0, left: -3, width: 7, height: 7,
+              background: NEEDLE, borderRadius: '0 0 2px 2px',
+            }} />
+          </div>
+        </div>
       </div>
 
-      {/* ── The title: what you found ── */}
-      <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
-        <div style={{
-          flex: 1, minWidth: 0,
-          background: 'linear-gradient(180deg, #14180f 0%, #0b0e08 100%)',
-          boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.6)',
-          color: '#9ef06a',
-          textShadow: '0 0 8px rgba(158,240,106,0.5)',
-          padding: '0 22px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
-            <span style={{ fontSize: 30, fontWeight: 800, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+      {/* ── The card: what you found ──
+          A station ident, the way a channel would caption itself: the frequency
+          set large, the station beside it, the record underneath. Re-keyed on
+          the station so it fades in on a lock instead of swapping in place. */}
+      <div style={{
+        flex: 1, minHeight: 0, display: 'flex', alignItems: 'center',
+        gap: 20, padding: '0 26px', color: DIAL_INK,
+      }}>
+        <div key={station?.id ?? 'none'} className="cv-radio-ident" style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, marginBottom: 12 }}>
+            {/* Longhand, not the `font` shorthand: React warns when a shorthand
+                and a longhand for the same value (fontVariantNumeric) are set
+                together, and the shorthand resets it on every rerender. */}
+            <span style={{
+              fontFamily: 'var(--font-sans)', fontSize: 40, fontWeight: 800, lineHeight: 1,
+              fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em',
+            }}>
               {freq.toFixed(1)}
             </span>
-            <span style={{
-              fontSize: 22, fontWeight: 700, letterSpacing: '0.04em',
-              opacity: station ? 1 : 0.4,
-              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-            }}>
-              {station ? station.name.toUpperCase() : (powered ? 'TUNING…' : 'OFF')}
-            </span>
+            <span style={{ font: '700 12px/1 var(--font-sans)', letterSpacing: '0.16em', color: DIAL_MUTED }}>MHZ</span>
           </div>
 
           {station ? (
-            <div>
-              <div style={{ fontSize: 20, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {failed ? 'NO SIGNAL' : buffering ? '…' : (track?.title ?? '')}
+            <>
+              {/* The station's own name, set as type. It used to sit in a filled
+                  chip, which read as a label stuck onto the broadcast rather
+                  than as the thing the set had found. */}
+              <div style={{ font: '700 22px/1.2 var(--font-sans)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {failed ? 'No signal' : buffering ? 'Tuning…' : station.name}
               </div>
-              <div style={{ fontSize: 14, opacity: 0.85, marginTop: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {track ? `${track.artist} · ${track.year}` : ''}
+              <div style={{ font: '500 14px/1.4 var(--font-sans)', color: DIAL_MUTED, marginTop: 5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {/* What it plays, where it broadcasts from, and — when a
+                    frequency is crowded — which of the stations sharing it you
+                    are listening to. */}
+                {[track?.title, station.era].filter(Boolean).join(' - ')}
+                {atNeedle.length > 1 && ` - ${(stationIndex % atNeedle.length) + 1} of ${atNeedle.length}`}
               </div>
-            </div>
+            </>
           ) : (
-            <div style={{ fontSize: 14, opacity: 0.45 }}>
-              {powered ? 'Turn the dial to find a station' : ''}
-            </div>
+            <>
+              <span style={{
+                display: 'inline-block',
+                border: `1px solid ${DIAL_MUTED}`, color: DIAL_MUTED, borderRadius: 3,
+                padding: '3px 8px', marginBottom: 10,
+                font: '700 12px/1 var(--font-sans)', letterSpacing: '0.14em',
+              }}>
+                {scanning ? 'SCANNING' : powered ? 'NO STATION' : 'OFF'}
+              </span>
+              <div style={{ font: '500 14px/1.5 var(--font-sans)', color: DIAL_MUTED, maxWidth: 340 }}>
+                {scanning
+                  ? 'Scanning the band…'
+                  : bandError
+                    ? 'The station index could not be reached. Switch the set off and on to scan again.'
+                    : liveBand?.length === 0
+                      ? 'No stations came back from the scan.'
+                      : powered
+                        ? 'Nothing is labelled on the dial. Turn the knob and listen for the hiss to break.'
+                        : 'Press play to switch the set on, then turn the knob to sweep the band.'}
+              </div>
+            </>
           )}
         </div>
 
-        <MagicEye level={level} live={live} />
+        {/* Signal strength, standing up the right-hand edge — the one piece of
+            live telemetry on the page, given room to read as an instrument
+            rather than a decoration tucked beside the frequency. */}
+        <SignalMeter level={level} live={live} />
       </div>
 
-      {/* ── Transport ── */}
+      {/* ── Transport ──
+          Three controls, not five. The tune buttons that used to sit here were
+          the knob on the cabinet drawn a second time, in the same double-arrow
+          icon as the station buttons beside them — two identical-looking pairs
+          doing different jobs. Tuning belongs to the knob (and the arrow keys);
+          what is left is stopping the set, and reaching the stations the needle
+          cannot point at separately. */}
       <div style={{
         flexShrink: 0, display: 'flex', alignItems: 'center', gap: 7,
         padding: '10px 16px',
-        borderTop: '2px solid #3a2410',
-        boxShadow: 'inset 0 1px 0 rgba(255,220,160,0.2)',
+        background: FACE,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 #a8a49c',
       }}>
-        <RetroButton icon label="Tune down" onClick={() => nudge(-1)}>
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M7 1.5v9L1 6zM11 1.5v9L5 6z" fill={INK} /></svg>
+        {/* Up to 92 stations share a single frequency worldwide. The needle can
+            only point at one place, so these walk the ones stacked underneath
+            it — otherwise all but the most-listened station is unreachable. */}
+        <RetroButton icon label="Previous station on this frequency" disabled={atNeedle.length < 2}
+          onClick={() => { triedRef.current = 0; setStationIndex((i) => (i - 1 + atNeedle.length) % atNeedle.length); setFailed(false); }}>
+          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M10 1.5v9L4 6zM3 1.5h1.6v9H3z" fill={INK} /></svg>
         </RetroButton>
+
+        {/* Between the two skips, where a deck puts it. */}
         <RetroButton icon label={powered ? 'Switch off' : 'Switch on'} onClick={() => void power(!powered)} style={{ minWidth: 46 }}>
           {powered
             ? <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1.5h3v9H2zM7 1.5h3v9H7z" fill={INK} /></svg>
             : <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5l8 4.5-8 4.5z" fill={INK} /></svg>}
         </RetroButton>
-        <RetroButton icon label="Tune up" onClick={() => nudge(1)}>
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M5 1.5v9L11 6zM1 1.5v9L7 6z" fill={INK} /></svg>
-        </RetroButton>
-
-        <span style={{ width: 8 }} />
-
-        <RetroButton icon label="Previous track" disabled={!station} onClick={() => goTrack(step(-1))}>
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M10 1.5v9L4 6zM3 1.5h1.6v9H3z" fill={INK} /></svg>
-        </RetroButton>
-        <RetroButton icon label="Next track" disabled={!station} onClick={() => goTrack(step(1))}>
+        <RetroButton icon label="Next station on this frequency" disabled={atNeedle.length < 2}
+          onClick={() => { triedRef.current = 0; setStationIndex((i) => (i + 1) % atNeedle.length); setFailed(false); }}>
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1.5v9L8 6zM7.4 1.5H9v9H7.4z" fill={INK} /></svg>
         </RetroButton>
+
       </div>
     </div>
   );
 }
 
+const SEGMENTS = 18;
+
 /**
- * A magic eye — the tuning indicator a valve radio actually had. The dark wedge
- * closes as the signal comes up, so it reads as "tuned in" rather than as a
- * meter. Driven by the real output level.
+ * Signal strength, as a broadcast graphic rather than a valve.
+ *
+ * This was a magic eye — a glowing green iris, a lovely object on a wooden set
+ * and a foreign one on a page of paper and ink. A segmented meter says the same
+ * thing (how much signal is coming through) in the shell's own language, and it
+ * stays readable at a glance while the needle sweeps.
+ *
+ * Vertical, and standing at the right-hand edge of the ident: a meter that fills
+ * upward reads as a level without needing a label.
+ *
+ * A plain ladder of equal bars, not the wedge it started as. Tapering the bars
+ * drew a triangle, and a triangle is a picture of a level rather than a scale
+ * you can read — the eye measures the outline instead of counting how far up the
+ * lit segments have climbed. Equal rungs make the reading unambiguous.
  */
-function MagicEye({ level, live }: { level: number; live: boolean }) {
-  const wedge = (live ? 78 * (1 - Math.min(1, level)) : 78) + 2;
+function SignalMeter({ level, live }: { level: number; live: boolean }) {
+  const lit = live ? Math.round(Math.min(1, level) * SEGMENTS) : 0;
   return (
-    <div style={{
-      width: 128, flexShrink: 0,
-      background: '#0b0e08',
-      boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.7)',
-      borderLeft: '2px solid #3a2410',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <div style={{
-        width: 74, height: 74, borderRadius: '50%',
-        background: `conic-gradient(from ${-wedge}deg, #0c2f16 0deg ${wedge * 2}deg, #46e878 ${wedge * 2}deg 360deg)`,
-        boxShadow: '0 0 18px rgba(70,232,120,0.4), inset 0 0 12px rgba(0,0,0,0.6)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#0c2f16', boxShadow: 'inset 0 0 6px rgba(0,0,0,0.9)' }} />
-      </div>
-    </div>
+    <span
+      role="img"
+      aria-label={live ? `Signal ${Math.round(Math.min(1, level) * 100)} percent` : 'No signal'}
+      style={{
+        display: 'flex', flexDirection: 'column-reverse', alignItems: 'flex-end',
+        gap: 4, flexShrink: 0, alignSelf: 'stretch', justifyContent: 'center',
+      }}
+    >
+      {Array.from({ length: SEGMENTS }, (_, i) => (
+        <span key={i} style={{
+          height: 5, width: 34, borderRadius: 1,
+          background: i < lit ? NEEDLE : DIAL_INK,
+          opacity: i < lit ? 1 : 0.13,
+          transition: 'opacity 120ms ease-out, background-color 120ms ease-out',
+        }} />
+      ))}
+    </span>
   );
 }

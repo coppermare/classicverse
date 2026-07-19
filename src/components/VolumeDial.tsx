@@ -59,7 +59,7 @@ interface VolumeDialProps {
  */
 export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Volume' }: VolumeDialProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ startAng: number; startVal: number; cx: number; cy: number } | null>(null);
+  const dragRef = useRef<{ lastAng: number; val: number; cx: number; cy: number } | null>(null);
   const lastStepRef = useRef(Math.round(value * TICK_STEPS));
   const preMuteRef = useRef(value || 0.5);
   const hideReadoutTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -101,7 +101,7 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    dragRef.current = { startAng: Math.atan2(e.clientY - cy, e.clientX - cx), startVal: value, cx, cy };
+    dragRef.current = { lastAng: Math.atan2(e.clientY - cy, e.clientX - cx), val: clamp(value, 0, 1), cx, cy };
     el.setPointerCapture(e.pointerId);
     setIsDragging(true);
     el.focus();
@@ -111,11 +111,19 @@ export default function VolumeDial({ value, onChange, embedded, ariaLabel = 'Vol
     const d = dragRef.current;
     if (!d) return;
     const ang = Math.atan2(e.clientY - d.cy, e.clientX - d.cx);
-    let delta = ang - d.startAng;
+    // Step by the angle travelled since the LAST move, not since the grab.
+    // Measured from the grab, a drag through the gap at the bottom of the
+    // scale wrapped past ±π and threw the knob from 0 straight to 10. Each
+    // increment is tiny, so the wrap never trips, and clamping the running
+    // value means an over-travelled knob sits at the stop and comes back the
+    // way it went rather than jumping to the far end.
+    let delta = ang - d.lastAng;
     if (delta > Math.PI) delta -= 2 * Math.PI;
     if (delta < -Math.PI) delta += 2 * Math.PI;
     const range = (END_ANGLE - START_ANGLE) * Math.PI / 180;
-    commit(d.startVal + delta / range);
+    d.lastAng = ang;
+    d.val = clamp(d.val + delta / range, 0, 1);
+    commit(d.val);
   }, [commit]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
