@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -10,8 +9,7 @@
   --color-brass: #B5913A;
   --color-ivory: #F5F0E8;
   --color-muted: #6B7280;
-  --font-serif: 'Inter', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 /* ─── Theme tokens (light defaults) ─── */
@@ -140,6 +138,7 @@ body {
   inset: 10px;
   z-index: -1;
   border-radius: 24px;
+  corner-shape: squircle;
   background:
     linear-gradient(180deg, rgba(76, 67, 55, 0.22), transparent 18%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.28), transparent 18%, transparent 82%, rgba(62, 52, 40, 0.18));
@@ -157,6 +156,7 @@ body {
   z-index: -2;
   height: 26px;
   border-radius: 0 0 34px 34px;
+  corner-shape: squircle;
   background:
     linear-gradient(180deg, #a79d8c, #7e7568);
   box-shadow:
@@ -188,6 +188,7 @@ body {
   z-index: 2;
   pointer-events: none;
   border-radius: 45% / 36%;
+  corner-shape: squircle;
   background:
     radial-gradient(ellipse at 50% 42%, transparent 43%, rgba(0, 0, 0, 0.30) 100%),
     radial-gradient(ellipse at 30% 13%, rgba(255, 255, 255, 0.38), transparent 25%),
@@ -302,6 +303,7 @@ body {
     linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 46%),
     linear-gradient(180deg, rgba(224, 217, 202, 0.62), rgba(182, 172, 154, 0.34));
   border-radius: 0 0 20px 20px;
+  corner-shape: squircle;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.46) inset,
     0 11px 18px rgba(77, 66, 51, 0.12) inset;
@@ -318,6 +320,7 @@ body {
   background:
     repeating-linear-gradient(90deg, rgba(82, 72, 58, 0.62) 0 3px, transparent 3px 8px);
   border-radius: 6px;
+  corner-shape: squircle;
   pointer-events: none;
 }
 
@@ -345,11 +348,15 @@ body {
 
 .cv-brand-logo {
   display: block;
-  width: 58%;
-  height: 58%;
+  width: 84%;
+  height: 84%;
   object-fit: contain;
   pointer-events: none;
   user-select: none;
+  /* Faint dark edge so light/silver marks (Auto Union rings, Cadillac,
+     Lincoln) stay legible on the light ivory badge. Imperceptible on
+     dark or coloured logos. */
+  filter: drop-shadow(0 0 0.6px rgba(0, 0, 0, 0.5));
 }
 
 .cv-inline-flag {
@@ -357,6 +364,7 @@ body {
   width: 1.4rem;
   height: 0.9rem;
   border-radius: 2px;
+  corner-shape: squircle;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.14),
     0 1px 0 rgba(255, 255, 255, 0.36) inset;
@@ -754,29 +762,9 @@ body {
     drop-shadow(0 6px 8px rgba(0,0,0,0.44));
 }
 
-/* ── Roller shell — carved recess in the surface ── */
-.timeline-roller-shell {
+/* ── Roller well — no boxed frame of its own; the rotary is the only visible box ── */
+.timeline-roller-well {
   isolation: isolate;
-  background: var(--cv-bg);
-  box-shadow:
-    /* Top wall shadow — carved edge casts shadow inward */
-    0  6px 16px rgba(0,0,0,0.48) inset,
-    /* Bottom wall — lighter, less shadow */
-    0 -3px  8px rgba(0,0,0,0.22) inset,
-    /* Perimeter groove line */
-    0 0 0 1px rgba(0,0,0,0.30),
-    /* Light catches the surface just below the groove */
-    0 1px 0 rgba(255,255,255,0.36);
-}
-
-/* ── Roller cavity — deep black floor ── */
-.timeline-roller-cavity {
-  background: radial-gradient(ellipse at 50% 35%, #1c1c1a 0%, #050505 70%, #000 100%);
-  box-shadow:
-    0  6px 16px rgba(0,0,0,0.90) inset,
-    0 -2px  8px rgba(0,0,0,0.70) inset,
-    0 0 0 1px rgba(0,0,0,0.95) inset,
-    0 1px 0 rgba(255,255,255,0.30);
 }
 
 /* ── Wheel pill — SVG drum sits inside here ── */
@@ -817,6 +805,7 @@ body {
   width: 1.9rem;
   height: 1.9rem;
   border-radius: 999px;
+  overflow: hidden;
   font-family: var(--font-sans);
   font-size: 0.7rem;
   font-weight: 800;
@@ -837,8 +826,8 @@ body {
 }
 
 .brand-knob-mark .cv-brand-logo {
-  width: 58%;
-  height: 58%;
+  width: 84%;
+  height: 84%;
 }
 
 .brand-knob-mark--active {
@@ -850,37 +839,6 @@ body {
     0 1px 0 rgba(255, 255, 255, 0.38) inset,
     0 -1px 0 rgba(0, 0, 0, 0.16) inset,
     0 0 18px color-mix(in srgb, var(--timeline-accent) 16%, transparent);
-}
-
-@media (max-width: 640px) {
-  .timeline-scrubber {
-    height: 176px !important;
-  }
-  .timeline-display-shell {
-    height: 86px !important;
-    border-radius: 28px !important;
-  }
-  .timeline-display-glass {
-    border-radius: 23px !important;
-  }
-  .timeline-roller-shell {
-    height: 72px !important;
-    border-radius: 22px !important;
-  }
-  .timeline-roller-cavity {
-    border-radius: 16px !important;
-  }
-  .brand-knob {
-    height: 146px !important;
-  }
-  .brand-knob .timeline-display-shell {
-    height: 72px !important;
-  }
-  .brand-knob .timeline-roller-shell {
-    height: 60px !important;
-    left: 4rem !important;
-    right: 4rem !important;
-  }
 }
 
 /* Animations */
@@ -921,6 +879,7 @@ body {
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background-color: var(--cv-text-steel);
   border-radius: 2px;
+  corner-shape: squircle;
 }
 
 /* ═══════════════════════════════════════════
@@ -947,7 +906,7 @@ body {
 .cv-tv-shadow {
   position: absolute;
   left: 5%; right: 5%;
-  bottom: -20px;
+  bottom: -8px;
   height: 24px;
   background: radial-gradient(ellipse, rgba(0,0,0,0.55), rgba(0,0,0,0) 70%);
   filter: blur(4px);
@@ -960,8 +919,9 @@ body {
   top: 0; left: 0; right: 0;
   bottom: 16px;
   border-radius: 22px;
+  corner-shape: squircle;
   background:
-    linear-gradient(180deg, #b8b1a4 0%, #9a9286 50%, #7a7468 100%);
+    linear-gradient(180deg, #d8b183 0%, #ba9165 50%, #99744b 100%);
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.45),
     inset 0 -3px 0 rgba(0,0,0,0.4),
@@ -973,10 +933,12 @@ body {
 .cv-tv-cabinet-grain {
   position: absolute; inset: 0;
   background:
-    repeating-linear-gradient(92deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(91deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 7px),
-    repeating-linear-gradient(89deg, rgba(0,0,0,0.06) 0 1px, transparent 1px 11px);
-  mix-blend-mode: overlay;
+    repeating-linear-gradient(89deg, rgba(40,22,10,0.22) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(90.5deg, rgba(180,130,80,0.16) 0 2px, transparent 2px 13px),
+    repeating-linear-gradient(88deg, rgba(30,16,6,0.18) 0 1px, transparent 1px 21px),
+    repeating-linear-gradient(91deg, rgba(200,155,105,0.12) 0 3px, transparent 3px 34px),
+    repeating-linear-gradient(89.5deg, rgba(20,10,4,0.14) 0 1px, transparent 1px 55px);
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
@@ -997,8 +959,9 @@ body {
   position: absolute;
   inset: 14px;
   border-radius: 14px;
+  corner-shape: squircle;
   background:
-    linear-gradient(180deg, #524e48 0%, #3e3a32 60%, #302c24 100%);
+    linear-gradient(180deg, #7a5836 0%, #614327 55%, #48301b 100%);
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,0.5),
     inset 0 2px 0 rgba(255,255,255,0.06);
@@ -1009,11 +972,18 @@ body {
   overflow: hidden;
 }
 
+/* Deep walnut, properly grained. The panel went pale and nearly smooth chasing
+   legibility, and a light untextured board reads as laminate. Four passes carry
+   the grain: a close pair for the fibre, a wide one for the darker streaks, and
+   a warm pass that lifts the ridges between them. Kept off the tight 5px period
+   that read as stripes at normal viewing distance. */
 .cv-tv-bezel-grain {
   position: absolute; inset: 0;
   background:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 6px);
+    repeating-linear-gradient(90.4deg, rgba(28,14,5,0.20) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(89.6deg, rgba(255,222,180,0.09) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90.8deg, rgba(20,10,3,0.16) 0 2px, transparent 2px 27px),
+    repeating-linear-gradient(89.3deg, rgba(255,214,164,0.06) 0 2px, transparent 2px 49px);
   pointer-events: none;
   mix-blend-mode: overlay;
 }
@@ -1021,66 +991,49 @@ body {
 /* ── Screen well ── */
 .cv-tv-screen-well {
   position: relative;
-  border-radius: 36px / 42px;
+  border-radius: 14px;
+  corner-shape: squircle;
   background:
     radial-gradient(ellipse at 50% 50%, #1a1612 0%, #0a0806 70%, #050403 100%);
-  padding: 8px;
-  box-shadow:
-    inset 0 6px 16px rgba(0,0,0,0.9),
-    inset 0 -4px 12px rgba(0,0,0,0.8),
-    inset 12px 0 22px rgba(0,0,0,0.55),
-    inset -12px 0 22px rgba(0,0,0,0.55),
-    inset 0 0 0 2px rgba(255,255,255,0.03);
+  padding: 18px;
   display: flex;
   flex-direction: column;
 }
 
-.cv-tv-screen-dome {
+/* Glass highlight — folded into the well as a pseudo-element instead of its own layer.
+   Aligned to the well's padding (18px) so it sits exactly on the screen, not straddling
+   the well/screen boundary and painting a stray dark ring there. */
+.cv-tv-screen-well::before {
+  content: '';
   position: absolute;
-  inset: 6px;
-  border-radius: 40px / 46px;
+  inset: 18px;
+  border-radius: 36px;
+  corner-shape: squircle;
   pointer-events: none;
   z-index: 3;
   background:
     radial-gradient(ellipse 70% 35% at 50% 6%, rgba(255,255,255,0.10), transparent 65%);
-  box-shadow:
-    inset 0 8px 18px rgba(0,0,0,0.55),
-    inset 0 -8px 18px rgba(0,0,0,0.45),
-    inset 12px 0 20px rgba(0,0,0,0.32),
-    inset -12px 0 20px rgba(0,0,0,0.32),
-    inset 0 0 0 2px rgba(0,0,0,0.45);
 }
 
-.cv-tv-screen-frame {
+/* Screen + content merged — sits directly against the silver well, no black ring */
+.cv-tv-screen {
   flex: 1;
   position: relative;
-  border-radius: 44px / 50px;
-  background: #050403;
-  padding: 4px;
-  box-shadow:
-    inset 0 0 0 2px #1a1410,
-    inset 0 0 14px rgba(0,0,0,0.95),
-    0 2px 0 rgba(255,210,170,0.05);
-}
-
-.cv-tv-screen {
-  position: relative;
-  width: 100%; height: 100%;
-  border-radius: 40px / 46px;
+  /* The picture is the unit of measure for anything drawn on it. Sizing the
+     lower third in cqw keeps the caption the same fraction of the screen at
+     every window width, instead of ballooning on a small tube. inline-size,
+     not size — height containment isn't needed and this element is flex:1. */
+  container-type: inline-size;
+  border-radius: 36px;
+  corner-shape: squircle;
   overflow: hidden;
   background: #0a0a08;
   transition: background 200ms;
-}
-.cv-tv-screen.on  { background: #14140e; }
-.cv-tv-screen.off { background: #060604; }
-
-.cv-tv-screen-content {
-  position: absolute; inset: 0;
-  border-radius: 40px / 46px;
-  overflow: hidden;
   transform: perspective(900px) rotateX(0.6deg);
   transform-style: preserve-3d;
 }
+.cv-tv-screen.on  { background: #14140e; }
+.cv-tv-screen.off { background: #060604; }
 
 /* Hide system cursor inside the screen — pixel cursor handles it */
 .cv-tv-screen-well,
@@ -1089,10 +1042,10 @@ body {
 }
 
 /* Power animations */
-.cv-tv-screen.turning-off .cv-tv-screen-content {
+.cv-tv-screen.turning-off {
   animation: cv-tv-turnOff 0.5s forwards ease-in;
 }
-.cv-tv-screen.turning-on .cv-tv-screen-content {
+.cv-tv-screen.turning-on {
   animation: cv-tv-turnOn 0.6s forwards ease-out;
 }
 @keyframes cv-tv-turnOff {
@@ -1116,40 +1069,56 @@ body {
 }
 @keyframes cv-tv-dotFade { to { opacity: 0; transform: translate(-50%,-50%) scale(0.2); } }
 
-/* Screen overlays */
+/* Screen overlays — the glass.
+   These sit above every piece of UI (z-index 40) rather than relying on document
+   order. The toolbar and panels carry their own z-index to stack over app
+   content, which would otherwise lift them out through the glass: they'd render
+   flat and clean while everything around them had scanlines, vignette and
+   curvature, and read as pasted on top of the screen rather than displayed on
+   it. Only the boot overlay (60) and the cursor (99) are meant to be in front. */
 .cv-tv-screen-scanlines {
   position: absolute; inset: 0;
+  z-index: 40;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 1px, transparent 1px 3px);
   pointer-events: none;
   mix-blend-mode: multiply;
-  border-radius: 40px / 46px;
+  border-radius: 16px;
+  corner-shape: squircle;
 }
 .cv-tv-screen-vignette {
   position: absolute; inset: 0;
+  z-index: 40;
   background:
-    radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.28) 78%, rgba(0,0,0,0.55) 100%);
+    radial-gradient(ellipse at 50% 50%, transparent 52%, rgba(0,0,0,0.16) 80%, rgba(0,0,0,0.34) 100%);
   pointer-events: none;
-  border-radius: 40px / 46px;
+  border-radius: 16px;
+  corner-shape: squircle;
 }
 .cv-tv-screen-glare {
   position: absolute; inset: 0;
+  z-index: 40;
   background:
     radial-gradient(ellipse 75% 35% at 35% 10%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 40%, transparent 70%),
     radial-gradient(ellipse 60% 25% at 70% 90%, rgba(255,255,255,0.07) 0%, transparent 60%);
   pointer-events: none;
-  border-radius: 40px / 46px;
+  border-radius: 16px;
+  corner-shape: squircle;
   mix-blend-mode: screen;
 }
 .cv-tv-screen-curve {
   position: absolute; inset: 0;
-  border-radius: 40px / 46px;
+  z-index: 40;
+  border-radius: 16px;
+  corner-shape: squircle;
   pointer-events: none;
+  /* Eased off: enough to bend the picture into the tube without the left and
+     right thirds of every screen sitting in shadow. */
   box-shadow:
-    inset 0 0 22px rgba(0,0,0,0.25),
-    inset 10px 0 22px rgba(0,0,0,0.18),
-    inset -10px 0 22px rgba(0,0,0,0.18),
-    inset 0 10px 22px rgba(0,0,0,0.18),
-    inset 0 -12px 24px rgba(0,0,0,0.22);
+    inset 0 0 18px rgba(0,0,0,0.16),
+    inset 7px 0 16px rgba(0,0,0,0.10),
+    inset -7px 0 16px rgba(0,0,0,0.10),
+    inset 0 7px 16px rgba(0,0,0,0.10),
+    inset 0 -8px 18px rgba(0,0,0,0.13);
 }
 
 /* Lower-third title overlay */
@@ -1158,32 +1127,34 @@ body {
   bottom: 0; left: 0; right: 0;
   z-index: 4;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 55%, transparent 100%);
+  /* No gradient scrim over the car image — the title/meta stay legible via their
+     own text-shadows, and the brand mark sits on its own light chip. */
+  background: none;
   padding: 28px 28px 20px;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
-.cv-tv-era-label {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--cv-brass);
-  font-family: var(--font-sans);
-}
 .cv-tv-car-name {
-  font-size: 20px;
+  font-family: var(--font-sans);
+  font-size: clamp(17px, 3.3cqw, 30px);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.1;
-  font-family: var(--font-sans);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 0, 0, 0.7);
 }
 .cv-tv-car-meta {
-  font-size: 11px;
-  color: rgba(255,255,255,0.65);
-  letter-spacing: 0.05em;
   font-family: var(--font-sans);
+  /* The two lines read as one caption block, so they need air between them —
+     line-height alone leaves the meta line crowding the name's descenders. */
+  margin-top: clamp(3px, 0.6cqw, 6px);
+  font-size: clamp(12px, 2.3cqw, 20px);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 2px 5px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.7);
 }
 
 /* Screen toggle button — top-right inside screen */
@@ -1195,9 +1166,19 @@ body {
 
 /* ── Right control column ── */
 .cv-tv-right-col {
+  /* Above the grain. The wood texture is absolutely positioned, and a static
+     block paints before positioned siblings — so the pattern was laid over the
+     knobs, the brand plate and the power button instead of behind them. The
+     controls are objects sitting on the panel, not things printed into it. */
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* One rhythm between control groups. 8px read as uneven because the volume
+     dial carries a 20px halo of its own inside its 148px box, so its neighbour
+     sat 28px away while the roller and the knobs sat 8px apart. The dial
+     cancels its halo with a negative margin where it is rendered. */
+  gap: 24px;
   overflow: hidden;
   padding-bottom: 8px;
 }
@@ -1224,64 +1205,56 @@ body {
   --timeline-ridge-shadow:   rgba(0,0,0,0.92);
 }
 
-/* Knob plate (bottom panel) */
-.cv-tv-knob-plate {
-  flex: 1;
-  min-height: 0;
+
+/* Speaker grille — dot perforations directly on the panel, no boxed frame.
+   The panel behind the badge is left undrilled, the way a set has its nameplate
+   fixed to solid metal. */
+.cv-tv-speaker-grille {
   position: relative;
-  background: linear-gradient(180deg, #1a1410, #0d0907);
-  border-radius: 8px;
-  margin: 0 4px;
-  padding: 8px 0 6px;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
+  flex-shrink: 0;
 }
-.cv-tv-knob-plate::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 4px);
+
+/* The perforations sit on a pseudo-element rather than the grille itself: a
+   mask applies to an element's children too, so masking the grille erased the
+   badge standing on it.
+
+   Two details make the clearing look drilled rather than smudged. The pattern
+   is anchored at 50% 50%, which puts a dot centre exactly on the middle of the
+   panel and every other centre a whole 7px step away; and the hole's edges are
+   half-steps (3.5 + 7k) from that centre, so each edge lands precisely between
+   two rows of holes. Anchored top-left instead, the edges fell half a pixel
+   from a dot centre and sliced perforations in half. */
+.cv-tv-speaker-grille::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0.55) 1.1px, transparent 1.4px) 50% 50% / 7px 7px;
+  /* A rect hole, from two gradients that are opaque outside their own band:
+     transparent only where both are. Hard stops, so the edge is a cut. */
+  -webkit-mask-image:
+    linear-gradient(to right, #000 calc(50% - 73.5px), transparent calc(50% - 73.5px) calc(50% + 73.5px), #000 calc(50% + 73.5px)),
+    linear-gradient(to bottom, #000 calc(50% - 10.5px), transparent calc(50% - 10.5px) calc(50% + 10.5px), #000 calc(50% + 10.5px));
+  mask-image:
+    linear-gradient(to right, #000 calc(50% - 73.5px), transparent calc(50% - 73.5px) calc(50% + 73.5px), #000 calc(50% + 73.5px)),
+    linear-gradient(to bottom, #000 calc(50% - 10.5px), transparent calc(50% - 10.5px) calc(50% + 10.5px), #000 calc(50% + 10.5px));
   pointer-events: none;
 }
 
-/* Speaker grille */
-.cv-tv-grille {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3px;
-  padding: 4px 0 0;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  align-content: end;
-}
-.cv-tv-grille-slot {
-  height: 2px;
-  background: #050403;
-  border-radius: 1px;
-  box-shadow: inset 0 1px 0 rgba(255,210,170,0.05);
-}
-
-/* Brand plate */
+/* Brand plate — bare mark + wordmark, no background wrapper */
 .cv-tv-brand-plate {
+  /* Above the perforations, which are painted by a positioned pseudo-element. */
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(180deg, #1a1410, #0a0806);
-  border-radius: 8px;
   margin: 0;
-  padding: 6px 10px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
   flex-shrink: 0;
 }
 .cv-tv-brand-mark-strip {
   display: inline-flex;
   border-radius: 2px;
+  corner-shape: squircle;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
 }
@@ -1326,6 +1299,42 @@ body {
   animation: cv-crt-scan 500ms ease-out forwards;
 }
 
+/* Snow — the set hunting for a signal between warming up and locking on.
+   Two offset repeating gradients jittered per-frame give the grain of analogue
+   static without an image or a canvas; a rolling bright band sweeps through it
+   the way a mistuned CRT rolls. */
+.cv-boot-snow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    repeating-conic-gradient(#fff 0% 25%, #000 0% 50%),
+    repeating-conic-gradient(#000 0% 25%, #fff 0% 50%);
+  background-size: 3px 3px, 5px 5px;
+  animation: cv-snow-jitter 90ms steps(1) infinite;
+}
+.cv-boot-snow::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 22%;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: cv-snow-roll 700ms linear infinite;
+}
+
+@keyframes cv-snow-jitter {
+  0%   { background-position: 0 0, 0 0; }
+  25%  { background-position: 2px 1px, 3px 2px; }
+  50%  { background-position: 1px 3px, 1px 4px; }
+  75%  { background-position: 3px 2px, 2px 1px; }
+  100% { background-position: 0 2px, 4px 0; }
+}
+
+@keyframes cv-snow-roll {
+  0%   { top: -25%; }
+  100% { top: 100%; }
+}
+
 @keyframes cv-crt-scan {
   0%   { transform: scaleY(0.004); opacity: 1; filter: brightness(3); }
   50%  { transform: scaleY(0.06);  opacity: 0.9; filter: brightness(2); }
@@ -1351,6 +1360,7 @@ body {
   display: inline-flex;
   flex-direction: row;
   border-radius: 4px;
+  corner-shape: squircle;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
 }
@@ -1389,36 +1399,84 @@ body {
   height: 16px;
   background:
     linear-gradient(180deg, #4a4238 0%, #2a241e 55%, #14110d 100%);
-  border-radius: 0 0 18px 18px;
+  clip-path: polygon(
+    0 0, 100% 0,
+    100% 0, calc(100% - 16px) 100%,
+    16px 100%, 0 0
+  );
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.14),
     inset 0 -2px 4px rgba(0,0,0,0.7),
     inset 5px 0 10px rgba(0,0,0,0.35),
     inset -5px 0 10px rgba(0,0,0,0.35);
 }
-.cv-tv-base::before {
-  content: '';
-  position: absolute;
-  bottom: -5px; left: 14px;
-  width: 36px; height: 6px;
-  background: linear-gradient(180deg, #1a1612, #050403);
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.45);
-}
-.cv-tv-base::after {
-  content: '';
-  position: absolute;
-  bottom: -5px; right: 14px;
-  width: 36px; height: 6px;
-  background: linear-gradient(180deg, #1a1612, #050403);
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.45);
-}
 .cv-tv-base-shadow {
   position: absolute;
   left: -4%; right: -4%;
-  bottom: -16px;
-  height: 14px;
+  bottom: -6px;
+  height: 16px;
   background: radial-gradient(ellipse, rgba(0,0,0,0.32), transparent 70%);
   filter: blur(6px);
+}
+
+/* ── Mobile / tablet — stack screen above, controls below instead of side-by-side.
+   The desktop layout is a chain of absolutely-positioned boxes sized off one fixed
+   landscape aspect-ratio on .cv-tv; that only works side-by-side. To stack, the whole
+   chain (.cv-tv → .cv-tv-cabinet → .cv-tv-bezel) switches to normal flow with
+   content-driven height, and the bezel's 2-column grid collapses to 1 column so the
+   screen and the right control column stack as separate rows instead. ── */
+@media (max-width: 900px) {
+  .cv-tv {
+    width: 100%;
+    aspect-ratio: auto;
+  }
+
+  .cv-tv-cabinet {
+    position: relative;
+    inset: auto;
+    top: auto; left: auto; right: auto; bottom: auto;
+    margin-bottom: 16px;
+    height: auto;
+  }
+
+  .cv-tv-bezel {
+    position: relative;
+    inset: auto;
+    margin: 14px;
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .cv-tv-screen-well {
+    aspect-ratio: 4 / 3;
+  }
+
+  .cv-tv-right-col {
+    height: auto;
+  }
+
+  .cv-tv-speaker-grille {
+    min-height: 100px !important;
+  }
+
+  .timeline-roller-well {
+    height: 70px !important;
+    margin: 20px 24px !important;
+    padding: 12px 22px !important;
+  }
+}
+
+/* Radio station ident — fades in when the needle locks onto a station, so a new
+   station arrives rather than replacing the old one in place. Entering, so
+   ease-out; short, because tuning across the band replays it constantly. */
+.cv-radio-ident {
+  animation: cv-radio-ident-in 200ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes cv-radio-ident-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-radio-ident { animation: cv-radio-ident-fade 160ms ease-out both; }
+  @keyframes cv-radio-ident-fade { from { opacity: 0; } to { opacity: 1; } }
 }

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * integrate.js — merge car-research/*.json into src/data/cars.ts
+ * integrate.js — merge "a century of cars"/*.json into src/data/cars.ts
  *
  * Run: node scripts/integrate.js
  *
- * Reads every *.json file in car-research/, skips years already defined in
+ * Reads every *.json file in "a century of cars"/, skips years already defined in
  * SKIP_YEARS (those are the original 10 vertical-slice records with richer
  * prose that live directly in cars.ts), converts the rest to TypeScript
  * CarRecord objects, and appends them to the CARS array in cars.ts.
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const RESEARCH_DIR = path.join(ROOT, 'car-research');
+const RESEARCH_DIR = path.join(ROOT, 'a century of cars');
 const CARS_FILE = path.join(ROOT, 'src', 'data', 'cars.ts');
 
 // ─── helpers ────────────────────────────────────────────────────────────────
