@@ -62,7 +62,10 @@ export default function CarApp({ node, os }: AppProps) {
                  type beside it (name × line-height + gap + meta × line-height). */
               width: 'clamp(56px, 9.8cqw, 88px)',
               height: 'calc(clamp(17px, 3.3cqw, 30px) * 1.15 + clamp(3px, 0.6cqw, 6px) + clamp(12px, 2.3cqw, 20px) * 1.35)',
-              padding: 'clamp(3px, 0.5cqw, 5px) clamp(5px, 0.8cqw, 8px)', flexShrink: 0,
+              /* More air inside the badge: the marque used to reach almost to
+                 the edges, which read as a cropped picture rather than a plate
+                 with a logo on it. The plate keeps its size; the logo sits in. */
+              padding: 'clamp(5px, 0.95cqw, 9px) clamp(8px, 1.5cqw, 14px)', flexShrink: 0,
               background: 'rgba(248,246,241,0.96)', borderRadius: 7,
               boxShadow: '0 1px 4px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6)',
             }}>
