@@ -499,6 +499,10 @@ function Classicverse() {
                   embedded
                   showAll={false}
                   ariaLabel={rollerLabel}
+                  /* An app that has claimed the roller sets its own pace: the
+                     Radio is tuned, not travelled, so it keeps the fine step.
+                     Anything else is a list to get through. */
+                  pace={appTuner ? 'fine' : 'list'}
                 />
 
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'center' }}>
