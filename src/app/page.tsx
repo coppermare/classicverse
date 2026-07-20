@@ -105,6 +105,41 @@ function circleButtonShadow(pressed: boolean) {
 
 type BootPhase = 'idle' | 'warming' | 'snow' | 'logo' | 'fading';
 
+/**
+ * Whether the set was left switched on.
+ *
+ * A television doesn't switch itself off because the page was reloaded — a
+ * refresh isn't the same gesture as reaching for the power button. The set
+ * still arrives off the first time anyone opens it, because nothing has been
+ * stored yet; after that it comes back the way it was left.
+ */
+const POWER_KEY = 'cv-set-power';
+
+function readLeftOn(): boolean {
+  try {
+    return localStorage.getItem(POWER_KEY) === 'on';
+  } catch {
+    // A full or disabled localStorage costs the memory, not the set.
+    return false;
+  }
+}
+
+/* Read once at startup and never again — nothing changes it behind our back,
+   so there is no subscription to keep. Going through useSyncExternalStore
+   rather than an effect is what keeps the restore off the critical path: the
+   server and the hydrating render both see `false`, React swaps in the real
+   value before it paints, and the set never flashes dark on its way to on. */
+const subscribeToNothing = () => () => {};
+const leftOnDuringSSR = () => false;
+
+function rememberPower(on: boolean) {
+  try {
+    localStorage.setItem(POWER_KEY, on ? 'on' : 'off');
+  } catch {
+    // As above — never let storage take the set down with it.
+  }
+}
+
 function Classicverse() {
   const nav = useOSNav();
 
@@ -118,11 +153,22 @@ function Classicverse() {
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [volumeChanging, setVolumeChanging] = useState(false);
 
-  // The set arrives off, the way a television in a room is off until someone
-  // turns it on. The power button is then the first thing you press, and the
-  // warm-up plays for real instead of being a flourish you only see if you
-  // happen to switch the set off and on again.
-  const [screenOn, setScreenOn] = useState(false);
+  /**
+   * Is the set on.
+   *
+   * Off the first time anyone opens it, the way a television in a room is off
+   * until someone turns it on — so the warm-up plays for real rather than being
+   * a flourish you only see by switching the set off and on again. But a reload
+   * isn't that gesture, so a set left on comes back on.
+   *
+   * Two sources, because they answer different questions: `leftOn` is how the
+   * set was found, `powerChoice` is what has been done to it since. The choice
+   * wins once it exists, which is also what stops a reload-restored `true` from
+   * overriding a switch-off a moment later.
+   */
+  const leftOn = useSyncExternalStore(subscribeToNothing, readLeftOn, leftOnDuringSSR);
+  const [powerChoice, setPowerChoice] = useState<boolean | null>(null);
+  const screenOn = powerChoice ?? leftOn;
   const [turningOff, setTurningOff] = useState(false);
   const [turningOn, setTurningOn] = useState(false);
   const [bootPhase, setBootPhase] = useState<BootPhase>('idle');
@@ -135,6 +181,12 @@ function Classicverse() {
 
   // Every sound in the system reads the knob through this one call.
   useEffect(() => { sfx.setLevel(volume, muted); }, [volume, muted]);
+
+  /* `setPower` reads the current state through this ref so it can stay
+     dependency-free. A set restored as already-on has to be reflected here too,
+     or the guard in `setPower` would read a stale `off` and swallow the first
+     press of the power button. */
+  useEffect(() => { powerRef.current.on = screenOn; }, [screenOn]);
 
   /* ── Where are we ── */
   const resolved = useMemo(() => resolvePath(DESKTOP, nav.path), [nav.path]);
@@ -293,9 +345,12 @@ function Classicverse() {
     bootTimers.current.forEach(clearTimeout);
     bootTimers.current = [];
     powerRef.current = { on, busy: true };
+    // Recorded on the press, not when the sequence finishes: a reload part-way
+    // through the warm-up should still come back to a set that is on.
+    rememberPower(on);
 
     if (on) {
-      setScreenOn(true);
+      setPowerChoice(true);
       setTurningOn(true);
       setBootPhase('warming');
       sfx.powerOn();
@@ -311,7 +366,7 @@ function Classicverse() {
       sfx.powerOff();
       setBootPhase('idle');
       setTurningOff(true);
-      setScreenOn(false);
+      setPowerChoice(false);
       setSearchOpen(false);
       bootTimers.current.push(setTimeout(() => {
         setTurningOff(false);
