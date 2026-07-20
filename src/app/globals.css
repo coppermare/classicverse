@@ -889,9 +889,21 @@ body {
 .cv-tv-stage {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 32px 16px 64px;
-  min-height: calc(100vh - 52px); /* fill viewport below nav */
+  /* Centred, but `safe` so it degrades to top-aligned rather than centring an
+     item taller than the stage — which on a phone, where the set stacks and
+     runs past the viewport, would push its top edge above the scroll origin and
+     leave the screen unreachable. Browsers without `safe` keep plain `center`. */
+  align-items: center;
+  align-items: safe center;
+  /* Even top and bottom: uneven padding shifts the midpoint, so the set would
+     sit off-centre by half the difference. */
+  padding: 32px 16px;
+  /* Was `calc(100vh - 52px)`, holding a gap for a nav bar that no longer exists
+     — the same one the skip link still points past. `dvh` keeps the set centred
+     on mobile against the visible viewport rather than behind the browser's
+     own chrome. */
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--cv-bg);
 }
 
