@@ -900,17 +900,64 @@ body {
   width: 1100px;
   max-width: 100%;
   aspect-ratio: 1000 / 620;
-  filter: drop-shadow(0 24px 40px rgba(0,0,0,0.18));
+  /* Pulled in from `0 24px 40px`: a shadow thrown that far below the silhouette
+     is the look of an object lit from above with nothing underneath it. Kept
+     close, it reads as the cabinet's own mass instead, and the contact shadow
+     below does the work of putting it on the floor. */
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,0.16));
 }
 
+/* Ground shadow.
+
+   What makes an object look like it is *resting* on something rather than
+   hovering over it is not one shadow but two at very different scales: a wide,
+   faint pool of ambient light the cabinet blocks from the room, and a small,
+   dark, almost unblurred core exactly where it touches. One blur radius cannot
+   be both — a single soft ellipse (which is what this was) always reads as
+   floating, because nothing in it is anchored to the contact line.
+
+   So the element itself is a zero-height ruler pinned to the cabinet's bottom
+   edge, and the two layers are measured off it. The ambient pool is drawn
+   first so the contact core lands on top of it.
+
+   The third tier is the drop-shadow on `.cv-tv`, which follows the cabinet's
+   real silhouette and covers the mid distance between these two. */
 .cv-tv-shadow {
   position: absolute;
-  left: 5%; right: 5%;
-  bottom: -8px;
-  height: 24px;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.55), rgba(0,0,0,0) 70%);
-  filter: blur(4px);
+  left: 0; right: 0;
+  bottom: 0;
+  height: 0;
   z-index: -1;
+}
+/* Both gradients are anchored near the top of their box rather than centred, so
+   each is darkest at the contact line and fades downward — the way a shadow
+   actually leaves the object that casts it. */
+
+/* Ambient: wide and soft, spilling well past the cabinet on both sides. */
+.cv-tv-shadow::before {
+  content: '';
+  position: absolute;
+  left: -8%; right: -8%;
+  top: -10px; height: 92px;
+  background: radial-gradient(ellipse 55% 62% at 50% 16%,
+    rgba(0,0,0,0.32) 0%,
+    rgba(0,0,0,0.20) 45%,
+    rgba(0,0,0,0) 76%);
+  filter: blur(24px);
+}
+/* Contact: the dark core under the feet. Tight, barely blurred, and inset to
+   the base's own footprint — the base is a trapezoid clipped 16px in on each
+   side, so the set touches down narrower than the cabinet above it. */
+.cv-tv-shadow::after {
+  content: '';
+  position: absolute;
+  left: 6%; right: 6%;
+  top: -4px; height: 20px;
+  background: radial-gradient(ellipse 50% 80% at 50% 20%,
+    rgba(0,0,0,0.62) 0%,
+    rgba(0,0,0,0.44) 45%,
+    rgba(0,0,0,0) 78%);
+  filter: blur(4px);
 }
 
 /* Cabinet — gray/cream per the reference photo */
@@ -1035,9 +1082,11 @@ body {
 .cv-tv-screen.on  { background: #14140e; }
 .cv-tv-screen.off { background: #060604; }
 
-/* Hide system cursor inside the screen — pixel cursor handles it */
-.cv-tv-screen-well,
-.cv-tv-screen-well * {
+/* Hide system cursor inside the screen — pixel cursor handles it.
+   Only while the set is lit; with the screen off nothing draws a pointer, so
+   the real one has to stay. */
+.cv-tv-screen-well.is-lit,
+.cv-tv-screen-well.is-lit * {
   cursor: none !important;
 }
 
@@ -1410,14 +1459,10 @@ body {
     inset 5px 0 10px rgba(0,0,0,0.35),
     inset -5px 0 10px rgba(0,0,0,0.35);
 }
-.cv-tv-base-shadow {
-  position: absolute;
-  left: -4%; right: -4%;
-  bottom: -6px;
-  height: 16px;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.32), transparent 70%);
-  filter: blur(6px);
-}
+/* `.cv-tv-base-shadow` used to live here. It was a child of `.cv-tv-base`, whose
+   clip-path also clips its descendants, so all that ever survived was a sliver
+   painted inside the base's own near-black trapezoid. The ground shadow above
+   replaces what it was meant to do. */
 
 /* ── Mobile / tablet — stack screen above, controls below instead of side-by-side.
    The desktop layout is a chain of absolutely-positioned boxes sized off one fixed

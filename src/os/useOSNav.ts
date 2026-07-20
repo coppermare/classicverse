@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ROOT } from './path';
 
@@ -107,5 +107,15 @@ export function useOSNav() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  return { path, navigate, replace, back, forward, canGoBack, canGoForward };
+  // One object, rebuilt only when something in it actually changed.
+  //
+  // A fresh literal every render looked harmless — the functions inside were all
+  // useCallback'd — but the shell holds `nav` whole and derives half its handlers
+  // from it (`openNode`, `goUp`, `onCrumb`, the `os` object). A new identity each
+  // render invalidated every one of them, so each dependent re-rendered on every
+  // keystroke and every hover, memoised or not.
+  return useMemo(
+    () => ({ path, navigate, replace, back, forward, canGoBack, canGoForward }),
+    [path, navigate, replace, back, forward, canGoBack, canGoForward],
+  );
 }

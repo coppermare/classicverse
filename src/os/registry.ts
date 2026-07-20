@@ -22,6 +22,26 @@ import type { AppNode, FolderNode, OSNode } from './types';
  * means a module can be arbitrarily large without slowing the desktop.
  */
 
+/**
+ * Builds a folder's children once, then hands back the same array forever.
+ *
+ * Lazy and *repeatable* are different things, and only the first was true here.
+ * Every caller that asked a folder what it contained paid to rebuild the whole
+ * list — and the shell asks constantly: once to work out the default selection,
+ * once more to count the items for the live region, again for the roller. Inside
+ * Ferrari that meant 250 nodes reconstructed several times per render, each one
+ * re-deriving its thumbnail URL, and a render happens every time the pointer
+ * crosses a tile.
+ *
+ * Caching also makes the array referentially stable, which is what lets the
+ * `useMemo`s downstream actually hold: they key off the node, so a fresh array
+ * on every call quietly defeated them.
+ */
+function lazy(build: () => OSNode[]): () => OSNode[] {
+  let built: OSNode[] | null = null;
+  return () => (built ??= build());
+}
+
 /* ── A century of cars: decade folders → one car each ── */
 
 function carNode(car: CarRecord): AppNode {
@@ -54,7 +74,7 @@ const carsFolder: FolderNode = {
   icon: { kind: 'glyph', id: 'cars' },
   layout: 'gallery',
   keywords: 'archive automobile timeline history century decade',
-  children: () => [...CARS].sort((a, b) => a.year - b.year).map(carNode),
+  children: lazy(() => [...CARS].sort((a, b) => a.year - b.year).map(carNode)),
 };
 
 /* ── F1 Archive: team folders → one win each ── */
@@ -82,7 +102,7 @@ const f1Folder: FolderNode = {
   icon: { kind: 'glyph', id: 'f1' },
   layout: 'icons',
   keywords: 'formula one grand prix racing motorsport',
-  children: () => F1_TEAMS.map((team): FolderNode => ({
+  children: lazy(() => F1_TEAMS.map((team): FolderNode => ({
     id: team.id,
     kind: 'folder',
     name: team.name,
@@ -91,8 +111,8 @@ const f1Folder: FolderNode = {
     enabled: team.enabled,
     layout: 'gallery',
     keywords: `${team.name} formula one`,
-    children: () => (team.id === 'ferrari' ? FERRARI_WINS.map(winNode) : []),
-  })),
+    children: lazy(() => (team.id === 'ferrari' ? FERRARI_WINS.map(winNode) : [])),
+  }))),
 };
 
 /* ── Apps ── */
@@ -116,5 +136,5 @@ export const DESKTOP: FolderNode = {
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: (): OSNode[] => [f1Folder, carsFolder, radioApp],
+  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp]),
 };

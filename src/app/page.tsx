@@ -118,13 +118,17 @@ function Classicverse() {
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [volumeChanging, setVolumeChanging] = useState(false);
 
-  const [screenOn, setScreenOn] = useState(true);
+  // The set arrives off, the way a television in a room is off until someone
+  // turns it on. The power button is then the first thing you press, and the
+  // warm-up plays for real instead of being a flourish you only see if you
+  // happen to switch the set off and on again.
+  const [screenOn, setScreenOn] = useState(false);
   const [turningOff, setTurningOff] = useState(false);
   const [turningOn, setTurningOn] = useState(false);
   const [bootPhase, setBootPhase] = useState<BootPhase>('idle');
 
   const screenContentRef = useRef<HTMLDivElement>(null);
-  const powerRef = useRef({ on: true, busy: false });
+  const powerRef = useRef({ on: false, busy: false });
   const volumeHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const bootTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const glitchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -349,9 +353,13 @@ function Classicverse() {
   ].filter(Boolean).join(' ');
 
   const AppComponent = !isFolder(node) ? node.component : null;
-  const liveText = isFolder(node)
-    ? `${node.name}: ${node.children().length} items`
-    : `${node.name}${node.subtitle ? `, ${node.subtitle}` : ''}`;
+  // Nothing is on the screen while the set is off, so don't announce a channel
+  // that isn't showing — say what the set is actually doing.
+  const liveText = !screenOn
+    ? 'The set is off. Use the power button to turn it on.'
+    : isFolder(node)
+      ? `${node.name}: ${node.children().length} items`
+      : `${node.name}${node.subtitle ? `, ${node.subtitle}` : ''}`;
 
   return (
     <>
@@ -371,7 +379,12 @@ function Classicverse() {
             <div className="cv-tv-bezel">
               <div className="cv-tv-bezel-grain" />
 
-              <div id="main-content" className="cv-tv-screen-well" style={{ cursor: 'none' }}>
+              {/* `is-lit` hands the pointer over to the pixel cursor. Only while
+                  the set is on: the drawn cursor isn't rendered when the screen
+                  is dark, so hiding the real one as well would leave a visitor
+                  with no pointer at all over the largest thing on the page —
+                  which is now what they meet first. */}
+              <div id="main-content" className={`cv-tv-screen-well${screenOn ? ' is-lit' : ''}`}>
                 <div
                   ref={screenContentRef}
                   className={screenClass}
@@ -461,7 +474,12 @@ function Classicverse() {
                   <div className="cv-tv-screen-vignette" />
                   <div className="cv-tv-screen-glare" />
                   <div className="cv-tv-screen-curve" />
-                  {!screenOn && <div key="off-dot" className="cv-tv-off-dot" />}
+                  {/* Keyed to the switch-off, not to being off. It's the charge
+                      left on the phosphor when the tube loses its signal, and it
+                      fades over exactly the 700ms `turningOff` lasts — rendering
+                      it for "off" in general meant it also flashed once on load,
+                      on a set that had never been on. */}
+                  {turningOff && <div key="off-dot" className="cv-tv-off-dot" />}
                 </div>
               </div>
 
@@ -532,7 +550,7 @@ function Classicverse() {
             </div>
           </div>
 
-          <div className="cv-tv-base"><div className="cv-tv-base-shadow" /></div>
+          <div className="cv-tv-base" />
           <div className="cv-tv-shadow" />
         </div>
       </div>

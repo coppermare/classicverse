@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { isFolder, type FolderNode, type OSNode } from './types';
 import PixelArt from './PixelArt';
 import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
@@ -75,6 +75,97 @@ function NodeArt({ node }: { node: OSNode }) {
   return <PixelArt grid={emblem} scale={APP_PX} style={{ opacity: enabled ? 1 : 0.5 }} />;
 }
 
+/**
+ * The tiles are memoised, and the two below are why the shell stays responsive
+ * inside a big folder.
+ *
+ * Moving the pointer one tile to the right changes exactly two things on screen:
+ * the tile that lost the highlight and the tile that gained it. Without `memo`
+ * React re-rendered all 250 of Ferrari's, several times a second, which is what
+ * made the pointer itself stutter — it is drawn on an animation frame, and the
+ * frames were going to reconciliation instead. `onSelect`/`onOpen` are stable
+ * from the shell, so `node` and `active` are the only props that move, and only
+ * for the two tiles that actually changed.
+ */
+const GalleryTile = memo(function GalleryTile({
+  node, active, onSelect, onOpen,
+}: {
+  node: OSNode; active: boolean;
+  onSelect: (id: string) => void; onOpen: (node: OSNode) => void;
+}) {
+  const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
+  return (
+    <button
+      data-id={node.id}
+      type="button"
+      onPointerEnter={() => { onSelect(node.id); sfx.hover(); }}
+      onClick={() => onOpen(node)}
+      aria-label={`${node.name}${node.subtitle ? ` - ${node.subtitle}` : ''}`}
+      aria-current={active ? 'true' : undefined}
+      style={{
+        position: 'relative', display: 'block', padding: 0, border: 'none',
+        aspectRatio: '4 / 3', overflow: 'hidden', cursor: 'pointer', background: '#1a1612',
+        borderRadius: 3,
+        boxShadow: active
+          ? 'inset 0 0 0 2px #d4a017, 0 0 0 1px rgba(0,0,0,0.5)'
+          : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
+      }}
+    >
+      {photo ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={photo} alt="" loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      ) : (
+        <span style={{
+          width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          font: '600 15px/1 var(--font-sans)', color: '#6a6258',
+        }}>
+          {node.id}
+        </span>
+      )}
+    </button>
+  );
+});
+
+const IconTile = memo(function IconTile({
+  node, active, onSelect, onOpen,
+}: {
+  node: OSNode; active: boolean;
+  onSelect: (id: string) => void; onOpen: (node: OSNode) => void;
+}) {
+  const off = node.enabled === false;
+  return (
+    <button
+      data-id={node.id}
+      type="button"
+      onPointerEnter={() => { onSelect(node.id); if (!off) sfx.hover(); }}
+      onClick={() => onOpen(node)}
+      aria-label={`${node.name}${off ? ' (coming soon)' : ''}`}
+      aria-current={active ? 'true' : undefined}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+        width: 138, padding: '8px 6px 10px', border: 'none', borderRadius: 6,
+        cursor: off ? 'default' : 'pointer',
+        background: active ? 'rgba(74,110,158,0.18)' : 'transparent',
+        outline: active ? '1px dotted rgba(44,38,32,0.45)' : 'none',
+        outlineOffset: -2,
+      }}
+    >
+      <NodeArt node={node} />
+      {/* Name only. The subtitle repeated what the icon and the folder
+          already said, and a second line under every icon turned the
+          desktop into a wall of text. It still rides along in search
+          results and the Guide, where it disambiguates. */}
+      <span style={{
+        font: '600 14px/1.25 var(--font-sans)',
+        color: off ? '#6f675c' : '#2c2620', textAlign: 'center',
+      }}>
+        {node.name}
+      </span>
+    </button>
+  );
+});
+
 interface Props {
   folder: FolderNode;
   selectedId: string | null;
@@ -87,11 +178,16 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
   // list — 250 nodes for a Ferrari season, each re-deriving its thumbnail URL —
   // every time anything re-rendered, hovering a tile included.
   const children = useMemo(() => folder.children(), [folder]);
-  const activeRef = useRef<HTMLButtonElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
+  // Found by id rather than held on a ref: a ref would have to be threaded
+  // through the tile, and the tiles are memoised precisely so that they don't
+  // re-render when the selection moves.
   useEffect(() => {
-    activeRef.current?.scrollIntoView({ block: 'nearest' });
+    if (!selectedId) return;
+    gridRef.current
+      ?.querySelector(`button[data-id="${CSS.escape(selectedId)}"]`)
+      ?.scrollIntoView({ block: 'nearest' });
   }, [selectedId]);
 
   /**
@@ -173,43 +269,15 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
         {/* Gutters, so the tiles read as separate photographs rather than one
             butted-together sheet — and so the selection ring has room to sit. */}
         <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7, padding: '7px 8px 10px' }}>
-          {children.map((node) => {
-            const active = node.id === selectedId;
-            const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
-            return (
-              <button
-                key={node.id}
-                ref={active ? activeRef : undefined}
-                data-id={node.id}
-                type="button"
-                onPointerEnter={() => { onSelect(node.id); sfx.hover(); }}
-                onClick={() => onOpen(node)}
-                aria-label={`${node.name}${node.subtitle ? ` - ${node.subtitle}` : ''}`}
-                aria-current={active ? 'true' : undefined}
-                style={{
-                  position: 'relative', display: 'block', padding: 0, border: 'none',
-                  aspectRatio: '4 / 3', overflow: 'hidden', cursor: 'pointer', background: '#1a1612',
-                  borderRadius: 3,
-                  boxShadow: active
-                    ? 'inset 0 0 0 2px #d4a017, 0 0 0 1px rgba(0,0,0,0.5)'
-                    : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
-                }}
-              >
-                {photo ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={photo} alt="" loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                ) : (
-                  <span style={{
-                    width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    font: '600 15px/1 var(--font-sans)', color: '#6a6258',
-                  }}>
-                    {node.id}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          {children.map((node) => (
+            <GalleryTile
+              key={node.id}
+              node={node}
+              active={node.id === selectedId}
+              onSelect={onSelect}
+              onOpen={onOpen}
+            />
+          ))}
         </div>
       </div>
     );
@@ -228,42 +296,15 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
              the row still holds four icons instead of wrapping to three. */
           gap: '24px 18px', padding: '12px 18px', maxWidth: 620,
         }}>
-          {children.map((node) => {
-            const active = node.id === selectedId;
-            const off = node.enabled === false;
-            return (
-              <button
-                key={node.id}
-                ref={active ? activeRef : undefined}
-                data-id={node.id}
-                type="button"
-                onPointerEnter={() => { onSelect(node.id); if (!off) sfx.hover(); }}
-                onClick={() => onOpen(node)}
-                aria-label={`${node.name}${off ? ' (coming soon)' : ''}`}
-                aria-current={active ? 'true' : undefined}
-                style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                  width: 138, padding: '8px 6px 10px', border: 'none', borderRadius: 6,
-                  cursor: off ? 'default' : 'pointer',
-                  background: active ? 'rgba(74,110,158,0.18)' : 'transparent',
-                  outline: active ? '1px dotted rgba(44,38,32,0.45)' : 'none',
-                  outlineOffset: -2,
-                }}
-              >
-                <NodeArt node={node} />
-                {/* Name only. The subtitle repeated what the icon and the folder
-                    already said, and a second line under every icon turned the
-                    desktop into a wall of text. It still rides along in search
-                    results and the Guide, where it disambiguates. */}
-                <span style={{
-                  font: '600 14px/1.25 var(--font-sans)',
-                  color: off ? '#6f675c' : '#2c2620', textAlign: 'center',
-                }}>
-                  {node.name}
-                </span>
-              </button>
-            );
-          })}
+          {children.map((node) => (
+            <IconTile
+              key={node.id}
+              node={node}
+              active={node.id === selectedId}
+              onSelect={onSelect}
+              onOpen={onOpen}
+            />
+          ))}
         </div>
       </div>
     </div>
