@@ -243,47 +243,15 @@ export default function WeatherApp({}: AppProps) {
       display: 'flex', flexDirection: 'column',
       color: DIAL_INK,
     }}>
-      {/* ── Ident ──
-          Which place, and what time it is there. Full-bleed, like the Radio's
-          scale: the strip is the channel captioning itself. */}
-      <div style={{
-        flexShrink: 0, position: 'relative',
-        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16,
-        padding: '13px 22px 12px',
-        background: '#FBF9F3',
-        boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12)',
-      }}>
-        <div style={{ minWidth: 0 }}>
-          <div style={{
-            font: '800 21px/1.15 var(--font-sans)', letterSpacing: '-0.01em',
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {place.name}
-          </div>
-          <div style={{
-            font: '500 11px/1.3 var(--font-sans)', color: DIAL_MUTED, marginTop: 3,
-            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {[place.admin1 && place.admin1 !== place.name ? place.admin1 : null, place.country]
-              .filter(Boolean).join(', ')}
-          </div>
-        </div>
+      {/* The body: the dial's contents down the left, the bulletin to the right.
 
-        {showing && (
-          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-            <div style={{
-              font: '700 17px/1 var(--font-sans)', fontVariantNumeric: 'tabular-nums',
-            }}>
-              {showing.current.time.slice(11, 16)}
-            </div>
-            <div style={{ font: '600 9px/1 var(--font-sans)', letterSpacing: '0.14em', color: DIAL_MUTED, marginTop: 5 }}>
-              LOCAL TIME
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* The body: the dial's contents down the left, the bulletin to the right. */}
+          There is no full-bleed strip across the top any more. The place and
+          its local time used to caption the channel from a band above both
+          columns — but that band cut the sidebar off at the shoulder, so the
+          dial began halfway down the screen with a header sitting on top of it
+          that had nothing to do with it. The caption belongs to the bulletin,
+          not to the sidebar, so it has moved inside the bulletin and the dial
+          now runs the full height of the screen. */}
       <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
         {/* ── The dial ──
             What the knob is sweeping, written down.
@@ -404,6 +372,45 @@ export default function WeatherApp({}: AppProps) {
 
         {/* ── The bulletin ── */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          {/* ── Caption ──
+              Which place, and what time it is there. This is the ident that used
+              to run across the top of the whole channel; sat here, over the
+              bulletin it describes, it stops cutting the sidebar in half and
+              reads as the headline of the forecast rather than a title bar. */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16,
+            padding: '13px 20px 11px',
+            borderBottom: '1px solid rgba(0,0,0,0.10)',
+          }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{
+                font: '800 21px/1.15 var(--font-sans)', letterSpacing: '-0.01em',
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              }}>
+                {place.name}
+              </div>
+              <div style={{
+                font: '500 11px/1.3 var(--font-sans)', color: DIAL_MUTED, marginTop: 3,
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              }}>
+                {[place.admin1 && place.admin1 !== place.name ? place.admin1 : null, place.country]
+                  .filter(Boolean).join(', ')}
+              </div>
+            </div>
+
+            {showing && (
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div style={{ font: '700 17px/1 var(--font-sans)', fontVariantNumeric: 'tabular-nums' }}>
+                  {showing.current.time.slice(11, 16)}
+                </div>
+                <div style={{ font: '600 9px/1 var(--font-sans)', letterSpacing: '0.14em', color: DIAL_MUTED, marginTop: 5 }}>
+                  LOCAL TIME
+                </div>
+              </div>
+            )}
+          </div>
+
           <div style={{
             flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column',
             justifyContent: 'center', gap: 16, padding: '0 20px',
