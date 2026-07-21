@@ -554,10 +554,21 @@ function Classicverse() {
                   embedded
                   showAll={false}
                   ariaLabel={rollerLabel}
-                  /* An app that has claimed the roller sets its own pace: the
-                     Radio is tuned, not travelled, so it keeps the fine step.
-                     Anything else is a list to get through. */
-                  pace={appTuner ? 'fine' : 'list'}
+                  /* Geared by what one detent actually costs, not by how long
+                     the list is.
+
+                     Inside a folder a detent moves a highlight across tiles
+                     that are already on screen, so it can be as quick as the
+                     hand — that is what `list` is for.
+
+                     Everywhere else a detent is expensive. Between apps it is a
+                     whole navigation and a fresh full-screen photograph, and
+                     spinning through seventeen of those per notch only means
+                     sixteen aborted image fetches and a picture stuck on
+                     whichever one last managed to load. The Radio is tuned
+                     rather than travelled and wants the slow step for its own
+                     reasons. Both take the fine pace. */
+                  pace={isFolder(node) && !appTuner ? 'list' : 'fine'}
                 />
 
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 20, justifyContent: 'center' }}>
