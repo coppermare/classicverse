@@ -418,10 +418,18 @@ function Classicverse() {
 
   return (
     <>
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium"
-        style={{ backgroundColor: 'var(--cv-red)', color: '#fff' }}>
-        Skip to main content
-      </a>
+      {/* A "Skip to main content" link used to sit here, first in the tab order,
+          so the first Tab on any screen popped it up over the set.
+
+          It was left over from a masthead that no longer exists — the same one
+          the stage's min-height was still reserving a strip for. A skip link
+          earns its place by jumping past navigation repeated on every page, and
+          there is none: the set is the first thing in the document, and the
+          link's own target sat two elements below it. It didn't work either —
+          the target is a div with no tabindex, so following the link moved the
+          URL hash and left focus on the body, which is the opposite of what it
+          promises. If a masthead ever returns, this comes back with it, and the
+          target needs tabIndex={-1} to actually take focus. */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">{liveText}</div>
 
       <div className="cv-tv-stage">
