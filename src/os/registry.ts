@@ -9,6 +9,7 @@ import CarApp from './apps/CarApp';
 import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
 import WeatherApp from './apps/WeatherApp';
+import SnakeApp from './apps/SnakeApp';
 import type { AppNode, FolderNode, OSNode } from './types';
 
 /**
@@ -144,11 +145,22 @@ const weatherApp: AppNode = {
   keywords: 'forecast temperature rain sun cloud wind climate outlook meteo',
 };
 
+const snakeApp: AppNode = {
+  id: 'snake',
+  kind: 'app',
+  name: 'Snake',
+  subtitle: 'The game',
+  icon: { kind: 'glyph', id: 'snake' },
+  component: SnakeApp,
+  chrome: 'panel',
+  keywords: 'game play arcade classic nokia retro snake pellet high score',
+};
+
 /** The root. Everything the set can show hangs off here. */
 export const DESKTOP: FolderNode = {
   id: 'root',
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp]),
+  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp, snakeApp]),
 };
