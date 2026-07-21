@@ -1,6 +1,7 @@
 import {
   blit, disc, fillRect, hLine, line, makeGrid, plot, ring, strokeRect, vLine, type Grid,
 } from './pixel';
+import { skyGrid } from './weatherArt';
 
 /**
  * The icon set, drawn on a 90s palette.
@@ -140,6 +141,18 @@ function infoIcon(): Grid {
   return g;
 }
 
+/**
+ * Sun behind a cloud — the universal shorthand for a forecast.
+ *
+ * This is the Weather channel's own partly-cloudy symbol, not a second drawing
+ * of one. The channel needs the full set of nine anyway, and an emblem drawn
+ * separately here would be the same cloud maintained twice: the first pass at
+ * it had a hand-drawn outline that left gaps along the underside, and a paler
+ * cloud that vanished against the desktop's cream — both bugs the real symbol
+ * had already been fixed for.
+ */
+const weatherIcon = () => skyGrid('partly');
+
 /** A decade folder's stamp: two big numerals, e.g. "60s". */
 function labelIcon(text: string): Grid {
   const g = makeGrid(32, 32);
@@ -182,6 +195,7 @@ export const EMBLEMS: Record<string, () => Grid> = {
   cars: carsIcon,
   f1: f1Icon,
   radio: radioIcon,
+  weather: weatherIcon,
   guide: guideIcon,
   info: infoIcon,
 };

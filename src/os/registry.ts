@@ -8,6 +8,7 @@ import type { FerrariWin } from '@/types/f1';
 import CarApp from './apps/CarApp';
 import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
+import WeatherApp from './apps/WeatherApp';
 import type { AppNode, FolderNode, OSNode } from './types';
 
 /**
@@ -130,11 +131,24 @@ const radioApp: AppNode = {
   keywords: 'music stations tuner fm song listen live broadcast band',
 };
 
+const weatherApp: AppNode = {
+  id: 'weather',
+  kind: 'app',
+  name: 'Weather',
+  subtitle: 'Live forecast',
+  icon: { kind: 'glyph', id: 'weather' },
+  component: WeatherApp,
+  chrome: 'panel',
+  // Like the Radio, what it shows is whatever is true at the moment, so there
+  // is nothing static to index beyond the channel itself.
+  keywords: 'forecast temperature rain sun cloud wind climate outlook meteo',
+};
+
 /** The root. Everything the set can show hangs off here. */
 export const DESKTOP: FolderNode = {
   id: 'root',
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp]),
+  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp]),
 };
