@@ -40,25 +40,13 @@ export interface Place {
  * The dial's default stops.
  *
  * A weather channel with an empty dial is a search box wearing a costume, so the
- * knob starts with somewhere to sweep. These are picked to span the globe's
- * time zones and climates — turning the knob at any hour should find somewhere
- * in daylight and somewhere in weather — and any place found by search joins
- * them on the dial for the rest of the session.
+ * knob starts with somewhere to sweep. The set is 150 of the world's cities from
+ * GeoNames (see scripts/build-world-cities.js and worldCities.ts), spread across
+ * 80-odd countries and ordered west-to-east so turning the knob travels the
+ * globe. Any place found by search joins them for the rest of the session, and
+ * search itself reaches everywhere — the dial is a starting point, not the map.
  */
-export const PRESET_PLACES: Place[] = [
-  { id: 'p-london', name: 'London', country: 'United Kingdom', latitude: 51.5074, longitude: -0.1278 },
-  { id: 'p-tirana', name: 'Tirana', country: 'Albania', latitude: 41.3275, longitude: 19.8187 },
-  { id: 'p-modena', name: 'Modena', country: 'Italy', latitude: 44.6471, longitude: 10.9252 },
-  { id: 'p-stuttgart', name: 'Stuttgart', country: 'Germany', latitude: 48.7758, longitude: 9.1829 },
-  { id: 'p-paris', name: 'Paris', country: 'France', latitude: 48.8566, longitude: 2.3522 },
-  { id: 'p-newyork', name: 'New York', country: 'United States', latitude: 40.7128, longitude: -74.006 },
-  { id: 'p-detroit', name: 'Detroit', country: 'United States', latitude: 42.3314, longitude: -83.0458 },
-  { id: 'p-losangeles', name: 'Los Angeles', country: 'United States', latitude: 34.0522, longitude: -118.2437 },
-  { id: 'p-saopaulo', name: 'São Paulo', country: 'Brazil', latitude: -23.5505, longitude: -46.6333 },
-  { id: 'p-capetown', name: 'Cape Town', country: 'South Africa', latitude: -33.9249, longitude: 18.4241 },
-  { id: 'p-tokyo', name: 'Tokyo', country: 'Japan', latitude: 35.6762, longitude: 139.6503 },
-  { id: 'p-sydney', name: 'Sydney', country: 'Australia', latitude: -33.8688, longitude: 151.2093 },
-];
+export { WORLD_CITIES as PRESET_PLACES } from './worldCities';
 
 /* ── Conditions ─────────────────────────────────────────────── */
 
