@@ -60,13 +60,6 @@ export const PRESET_PLACES: Place[] = [
   { id: 'p-sydney', name: 'Sydney', country: 'Australia', latitude: -33.8688, longitude: 151.2093 },
 ];
 
-/** Where a place sits on the dial and in the address bar. */
-export function placeLabel(p: Place): string {
-  return [p.name, p.admin1 && p.admin1 !== p.name ? p.admin1 : null, p.country]
-    .filter(Boolean)
-    .join(', ');
-}
-
 /* ── Conditions ─────────────────────────────────────────────── */
 
 /**
