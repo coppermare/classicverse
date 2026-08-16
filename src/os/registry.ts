@@ -1,10 +1,14 @@
 import { CARS } from '@/data/cars';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
+import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
+import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
+import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
+import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { toThumb, THUMB_TILE } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
-import type { FerrariWin } from '@/types/f1';
+import type { F1Team, F1Win, F1WinRecord, FerrariWin } from '@/types/f1';
 import CarApp from './apps/CarApp';
 import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
@@ -81,19 +85,48 @@ const carsFolder: FolderNode = {
 
 /* ── F1 Archive: team folders → one win each ── */
 
-function winNode(win: FerrariWin): AppNode {
-  const img = getWinImage(win, THUMB_TILE);
+function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
+  const sourceImage = team.id === 'ferrari'
+    ? undefined
+    : team.id === 'mclaren'
+      // McLaren only receives its hand-verified, first-party race photography.
+      // The broad archive pool can contain a different constructor at the same
+      // circuit, which is worse than honestly leaving an older win unsourced.
+      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
+  const record: F1Win = {
+    ...win,
+    teamId: team.id,
+    teamName: team.name,
+    teamMark: team.mark,
+    teamAccent: team.accent,
+    teamWinCount,
+    ...(sourceImage ? {
+      teamImage: sourceImage.src,
+      teamImageLabel: sourceImage.label,
+      teamImageSourceUrl: sourceImage.sourceUrl,
+      teamImageKind: sourceImage.kind,
+    } : {}),
+  };
+  const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
+  const thumbnail = img?.src ?? sourceImage?.src;
   return {
     id: String(win.number),
     kind: 'app',
     name: `${win.grand_prix} Grand Prix`,
     subtitle: `${win.year} - ${win.driver}`,
-    icon: img?.src ? { kind: 'photo', src: img.src } : { kind: 'label', text: String(win.number) },
+    icon: thumbnail ? { kind: 'photo', src: thumbnail } : { kind: 'label', text: team.mark },
     component: WinApp,
     chrome: 'bleed',
-    data: win,
-    keywords: [win.driver, win.chassis, win.circuit, String(win.year), `win ${win.number}`].join(' '),
+    data: record,
+    keywords: [team.name, win.driver, win.chassis, win.circuit, String(win.year), `win ${win.number}`]
+      .filter(Boolean)
+      .join(' '),
   };
+}
+
+function winsForTeam(team: F1Team): F1WinRecord[] {
+  return team.id === 'ferrari' ? FERRARI_WINS : (F1_WINS_BY_TEAM[team.id] ?? []);
 }
 
 const f1Folder: FolderNode = {
@@ -104,17 +137,24 @@ const f1Folder: FolderNode = {
   icon: { kind: 'glyph', id: 'f1' },
   layout: 'icons',
   keywords: 'formula one grand prix racing motorsport',
-  children: lazy(() => F1_TEAMS.map((team): FolderNode => ({
-    id: team.id,
-    kind: 'folder',
-    name: team.name,
-    subtitle: team.enabled ? team.tagline : 'Coming soon',
-    icon: { kind: 'image', src: team.logo },
-    enabled: team.enabled,
-    layout: 'gallery',
-    keywords: `${team.name} formula one`,
-    children: lazy(() => (team.id === 'ferrari' ? FERRARI_WINS.map(winNode) : [])),
-  }))),
+  children: lazy(() => F1_TEAMS.map((team): FolderNode => {
+    const wins = winsForTeam(team);
+    return {
+      id: team.id,
+      kind: 'folder',
+      name: team.name,
+      subtitle: team.enabled ? team.tagline : 'No Grand Prix wins yet',
+      icon: team.logo
+        ? { kind: 'image', src: team.logo }
+        : team.archiveImage
+          ? { kind: 'photo', src: team.archiveImage.src }
+          : { kind: 'label', text: team.mark },
+      enabled: team.enabled,
+      layout: 'gallery',
+      keywords: `${team.name} formula one constructor grand prix wins`,
+      children: lazy(() => wins.map((win) => winNode(team, win, wins.length))),
+    };
+  })),
 };
 
 /* ── Apps ── */

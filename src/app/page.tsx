@@ -117,6 +117,7 @@ function Classicverse() {
   const [selection, setSelection] = useState<{ path: string; id: string } | null>(null);
   const [screenGlitch, setScreenGlitch] = useState(false);
   const [volumeChanging, setVolumeChanging] = useState(false);
+  const [fillsViewport, setFillsViewport] = useState(false);
 
   // The set arrives off, the way a television in a room is off until someone
   // turns it on. The power button is then the first thing you press, and the
@@ -369,7 +370,7 @@ function Classicverse() {
       </a>
       <div aria-live="polite" aria-atomic="true" className="sr-only">{liveText}</div>
 
-      <div className="cv-tv-stage">
+      <div className={`cv-tv-stage${fillsViewport ? ' cv-tv-stage--filled' : ''}`}>
         <div className="cv-tv">
           <div className="cv-tv-cabinet">
             <div className="cv-tv-cabinet-grain" />
@@ -390,7 +391,7 @@ function Classicverse() {
                   className={screenClass}
                   style={{ filter: screenOn ? screenFilter : 'none' }}
                 >
-                  {screenOn && bootPhase === 'idle' && (
+                  {screenOn && (bootPhase === 'idle' || bootPhase === 'fading') && (
                     <>
                       {isFolder(node) ? (
                         <FolderView folder={node} selectedId={selectedId} onSelect={setSelectedId} onOpen={openNode} />
@@ -518,10 +519,26 @@ function Classicverse() {
                   </div>
                 </div>
 
-                {/* Power only. The Home button beside it duplicated the Home
-                    control already in the screen's own toolbar, one press away
-                    from wherever you are. */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', margin: '0 4px', marginTop: 'auto' }}>
+                {/* Fill view removes the decorative outer cabinet and promotes
+                    the bezel to the viewport. The TV stays mounted, so power,
+                    channel, and app state all survive. */}
+                <div className="cv-tv-power-row">
+                  <button
+                    type="button"
+                    className="cv-tv-fill-button"
+                    onClick={() => setFillsViewport((filled) => !filled)}
+                    aria-label={fillsViewport ? 'Restore television frame' : 'Fill television viewport'}
+                    aria-pressed={fillsViewport}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      {fillsViewport ? (
+                        <path d="M6 2v4H2M10 2v4h4M6 14v-4H2M10 14v-4h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      ) : (
+                        <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      )}
+                    </svg>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setPower(!screenOn)}

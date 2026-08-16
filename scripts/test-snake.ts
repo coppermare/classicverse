@@ -13,8 +13,8 @@
 
 import assert from 'node:assert/strict';
 import {
-  COLS, ROWS, START_MS, SPEEDUP_MS,
-  createGame, queueTurn, tick,
+  COLS, ROWS, MIN_COLS, MIN_ROWS, START_MS, SPEEDUP_MS,
+  boardSize, createGame, fitBoard, placeFood, queueTurn, tick,
   type Cell, type Game,
 } from '../src/os/apps/snakeCore';
 
@@ -43,6 +43,28 @@ test('a fresh game is three cells, heading right, nothing scored', () => {
   // Head leads; body trails to its left.
   assert.deepEqual(g.snake[0], { x: 11, y: 8 });
   assert.deepEqual(g.snake[2], { x: 9, y: 8 });
+});
+
+test('a measured screen produces deterministic responsive board dimensions', () => {
+  assert.deepEqual(fitBoard(768, 528), { cols: 32, rows: 22 });
+  assert.deepEqual(fitBoard(757, 537), { cols: 32, rows: 22 });
+  assert.equal(boardSize(fitBoard(768, 528)), 704);
+});
+
+test('a small or invalid measurement never creates an unplayable board', () => {
+  assert.deepEqual(fitBoard(120, 96), { cols: MIN_COLS, rows: MIN_ROWS });
+  assert.deepEqual(fitBoard(Number.NaN, Number.POSITIVE_INFINITY), { cols: MIN_COLS, rows: MIN_ROWS });
+  assert.deepEqual(fitBoard(480, 360, 0), { cols: 20, rows: 15 });
+});
+
+test('a custom board carries its own integer dimensions and centred opening', () => {
+  const g = createGame(31.9, 19.8);
+  assert.deepEqual({ cols: g.cols, rows: g.rows }, { cols: 31, rows: 19 });
+  assert.deepEqual(g.snake[0], { x: 15, y: 9 });
+  assert.deepEqual(g.food, { x: 23, y: 9 });
+
+  const fallback = createGame(Number.NaN, Number.POSITIVE_INFINITY);
+  assert.deepEqual({ cols: fallback.cols, rows: fallback.rows }, { cols: COLS, rows: ROWS });
 });
 
 test('a plain step advances the head and drags the tail, same length', () => {
@@ -82,6 +104,14 @@ test('turns queue; a reverse onto the last queued turn is refused', () => {
   assert.equal(queueTurn(g, { x: 0, y: 1 }), false); // buffer already holds two
 });
 
+test('only cardinal one-cell turns can enter the input buffer', () => {
+  const g = createGame();
+  assert.equal(queueTurn(g, { x: 0, y: 0 }), false);
+  assert.equal(queueTurn(g, { x: 1, y: 1 }), false);
+  assert.equal(queueTurn(g, { x: 0, y: -2 }), false);
+  assert.deepEqual(g.queue, []);
+});
+
 test('a straight reverse from the current heading is refused', () => {
   const g = createGame();                            // heading right
   assert.equal(queueTurn(g, { x: -1, y: 0 }), false); // hard reverse
@@ -104,6 +134,20 @@ test('running into a wall ends the run', () => {
   g.snake = [{ x: COLS - 1, y: 5 }, { x: COLS - 2, y: 5 }, { x: COLS - 3, y: 5 }];
   g.dir = { x: 1, y: 0 };
   assert.equal(tick(g), 'dead');
+});
+
+test('wall collision uses the responsive run dimensions, not the fallback board', () => {
+  const g = withFood(createGame(30, 18), OFFBOARD);
+  g.snake = [{ x: 29, y: 7 }, { x: 28, y: 7 }, { x: 27, y: 7 }];
+  assert.equal(tick(g), 'dead');
+});
+
+test('food placement respects a custom board and clamps an RNG boundary value', () => {
+  const board = { cols: 12, rows: 9 };
+  const snake: Cell[] = [{ x: 0, y: 0 }];
+  assert.deepEqual(placeFood(snake, board, () => 0), { x: 1, y: 0 });
+  assert.deepEqual(placeFood(snake, board, () => 1), { x: 11, y: 8 });
+  assert.deepEqual(placeFood(snake, board, () => Number.NaN), { x: 1, y: 0 });
 });
 
 test('following your own tail is allowed — the tail moves away', () => {

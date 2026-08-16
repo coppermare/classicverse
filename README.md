@@ -1,118 +1,83 @@
 # Classicverse
 
-**Category**: Experiment and portfolio project
-**Status**: Planning updated, not ready to build
-**Scope**: Classic iconic cars from 1885 to 2000
-**Primary outcome**: Interactive timeline archive
-**Current folder**: `Projects/experiments/classicverse`
+Classicverse is an interactive archive of classic things presented as a working vintage television. The cabinet is not decorative framing: its power button, tuning roller, volume control, brightness and contrast knobs operate the software shown on the screen.
 
-## Vision
+**Status:** Active portfolio project
 
-Classicverse is an interactive archive of classic iconic cars, designed as a polished portfolio piece that shows product thinking, research discipline, editorial judgment, and visual interface craft.
+**Stack:** Next.js 16, React 19, TypeScript, Tailwind CSS 4
 
-The product lets users move through automotive history year by year. Each year from 1885 to 2000 has one hero car, a clear reason for why it represents that year, original historical writing, source links, image attribution, and a confidence level.
+**Primary experience:** A browsable desktop-style archive inside a tactile TV interface
 
-## Product Definition
+## What Is In The Set
 
-Classicverse is not a commerce product. It does not include buying flows, valuation, ownership transfer, or live inventory.
+- **F1 Archive** — 1,149 chronological Grand Prix victories across 34 winning constructor identities, plus an explicit zero-win Aston Martin placeholder. Ferrari retains 250 curated records and licensed chassis imagery; 899 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Their image index accepts only distinct, source-linked real photographs (race first, then circuit); no generated-art fallback is used.
+- **A century of cars** — one curated hero car for every year from 1885 through 1984, with original historical writing, verified facts, sources, selection reasoning, alternates, confidence and image attribution.
+- **Radio** — a live FM-style tuner backed by a generated snapshot of public internet radio stations.
+- **Weather** — searchable live forecasts with saved place and unit preferences.
+- **Snake** — a complete responsive game whose board fits the television screen, with score, best score, one contextual action and swipe input on touch devices.
 
-Classicverse is a curated history product with three priorities:
+The system also provides global search, URL-addressable navigation, browser-style Back/Forward/Up/Home controls, keyboard navigation, a custom screen cursor and synthesised interface sounds.
 
-1. Tell the story of classic cars through time.
-2. Build a credible dataset with transparent sources.
-3. Present the archive through an elegant timeline interface.
+## Run Locally
 
-## V1 Scope
+```bash
+npm install
+npm run dev
+```
 
-V1 guarantees:
+Open [http://localhost:3000](http://localhost:3000). The development server also prints a LAN URL for testing on another device.
 
-1. One hero car for every year from 1885 to 2000.
-2. A complete 116 year timeline.
-3. At least two credible sources per hero car.
-4. Image metadata with license and attribution.
-5. Original descriptions written from verified facts.
-6. Confidence labels for uncertain or debated selections.
-7. Alternates for years where multiple cars are strong candidates.
+## Quality Checks
 
-V1 excludes:
+```bash
+npm run lint
+npm test
+npm run build
+```
 
-1. Live inventory.
-2. Seller pages.
-3. Accounts.
-4. Saved searches.
-5. Vehicle valuation.
-6. Purchase flows.
-7. Real time data ingestion.
+`npm test` exercises the pure Snake rules and validates the generated F1 archive deterministically. The release checklist in [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md) covers interactive and content QA that is not yet automated.
 
-## Planning Documents
+Regenerate the non-Ferrari results snapshot deliberately with `npm run generate:f1`; the generated file records its [Jolpica F1](https://github.com/jolpica/jolpica-f1) source and 2026-07-26 cutoff date.
 
-Read these before any implementation:
+## Controls
 
-1. [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md): Research workflow, source ledger, data contract, curation rules, and phased build plan.
-2. [UI-UX-SPEC.md](UI-UX-SPEC.md): Timeline archive interface, navigation, visual system, motion, mobile behavior, and accessibility.
-3. [CONTENT-STRATEGY.md](CONTENT-STRATEGY.md): Historical writing rules, source policy, tone, confidence labels, and description templates.
-4. [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md): Planning and research checklist before build work starts.
-5. [PLANNING-SUMMARY.md](PLANNING-SUMMARY.md): Current project summary and planning decisions.
+- Click the cabinet power button to boot or shut down the set.
+- Use the tuning roller to move through the list currently on screen.
+- Drag or scroll the volume, brightness and contrast controls.
+- Use the toolbar for Back, Forward, Up, Home, Search and Mute.
+- Press `Ctrl/Command + K` for search.
+- Use arrow keys to move through folders, archives, the radio and Snake according to context.
+- Press `Enter` to open the selected item and `Escape` or `Backspace` to move up.
+- Use the cabinet's view icon to remove the decorative frame and make the square-cornered bezel fill the viewport; the same icon restores the framed television.
 
-## Source Policy
+## Architecture
 
-Classicverse uses open and properly attributed sources first.
+The interface is modeled as a small operating system:
 
-Preferred source tiers:
+- [src/os/registry.ts](src/os/registry.ts) defines the folder and application tree.
+- [src/os/types.ts](src/os/types.ts) defines the generic folder/app contract and the API handed to each app.
+- [src/app/page.tsx](src/app/page.tsx) owns the cabinet, power lifecycle, navigation shell and physical controls.
+- [src/os/FolderView.tsx](src/os/FolderView.tsx), [src/os/Toolbar.tsx](src/os/Toolbar.tsx) and [src/os/SearchPanel.tsx](src/os/SearchPanel.tsx) provide shared OS behavior.
+- [src/os/apps](src/os/apps) contains the individual channels.
+- [src/data](src/data) contains curated and generated archive data.
 
-1. Manufacturer archives, museum collections, and concours records.
-2. Books, period materials, and reputable automotive publications.
-3. Wikidata and Wikimedia Commons for seed data and image discovery.
-4. Enthusiast sites only as supporting context.
+Folders expose children lazily and the shell renders them generically. Registering another channel or archive should not require special-casing the cabinet.
 
-Rules:
+Navigation is stored in the `?p=` URL parameter. That makes archive items deep-linkable while allowing the simulated toolbar and the browser history to remain synchronized.
 
-1. Each hero car needs at least two credible source links.
-2. Wikimedia Commons images are allowed only when license and attribution metadata can be stored.
-3. NHTSA vPIC is useful only from 1981 onward.
-4. AI may help draft descriptions only after verified facts are locked.
-5. Descriptions must be original and must not copy source prose.
+## Content And Sources
 
-## Research First Workflow
+Historical claims and images must remain traceable. Car records store source links, review status, confidence, image licence, creator and attribution URL. F1 results use a documented results source and a reproducible generation path. Live radio belongs to its broadcasters and is streamed rather than stored.
 
-The first implementation must begin with a 10 car vertical slice before the full 116 year dataset.
+See:
 
-The vertical slice proves:
+- [CONTENT-STRATEGY.md](CONTENT-STRATEGY.md) for editorial and attribution rules.
+- [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md) for the current maintenance and expansion plan.
+- [UI-UX-SPEC.md](UI-UX-SPEC.md) for the implemented interaction model and design constraints.
+- [PLANNING-SUMMARY.md](PLANNING-SUMMARY.md) for the present product state and intentional scope decisions.
 
-1. Source quality.
-2. Image rights workflow.
-3. Data contract.
-4. Selection rubric.
-5. Writing tone.
-6. Timeline interface direction.
-7. Manual QA process.
+## Intentional Scope
 
-Recommended sample spread:
+Classicverse is an editorial archive and interaction-design project, not a marketplace. It has no accounts, inventory, valuation, buying flow or user-generated content. Persistent preferences are local to the browser.
 
-1. 1885 Benz Patent Motorwagen.
-2. 1908 Ford Model T.
-3. 1922 Austin Seven.
-4. 1934 Citroen Traction Avant.
-5. 1938 Volkswagen Beetle.
-6. 1948 Land Rover Series I.
-7. 1959 Mini.
-8. 1964 Ford Mustang.
-9. 1974 Volkswagen Golf.
-10. 1992 McLaren F1.
-
-## Success Criteria
-
-Planning is ready for implementation when:
-
-1. The 10 car vertical slice is fully sourced and reviewed.
-2. The source ledger format is validated.
-3. The data contract supports all required fields.
-4. The interface prototype supports year navigation.
-5. The content workflow prevents unsourced claims.
-6. The full 1885 to 2000 dataset can be produced without changing the core model.
-
-## Current Next Step
-
-Do not build yet.
-
-The next step is to create the 10 car vertical slice and source ledger, then review the research quality before committing to the full dataset.
+The car channel is intentionally an exact century, 1885–1984. Earlier planning documents described a 116-year 1885–2000 timeline; that direction was superseded by the tighter century exhibition now implemented.

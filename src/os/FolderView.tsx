@@ -140,7 +140,8 @@ const IconTile = memo(function IconTile({
       type="button"
       onPointerEnter={() => { onSelect(node.id); if (!off) sfx.hover(); }}
       onClick={() => onOpen(node)}
-      aria-label={`${node.name}${off ? ' (coming soon)' : ''}`}
+      aria-label={`${node.name}${off ? ` (${node.subtitle ?? 'unavailable'})` : ''}`}
+      aria-disabled={off || undefined}
       aria-current={active ? 'true' : undefined}
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
@@ -289,7 +290,14 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
       background: 'linear-gradient(180deg, #F7F3E9 0%, #EFE9DA 100%)',
       display: 'flex', flexDirection: 'column',
     }}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto' }}>
+      <div style={{
+        flex: 1, minHeight: 0, display: 'flex',
+        // A long icon grid must start at the top of its scroll port. Centring it
+        // on the cross axis places its first rows in negative, unreachable
+        // overflow; small desktop folders still benefit from centred icons.
+        alignItems: children.length > 12 ? 'flex-start' : 'center',
+        justifyContent: 'center', overflowY: 'auto',
+      }}>
         <div ref={gridRef} style={{
           display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
           /* Air between the tiles. maxWidth carries the column gap with it so

@@ -1,157 +1,120 @@
-# Classicverse Planning Checklist
+# Classicverse Release Checklist
 
-**Status**: Planning updated, not ready to build
-**Purpose**: Prepare research, content, and design before implementation
-**Scope**: Classic iconic cars from 1885 to 2000
+**Status:** Active
 
-This checklist is intentionally planning only. Do not build the app until the vertical slice and research workflow are reviewed.
+**Purpose:** Verify the implemented product before merging or deploying
 
-## 1. Project Framing
+## Automated Checks
 
-1. [ ] Confirm Classicverse as the working name.
-2. [ ] Confirm the scope as 1885 to 2000 inclusive.
-3. [ ] Confirm V1 guarantees one hero car per year.
-4. [ ] Confirm the product is a timeline archive, not a marketplace.
-5. [ ] Confirm the project is a portfolio piece first.
-6. [ ] Confirm folder rename is out of scope for now.
+- [ ] Install succeeds from the lockfile.
+- [ ] `npm run lint` passes.
+- [ ] `npm test` passes.
+- [ ] `npm run build` passes.
+- [ ] No generated archive or validation script leaves uncommitted accidental output.
 
-## 2. Source Policy
+## Documentation And Scope
 
-1. [ ] Document approved source tiers.
-2. [ ] Document image rights rules.
-3. [ ] Document NHTSA vPIC use only from 1981 onward.
-4. [ ] Document that AI cannot invent or select facts.
-5. [ ] Document minimum two credible sources per hero car.
-6. [ ] Document confidence labels.
+- [ ] README channels and controls match the desktop registry.
+- [ ] Car range is consistently described as 1885–1984.
+- [ ] F1 team roster, win totals, source and cutoff match the generated data.
+- [ ] The expected snapshot contains 899 generated non-Ferrari wins plus 250 curated Ferrari wins.
+- [ ] No enabled folder is described as coming soon.
+- [ ] No disabled/zero-record folder is described as complete.
+- [ ] New shortcuts and cabinet controls appear in README and UI specification.
 
-## 3. Source Ledger
+## Cabinet
 
-1. [ ] Create the source ledger structure.
-2. [ ] Add fields for year and candidate car.
-3. [ ] Add fields for claim and source URL.
-4. [ ] Add fields for source type and source tier.
-5. [ ] Add fields for image license and attribution.
-6. [ ] Add fields for confidence and review status.
-7. [ ] Test the ledger with 10 sample cars.
+- [ ] The screen starts off and the power button is reachable.
+- [ ] Power-on reaches the desktop after the boot sequence.
+- [ ] Rapid power clicks do not corrupt state.
+- [ ] Power-off and power-on retain the current OS path.
+- [ ] Volume, mute, brightness and contrast respond to pointer and wheel input.
+- [ ] The tuning roller controls the visible list or owning app.
+- [ ] Fill view removes the decorative cabinet, base and shadow.
+- [ ] The bezel reaches all four viewport edges and has square outer corners.
+- [ ] Browser chrome remains visible and compact layouts remain scrollable.
+- [ ] Restore returns the framed television.
+- [ ] Fill view does not reset media, Snake or archive selection.
 
-## 4. Selection Rubric
+## Navigation And Search
 
-1. [ ] Define selection basis options.
-2. [ ] Define historical importance score.
-3. [ ] Define engineering innovation score.
-4. [ ] Define design influence score.
-5. [ ] Define cultural recognition score.
-6. [ ] Define motorsport impact score.
-7. [ ] Define production impact score.
-8. [ ] Define collector or museum relevance score.
-9. [ ] Define global representation score.
-10. [ ] Define tie breakers.
+- [ ] Desktop items open with click and keyboard Enter.
+- [ ] Arrow keys move to visually adjacent folder items.
+- [ ] Back, Forward, Up and Home have correct enabled states.
+- [ ] Browser Back/Forward and toolbar Back/Forward remain synchronized.
+- [ ] Address breadcrumbs navigate to the selected ancestor.
+- [ ] A copied `?p=` deep link resolves to the expected destination.
+- [ ] An invalid path is replaced with the nearest valid path.
+- [ ] `Ctrl/Command + K` opens search with focus in the field.
+- [ ] Search finds cars, years, manufacturers, constructors, drivers, circuits and apps.
+- [ ] Search Up/Down/Enter/Escape works.
 
-## 5. Ten Car Vertical Slice
+## Car Archive
 
-Complete 10 fully reviewed records before researching all 116 years.
+- [ ] Exactly 100 unique records cover every year from 1885 through 1984.
+- [ ] The gallery is chronological.
+- [ ] Previous/next controls stop correctly at the first and last record.
+- [ ] Detail facts and descriptions remain readable over the image.
+- [ ] Sources, confidence, selection basis, alternates and attribution are reachable.
+- [ ] Broken or slow remote images do not block navigation.
 
-1. [ ] 1885 Benz Patent Motorwagen.
-2. [ ] 1908 Ford Model T.
-3. [ ] 1922 Austin Seven.
-4. [ ] 1934 Citroen Traction Avant.
-5. [ ] 1938 Volkswagen Beetle.
-6. [ ] 1948 Land Rover Series I.
-7. [ ] 1959 Mini.
-8. [ ] 1964 Ford Mustang.
-9. [ ] 1974 Volkswagen Golf.
-10. [ ] 1994 McLaren F1 (note: production year is 1994; announced 1992, first delivery 1994. Use 1994 as the timeline year per selection rules. Flag as medium confidence and document the distinction.)
+## Formula One Archive
 
-Note on sample geographic spread: this sample is 8 European cars and 2 American. It does not represent Asia, South America, or Australia. Before expanding to the full 116 year dataset, review whether the sample adequately tests the global representation tiebreaker criteria or whether an additional test record from a non-European manufacturer should be added.
+- [ ] Every enabled constructor folder contains at least one victory.
+- [ ] Constructor victories are chronological and numbered from one without gaps.
+- [ ] Displayed totals equal generated data lengths.
+- [ ] Grand Prix, circuit, driver, chassis and engine render correctly.
+- [ ] Previous/next controls stay inside the current constructor.
+- [ ] Ferrari records retain correct chassis images and attribution where available.
+- [ ] Every non-Ferrari victory has a distinct source-linked Commons photograph tied to the winning race; circuit photography is the fallback. The image index is curated before this item is marked complete.
+- [ ] Source and cutoff documentation match the generation script.
 
-Each record must include:
+## Radio
 
-1. [ ] Hero image.
-2. [ ] Image license.
-3. [ ] Image creator.
-4. [ ] Image attribution URL.
-5. [ ] Two credible source links.
-6. [ ] Three verified facts.
-7. [ ] Why this year.
-8. [ ] Why iconic.
-9. [ ] Short description.
-10. [ ] Long description.
-11. [ ] Confidence level.
-12. [ ] Review status.
+- [ ] The band snapshot loads.
+- [ ] Tuning changes frequency and station identification.
+- [ ] Play/pause and mute reflect actual audio state.
+- [ ] A failed stream reports failure and permits another station.
+- [ ] Keyboard and roller tuning agree.
+- [ ] Saved station state recovers safely from invalid local storage.
 
-## 6. Data Contract Review
+## Weather
 
-1. [ ] Validate all required fields with the 10 car slice.
-2. [ ] Confirm optional fields.
-3. [ ] Confirm date precision handling.
-4. [ ] Confirm alternate cars structure.
-5. [ ] Confirm source URL structure.
-6. [ ] Confirm confidence labels.
-7. [ ] Confirm review status values.
+- [ ] Place search returns and selects results.
+- [ ] Forecast loading, success and error states are distinct.
+- [ ] Unit switching updates displayed values.
+- [ ] Saved place and unit recover safely.
+- [ ] Location permission denial leaves manual search usable.
 
-## 7. Content Review
+## Snake
 
-1. [ ] Confirm short description length.
-2. [ ] Confirm long description length.
-3. [ ] Confirm tone.
-4. [ ] Confirm no copied source prose.
-5. [ ] Confirm no unsourced significance claims.
-6. [ ] Confirm low confidence language.
-7. [ ] Confirm source panel labels.
+- [ ] Start, pause, resume and restart work.
+- [ ] Arrow keys and WASD work without scrolling the page.
+- [ ] Touch swipes steer the snake without scrolling the board.
+- [ ] Opposite turns and overfilled turn buffers are rejected.
+- [ ] Eating grows the snake, raises the score and speeds the game to its floor.
+- [ ] Wall and body collision end the run.
+- [ ] Following a tail cell that moves away remains legal.
+- [ ] Filling the board reports a win.
+- [ ] Best score persists and a tied score is not labelled a new best.
+- [ ] Resizing before a run fits a new board; resizing during a run does not move its walls.
 
-## 8. Design Prototype Planning
+## Responsive And Accessible QA
 
-1. [ ] Design the 1885 opening screen.
-2. [ ] Design the year scrubber.
-3. [ ] Design decade navigation.
-4. [ ] Design era labels.
-5. [ ] Design hero car panel.
-6. [ ] Design source panel.
-7. [ ] Design confidence badge.
-8. [ ] Design alternate cars module.
-9. [ ] Design mobile sticky year selector.
-10. [ ] Design low confidence record state.
+- [ ] Test a narrow phone, tablet and desktop viewport.
+- [ ] No cabinet control is clipped or unreachable.
+- [ ] Screen toolbar remains legible at the smallest supported width.
+- [ ] All interactive elements have accessible names.
+- [ ] Keyboard focus is visible.
+- [ ] Screen power and archive counts are announced appropriately.
+- [ ] Muted operation remains understandable.
+- [ ] `prefers-reduced-motion` removes positional/scale motion from boot, power and app transitions.
+- [ ] The system pointer remains available outside an active lit screen.
 
-## 9. Full Research Readiness
+## Release Sign-Off
 
-Start full 116 year research only after:
-
-1. [ ] The 10 car vertical slice is complete.
-2. [ ] The source ledger works.
-3. [ ] The data contract works.
-4. [ ] The writing workflow works.
-5. [ ] Image attribution workflow works.
-6. [ ] Design prototype can display all sample records.
-
-## 10. Full Dataset Planning
-
-1. [ ] Create 1885 to 2000 year skeleton.
-2. [ ] Add candidate cars for each year.
-3. [ ] Add source links for each candidate.
-4. [ ] Score candidates with the rubric.
-5. [ ] Select one hero car per year.
-6. [ ] Add alternates for debated years.
-7. [ ] Assign confidence levels.
-8. [ ] Mark records ready for content.
-
-## 11. QA Planning
-
-1. [ ] Check every year has one hero car.
-2. [ ] Check every record has two credible sources.
-3. [ ] Check every image has attribution.
-4. [ ] Check every description is original.
-5. [ ] Check low confidence records are marked.
-6. [ ] Check source links work.
-7. [ ] Check selection basis is present.
-8. [ ] Check alternates are not confused with hero cars.
-
-## 12. Build Readiness Gate
-
-Do not begin implementation until:
-
-1. [ ] Planning docs are updated.
-2. [ ] Ten car vertical slice is reviewed.
-3. [ ] Source policy is approved.
-4. [ ] Data contract is validated.
-5. [ ] UI direction is approved.
-6. [ ] Content tone is approved.
+- [ ] Review the deployed build, not only the development server.
+- [ ] Check console errors on initial load and each channel.
+- [ ] Verify external weather, radio and remote-image requests under realistic network conditions.
+- [ ] Confirm no private keys, local paths or temporary research files are shipped.
+- [ ] Record the F1 data cutoff and any known incomplete media coverage in the release notes.

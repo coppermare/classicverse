@@ -2,26 +2,40 @@
 
 import { useState } from 'react';
 import { getWinImage } from '@/data/ferrariChassisImages';
-import { FERRARI_WINS } from '@/data/ferrariWins';
-import type { FerrariWin } from '@/types/f1';
+import type { F1Win, FerrariWin } from '@/types/f1';
 import type { AppProps } from '../types';
 import { RetroButton, TitleBar, Bevel, INK, RADIUS, WELL } from '../ui';
 import * as sfx from '../sound';
 
 /** One Grand Prix victory: the car that scored it, and the record behind it. */
 export default function WinApp({ node, os }: AppProps) {
-  const win = node.data as FerrariWin;
+  const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
   const [broken, setBroken] = useState(false);
-  const img = getWinImage(win);
+  const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
+  const imageSrc = img?.src ?? win.teamImage;
+  const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
+  const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
+  const facts: [string, string][] = [
+    ['Team', win.teamName],
+    ['Grand Prix', win.grand_prix],
+    ['Circuit', win.circuit],
+    ['Season', String(win.year)],
+    ...(win.date ? [['Race date', win.date] as [string, string]] : []),
+    ['Driver', win.driver],
+    ...(win.chassis ? [['Chassis', win.chassis] as [string, string]] : []),
+    ...(win.engine ? [['Engine', win.engine] as [string, string]] : []),
+    ['Car number', win.car_number],
+    ['Victory', `${win.number} of ${win.teamWinCount}`],
+  ];
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-      {img?.src && !broken ? (
+      {imageSrc && !broken ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
-          src={img.src}
-          alt={`Ferrari ${win.chassis} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
+          src={imageSrc}
+          alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
           onError={() => setBroken(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -30,10 +44,8 @@ export default function WinApp({ node, os }: AppProps) {
           position: 'absolute', inset: 0, background: '#1a1612',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
         }}>
-          <span style={{ fontSize: 26, fontWeight: 800, color: '#8a8278' }}>Ferrari {win.chassis}</span>
-          <span style={{ fontSize: 14, letterSpacing: '0.16em', color: 'var(--cv-brass)', textTransform: 'uppercase' }}>
-            {win.grand_prix} - {win.year}
-          </span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#b8b1a6', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Source photo unavailable</span>
+          <span style={{ fontSize: 14, color: '#8a8278' }}>{carLabel} · {win.grand_prix} · {win.year}</span>
         </div>
       )}
 
@@ -62,7 +74,7 @@ export default function WinApp({ node, os }: AppProps) {
           </div>
           <div style={{ minWidth: 0 }}>
             <div className="cv-tv-car-name">{win.grand_prix} Grand Prix</div>
-            <div className="cv-tv-car-meta">{win.year} - {win.driver} - {win.chassis}</div>
+            <div className="cv-tv-car-meta">{meta}</div>
           </div>
         </div>
       )}
@@ -85,7 +97,7 @@ export default function WinApp({ node, os }: AppProps) {
         <div style={{ position: 'absolute', inset: 0, zIndex: 7, padding: '40px 12px 12px', display: 'flex' }}>
           <Bevel style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, padding: 3 }}>
             <TitleBar
-              title={`Win ${win.number} of ${FERRARI_WINS.length} - ${win.grand_prix} ${win.year}`}
+              title={`${win.teamName} win ${win.number} of ${win.teamWinCount} - ${win.grand_prix} ${win.year}`}
               right={
                 <RetroButton icon label="Close" silent onClick={() => { sfx.back(); setDetails(false); }} style={{ height: 18, minWidth: 18 }}>
                   <span style={{ fontSize: 11, fontWeight: 700, lineHeight: 1 }}>✕</span>
@@ -97,11 +109,7 @@ export default function WinApp({ node, os }: AppProps) {
               borderRadius: `0 0 ${RADIUS}px ${RADIUS}px`, boxShadow: WELL, padding: '14px 16px',
             }}>
               <dl style={{ margin: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 16px', font: '400 13px/1.5 var(--font-sans)' }}>
-                {([
-                  ['Grand Prix', win.grand_prix], ['Circuit', win.circuit], ['Season', String(win.year)],
-                  ['Driver', win.driver], ['Chassis', win.chassis], ['Engine', win.engine],
-                  ['Car number', win.car_number], ['Victory', `${win.number} of ${FERRARI_WINS.length}`],
-                ] as [string, string][]).map(([k, v]) => (
+                {facts.map(([k, v]) => (
                   <div key={k} style={{ display: 'contents' }}>
                     {/* Ink, not blue — blue is reserved for links in this file. */}
                     <dt style={{ fontWeight: 700, color: '#1c1a17' }}>{k}</dt>
@@ -114,6 +122,19 @@ export default function WinApp({ node, os }: AppProps) {
                   {img.note ? <>{img.note}<br /></> : null}
                   Photograph: {img.creator} - {img.license} -{' '}
                   <a href={img.attribution_url} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
+                </p>
+              )}
+              {!img && win.source_url && (
+                <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
+                  Record: Jolpica F1 results archive
+                  {win.source_constructor ? ` (${win.source_constructor})` : ''} -{' '}
+                  <a href={win.source_url} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Race source</a>
+                </p>
+              )}
+              {!img && win.teamImageSourceUrl && (
+                <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
+                  {win.teamImageKind === 'circuit' ? 'Circuit photograph' : 'Race photograph'}: {win.teamImageLabel ?? win.teamName} -{' '}
+                  <a href={win.teamImageSourceUrl} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
                 </p>
               )}
             </div>

@@ -1232,6 +1232,70 @@ body {
   padding-bottom: 8px;
 }
 
+.cv-tv-power-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: auto 4px 0;
+}
+
+.cv-tv-fill-button {
+  box-sizing: border-box;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  corner-shape: squircle;
+  color: #d8d3cb;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
+    #211a15;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 0 rgba(0, 0, 0, 0.72),
+    0 4px 7px rgba(0, 0, 0, 0.32);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.cv-tv-fill-button:active {
+  transform: scale(0.97);
+}
+
+.cv-tv-fill-button[aria-pressed='true'] {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    #17120f;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cv-tv-fill-button:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+}
+
 /* Force vars for all scrubbers/knobs inside TV (bezel is always dark) */
 .cv-tv-right-col {
   --cv-bg:                   #1c1916;
@@ -1508,6 +1572,84 @@ body {
     height: 70px !important;
     margin: 20px 24px !important;
     padding: 12px 22px !important;
+  }
+}
+
+/* Fill-view mode promotes the bezel from an object inside the cabinet to the
+   viewport surface. The structural cabinet node stays mounted but loses every
+   decorative layer, preserving the running app while removing the outer box. */
+.cv-tv-stage--filled {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 100%;
+  padding: 0;
+  align-items: stretch;
+  overflow: auto;
+}
+
+.cv-tv-stage--filled .cv-tv {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  filter: none;
+}
+
+.cv-tv-stage--filled .cv-tv-cabinet {
+  inset: 0;
+  margin: 0;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.cv-tv-stage--filled .cv-tv-cabinet-grain,
+.cv-tv-stage--filled .cv-tv-cabinet-edge-top,
+.cv-tv-stage--filled .cv-tv-cabinet-edge-bottom,
+.cv-tv-stage--filled .cv-tv-base,
+.cv-tv-stage--filled .cv-tv-shadow {
+  display: none;
+}
+
+.cv-tv-stage--filled .cv-tv-bezel {
+  inset: 0;
+  margin: 0;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .cv-tv-stage--filled,
+  .cv-tv-stage--filled .cv-tv {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .cv-tv-stage--filled .cv-tv-cabinet,
+  .cv-tv-stage--filled .cv-tv-bezel {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .cv-tv-stage--filled .cv-tv-cabinet {
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-tv-fill-button {
+    transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  }
+
+  .cv-tv-fill-button:active {
+    transform: none;
   }
 }
 
