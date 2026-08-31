@@ -13,7 +13,7 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
     case 'same-event': return 'Same-event context photograph';
     case 'same-season': return 'Same-season context photograph';
     case 'team-era': return 'Team/era context photograph';
-    case 'editorial-artwork': return 'Editorial archive artwork';
+    case undefined: return 'Source photograph unavailable';
     default: return 'Contextual image';
   }
 }
@@ -23,13 +23,9 @@ export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
   const [photoFailed, setPhotoFailed] = useState(false);
-  const [fallbackFailed, setFallbackFailed] = useState(false);
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
-  const primaryImage = img?.src ?? win.teamImage;
-  const fallbackImage = win.teamImageFallback;
-  const showingFallback = photoFailed && Boolean(fallbackImage) && fallbackImage !== primaryImage;
-  const imageSrc = showingFallback ? fallbackImage : primaryImage;
-  const imageFailed = !imageSrc || (showingFallback ? fallbackFailed : photoFailed);
+  const primaryImage = img?.src ?? (win.teamImageVerificationStatus === 'verified' ? win.teamImage : undefined);
+  const imageFailed = !primaryImage || photoFailed;
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
   const facts: [string, string][] = [
@@ -47,12 +43,12 @@ export default function WinApp({ node, os }: AppProps) {
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-      {imageSrc && !imageFailed ? (
+      {primaryImage && !imageFailed ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
-          src={imageSrc}
+          src={primaryImage}
           alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
-          onError={() => showingFallback ? setFallbackFailed(true) : setPhotoFailed(true)}
+          onError={() => setPhotoFailed(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       ) : (
@@ -158,9 +154,9 @@ export default function WinApp({ node, os }: AppProps) {
                   <a href={win.teamImageSourceUrl} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
                 </p>
               )}
-              {!img && win.teamImageVerificationStatus === 'generated' && (
+              {win.teamImageVerificationStatus !== 'verified' || imageFailed && !img && (
                 <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
-                  Editorial archive artwork — generated from this record&apos;s team, driver, season and Grand Prix. It is contextual artwork, not a race photograph.
+                  No verified contextual photograph is available in the current source set.
                 </p>
               )}
             </div>

@@ -1,14 +1,14 @@
 // Source-linked web photographs researched for the F1 archive.
-// Only rights-cleared, context-verified race images are displayed. Circuit,
-// cross-team and rights-unverified candidates remain here for traceability but
-// are quarantined by f1WinImagePolicy.ts and replaced by record artwork.
+// Only local, rights-cleared, context-verified race images are displayed.
+// Circuit, cross-team and rights-unverified candidates remain here for
+// traceability but are quarantined by f1WinImagePolicy.ts.
 
 import type { F1WinImage } from '@/types/f1';
 
 export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   "red-bull:125": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/9/93/Max_Verstappen_2025_Italian_Grand_Prix_FP3.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/93/Max_Verstappen_2025_Italian_Grand_Prix_FP3.jpg",
+    "src": "/f1-wins/context/red-bull-125.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=176619308",
     "title": "Max Verstappen 2025 Italian Grand Prix FP3",
     "label": "2025 Italian Grand Prix",
@@ -16,7 +16,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:127": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/4/4e/2024_British_Grand_Prix%2C_Hamilton_%284%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4e/2024_British_Grand_Prix%2C_Hamilton_%284%29.jpg",
+    "src": "/f1-wins/context/mercedes-127.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=155071019",
     "title": "2024 British Grand Prix, Hamilton (4)",
     "label": "2024 British Grand Prix",
@@ -32,7 +32,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:68": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Max_Verstappen_at_the_2021_French_Grand_Prix.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Max_Verstappen_at_the_2021_French_Grand_Prix.png",
+    "src": "/f1-wins/context/red-bull-68.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154083035",
     "title": "Max Verstappen at the 2021 French Grand Prix",
     "label": "2021 French Grand Prix",
@@ -40,7 +40,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:109": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/3/31/Lewis_Hamilton_2020_Tuscan_Grand_Prix_-_race_day_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/Lewis_Hamilton_2020_Tuscan_Grand_Prix_-_race_day_%28cropped%29.jpg",
+    "src": "/f1-wins/context/mercedes-109.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96870476",
     "title": "Lewis Hamilton 2020 Tuscan Grand Prix - race day (cropped)",
     "label": "2020 Tuscan Grand Prix",
@@ -48,7 +48,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:99": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/b/b6/2019_Japanese_Grand_Prix_Valtteri_Bottas_%2849054225468%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b6/2019_Japanese_Grand_Prix_Valtteri_Bottas_%2849054225468%29.jpg",
+    "src": "/f1-wins/context/mercedes-99.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83923026",
     "title": "2019 Japanese Grand Prix Valtteri Bottas (49054225468)",
     "label": "2019 Japanese Grand Prix",
@@ -56,7 +56,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:94": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Lewis_Hamilton%2C_2019_Canadian_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Lewis_Hamilton%2C_2019_Canadian_Grand_Prix.jpg",
+    "src": "/f1-wins/context/mercedes-94.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=97165423",
     "title": "Lewis Hamilton, 2019 Canadian Grand Prix",
     "label": "2019 Canadian Grand Prix",
@@ -64,7 +64,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:82": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Lewis_Hamilton_Italian_Grand_Prix_2018_-_FP2.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Lewis_Hamilton_Italian_Grand_Prix_2018_-_FP2.jpg",
+    "src": "/f1-wins/context/mercedes-82.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=72373845",
     "title": "File:Lewis Hamilton Italian Grand Prix 2018 - FP2.jpg",
     "label": "2018 Italian Grand Prix",
@@ -72,7 +72,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:78": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/2/27/2018_Spanish_Grand_Prix_Hamilton_%283%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/2/27/2018_Spanish_Grand_Prix_Hamilton_%283%29.jpg",
+    "src": "/f1-wins/context/mercedes-78.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=107194678",
     "title": "2018 Spanish Grand Prix Hamilton (3)",
     "label": "2018 Spanish Grand Prix",
@@ -88,7 +88,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:56": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/2/2a/2018_Chinese_Grand_Prix_FP1_Daniel_Ricciardo_%2826708162217%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/2/2a/2018_Chinese_Grand_Prix_FP1_Daniel_Ricciardo_%2826708162217%29.jpg",
+    "src": "/f1-wins/context/red-bull-56.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=68573411",
     "title": "2018 Chinese Grand Prix FP1 Daniel Ricciardo (26708162217)",
     "label": "2018 Chinese Grand Prix",
@@ -104,7 +104,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:50": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Rosberg_Hamilton_-_2016_Monaco_GP_2.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Rosberg_Hamilton_-_2016_Monaco_GP_2.jpg",
+    "src": "/f1-wins/context/mercedes-50.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=49214993",
     "title": "File:Rosberg Hamilton - 2016 Monaco GP 2.jpg",
     "label": "2016 Monaco Grand Prix",
@@ -112,7 +112,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:47": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rosberg_Bahrain_2016_1.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Rosberg_Bahrain_2016_1.jpg",
+    "src": "/f1-wins/context/mercedes-47.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=48425051",
     "title": "Rosberg Bahrain 2016 1",
     "label": "2016 Bahrain Grand Prix",
@@ -120,7 +120,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:45": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Rosberg_Grosjean_Abu_Dhabi_2015.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Rosberg_Grosjean_Abu_Dhabi_2015.png",
+    "src": "/f1-wins/context/mercedes-45.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=45441025",
     "title": "Rosberg Grosjean Abu Dhabi 2015",
     "label": "2015 Abu Dhabi Grand Prix",
@@ -128,7 +128,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:41": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/5/52/Lewis_Hamilton_at_the_2015_F1_Russian_Grand_Prix.JPG",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/5/52/Lewis_Hamilton_at_the_2015_F1_Russian_Grand_Prix.JPG",
+    "src": "/f1-wins/context/mercedes-41.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=44142102",
     "title": "Lewis Hamilton at the 2015 F1 Russian Grand Prix",
     "label": "2015 Russian Grand Prix",
@@ -136,7 +136,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:30": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Lewis_Hamilton_on_Mercedes_F1_W06_Hybrid_2015_Australian_Grand_Prix_-_Qualifying_%2816265819744%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Lewis_Hamilton_on_Mercedes_F1_W06_Hybrid_2015_Australian_Grand_Prix_-_Qualifying_%2816265819744%29.jpg",
+    "src": "/f1-wins/context/mercedes-30.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81950973",
     "title": "Lewis Hamilton on Mercedes F1 W06 Hybrid 2015 Australian Grand Prix - Qualifying (16265819744)",
     "label": "2015 Australian Grand Prix",
@@ -152,7 +152,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "mercedes:17": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7e/2014_Chinese_Grand_Prix_-_Lewis_Hamilton_holding_winners%27_trophy_with_Nico_Rosberg_and_Fernando_Alonso.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7e/2014_Chinese_Grand_Prix_-_Lewis_Hamilton_holding_winners%27_trophy_with_Nico_Rosberg_and_Fernando_Alonso.jpg",
+    "src": "/f1-wins/context/mercedes-17.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=59220172",
     "title": "2014 Chinese Grand Prix - Lewis Hamilton holding winners' trophy with Nico Rosberg and Fernando Alonso",
     "label": "2014 Chinese Grand Prix",
@@ -160,7 +160,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:41": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Formula_One_Grand_Prix_Singapore_2013_-_Sebastian_Vettel_in_Red_Bull_Renault_1.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Formula_One_Grand_Prix_Singapore_2013_-_Sebastian_Vettel_in_Red_Bull_Renault_1.jpg",
+    "src": "/f1-wins/context/red-bull-41.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=102634624",
     "title": "Formula One Grand Prix Singapore 2013 - Sebastian Vettel in Red Bull Renault 1",
     "label": "2013 Singapore Grand Prix",
@@ -168,7 +168,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:39": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/1/1f/F1_2013_Belgian_Grand_Prix_-_Sebastian_Vettel.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/F1_2013_Belgian_Grand_Prix_-_Sebastian_Vettel.jpg",
+    "src": "/f1-wins/context/red-bull-39.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27887303",
     "title": "F1 2013 Belgian Grand Prix - Sebastian Vettel",
     "label": "2013 Belgian Grand Prix",
@@ -200,7 +200,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:29": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/b/b3/F1_Webber_Rosberg_final_lap_Monaco_2012.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b3/F1_Webber_Rosberg_final_lap_Monaco_2012.png",
+    "src": "/f1-wins/context/red-bull-29.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=19635912",
     "title": "File:F1 Webber Rosberg final lap Monaco 2012.png",
     "label": "2012 Monaco Grand Prix",
@@ -208,7 +208,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:28": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Sebastian_Vettel_2012_Bahrain_GP.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Sebastian_Vettel_2012_Bahrain_GP.jpg",
+    "src": "/f1-wins/context/red-bull-28.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=19295181",
     "title": "Sebastian Vettel 2012 Bahrain GP",
     "label": "2012 Bahrain Grand Prix",
@@ -216,7 +216,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:23": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/a/ab/2011_Italian_GP_-_Vettel.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ab/2011_Italian_GP_-_Vettel.jpg",
+    "src": "/f1-wins/context/red-bull-23.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=16586976",
     "title": "File:2011 Italian GP - Vettel.jpg",
     "label": "2011 Italian Grand Prix",
@@ -224,7 +224,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:11": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Mark_Webber_at_the_2010_British_Grand_Prix_%285083058131%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Mark_Webber_at_the_2010_British_Grand_Prix_%285083058131%29.jpg",
+    "src": "/f1-wins/context/red-bull-11.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81951945",
     "title": "Mark Webber at the 2010 British Grand Prix (5083058131)",
     "label": "2010 British Grand Prix",
@@ -240,7 +240,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:6": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Sebastian_Vettel_%28Red_Bull_RB5%29_on_Saturday_at_2009_Abu_Dhabi_Grand_Prix2.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Sebastian_Vettel_%28Red_Bull_RB5%29_on_Saturday_at_2009_Abu_Dhabi_Grand_Prix2.jpg",
+    "src": "/f1-wins/context/red-bull-6.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8405749",
     "title": "Sebastian Vettel (Red Bull RB5) on Saturday at 2009 Abu Dhabi Grand Prix2",
     "label": "2009 Abu Dhabi Grand Prix",
@@ -248,7 +248,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:3": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/db/Mark_Webber_2009_Germany.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Mark_Webber_2009_Germany.jpg",
+    "src": "/f1-wins/context/red-bull-3.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=7294764",
     "title": "Mark Webber 2009 Germany",
     "label": "2009 German Grand Prix",
@@ -256,7 +256,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "red-bull:2": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Vettel_2009_British_GP_1.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Vettel_2009_British_GP_1.jpg",
+    "src": "/f1-wins/context/red-bull-2.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=7090761",
     "title": "Vettel 2009 British GP 1",
     "label": "2009 British Grand Prix",
@@ -280,7 +280,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "renault:34": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/8/88/Singapore_grand_prix_2008_alonso_win.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/88/Singapore_grand_prix_2008_alonso_win.jpg",
+    "src": "/f1-wins/context/renault-34.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=4885174",
     "title": "Singapore grand prix 2008 alonso win",
     "label": "2008 Singapore Grand Prix",
@@ -296,7 +296,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "renault:30": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/8/80/Fernando_Alonso_-_Renault_R26_-_Monaco_Grand_Prix_2006.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/80/Fernando_Alonso_-_Renault_R26_-_Monaco_Grand_Prix_2006.jpg",
+    "src": "/f1-wins/context/renault-30.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=3913606",
     "title": "File:Fernando Alonso - Renault R26 - Monaco Grand Prix 2006.jpg",
     "label": "2006 Monaco Grand Prix",
@@ -304,7 +304,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "renault:27": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Giancarlo_Fisichella_won_the_2006_Malaysian_GP_cropped.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Giancarlo_Fisichella_won_the_2006_Malaysian_GP_cropped.jpg",
+    "src": "/f1-wins/context/renault-27.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2117246",
     "title": "Giancarlo Fisichella won the 2006 Malaysian GP cropped",
     "label": "2006 Malaysian Grand Prix",
@@ -320,7 +320,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "renault:21": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Alonso%2C_2005_San_Marino_Grand_Prix_Podium.JPG",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Alonso%2C_2005_San_Marino_Grand_Prix_Podium.JPG",
+    "src": "/f1-wins/context/renault-21.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=88417950",
     "title": "Alonso, 2005 San Marino Grand Prix Podium",
     "label": "2005 San Marino Grand Prix",
@@ -336,7 +336,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "benetton:20": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/76/Johnny_Herbert_-_Benetton_B195_at_the_1995_British_Grand_Prix%2C_Silverstone_%2849720286518%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/76/Johnny_Herbert_-_Benetton_B195_at_the_1995_British_Grand_Prix%2C_Silverstone_%2849720286518%29.jpg",
+    "src": "/f1-wins/context/benetton-20.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=89282795",
     "title": "Johnny Herbert - Benetton B195 at the 1995 British Grand Prix, Silverstone (49720286518)",
     "label": "1995 British Grand Prix",
@@ -344,7 +344,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "benetton:19": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7d/French_GP_1995_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7d/French_GP_1995_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
+    "src": "/f1-wins/context/benetton-19.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658698",
     "title": "French GP 1995 winner's trophy 2019 Michael Schumacher Private Collection",
     "label": "1995 French Grand Prix",
@@ -352,7 +352,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "williams:73": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Damon_Hill_-_Williams_FW16_at_the_1994_British_Grand_Prix_%2832541472155%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Damon_Hill_-_Williams_FW16_at_the_1994_British_Grand_Prix_%2832541472155%29.jpg",
+    "src": "/f1-wins/context/williams-73.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=61211964",
     "title": "Damon Hill - Williams FW16 at the 1994 British Grand Prix (32541472155)",
     "label": "1994 British Grand Prix",
@@ -368,7 +368,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "benetton:8": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/0/00/Brazilian_GP_1994_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/00/Brazilian_GP_1994_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
+    "src": "/f1-wins/context/benetton-8.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658332",
     "title": "Brazilian GP 1994 winner's trophy 2019 Michael Schumacher Private Collection",
     "label": "1994 Brazilian Grand Prix",
@@ -384,7 +384,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "williams:67": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Prost_at_1993_British_Grand_Prix_crop.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Prost_at_1993_British_Grand_Prix_crop.jpg",
+    "src": "/f1-wins/context/williams-67.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=31381053",
     "title": "Prost at 1993 British Grand Prix crop",
     "label": "1993 British Grand Prix",
@@ -392,7 +392,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "benetton:7": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/69/Portuguese_GP_1993_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/69/Portuguese_GP_1993_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
+    "src": "/f1-wins/context/benetton-7.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83781124",
     "title": "Portuguese GP 1993 winner's trophy 2019 Michael Schumacher Private Collection",
     "label": "1993 Portuguese Grand Prix",
@@ -416,7 +416,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "williams:58": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/8/8f/-1992-07-12_Nigel_Mansell%2C_Williams_FW14B%2C_Woodcote%2C_1992_British_Grand_Prix%2C_Silverstone%2C_England_%281%29.JPG",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8f/-1992-07-12_Nigel_Mansell%2C_Williams_FW14B%2C_Woodcote%2C_1992_British_Grand_Prix%2C_Silverstone%2C_England_%281%29.JPG",
+    "src": "/f1-wins/context/williams-58.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=82733082",
     "title": "-1992-07-12 Nigel Mansell, Williams FW14B, Woodcote, 1992 British Grand Prix, Silverstone, England (1)",
     "label": "1992 British Grand Prix",
@@ -424,7 +424,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "benetton:6": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Belgian_GP_1992_winner%27s_trophy_front_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Belgian_GP_1992_winner%27s_trophy_front_2019_Michael_Schumacher_Private_Collection.jpg",
+    "src": "/f1-wins/context/benetton-6.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658282",
     "title": "Belgian GP 1992 winner's trophy front 2019 Michael Schumacher Private Collection",
     "label": "1992 Belgian Grand Prix",
@@ -448,7 +448,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "williams:20": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/6d/1985_European_GP_Nigel_Mansell01.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6d/1985_European_GP_Nigel_Mansell01.jpg",
+    "src": "/f1-wins/context/williams-20.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=43891399",
     "title": "1985 European GP Nigel Mansell01",
     "label": "1985 European Grand Prix",
@@ -464,7 +464,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "renault:6": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Prost_at_1981_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Prost_at_1981_Dutch_Grand_Prix.jpg",
+    "src": "/f1-wins/context/renault-6.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23244720",
     "title": "Prost at 1981 Dutch Grand Prix",
     "label": "1981 Dutch Grand Prix",
@@ -472,7 +472,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "brabham:22": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Piquet_at_1980_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Piquet_at_1980_Dutch_Grand_Prix.jpg",
+    "src": "/f1-wins/context/brabham-22.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23275606",
     "title": "Piquet at 1980 Dutch Grand Prix",
     "label": "1980 Dutch Grand Prix",
@@ -480,7 +480,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "williams:4": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Jones_at_1979_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Jones_at_1979_Dutch_Grand_Prix.jpg",
+    "src": "/f1-wins/context/williams-4.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23275511",
     "title": "Jones at 1979 Dutch Grand Prix",
     "label": "1979 Dutch Grand Prix",
@@ -488,7 +488,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:71": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Mario_Andretti_celebrating_at_1978_Dutch_Grand_Prix_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Mario_Andretti_celebrating_at_1978_Dutch_Grand_Prix_%28cropped%29.jpg",
+    "src": "/f1-wins/context/lotus-71.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=110520683",
     "title": "Mario Andretti celebrating at 1978 Dutch Grand Prix (cropped)",
     "label": "1978 Dutch Grand Prix",
@@ -504,7 +504,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:46": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/66/Emerson_Fittipaldi_1972_Austrian_GP.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/66/Emerson_Fittipaldi_1972_Austrian_GP.jpg",
+    "src": "/f1-wins/context/lotus-46.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1175086",
     "title": "Emerson Fittipaldi 1972 Austrian GP",
     "label": "1972 Austrian Grand Prix",
@@ -512,7 +512,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:26": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Clark_at_1967_Dutch_Grand_Prix_%286%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Clark_at_1967_Dutch_Grand_Prix_%286%29.jpg",
+    "src": "/f1-wins/context/lotus-26.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23255834",
     "title": "Clark at 1967 Dutch Grand Prix (6)",
     "label": "1967 Dutch Grand Prix",
@@ -520,7 +520,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "brabham:5": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Brabham_at_1966_Dutch_Grand_Prix_%285%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Brabham_at_1966_Dutch_Grand_Prix_%285%29.jpg",
+    "src": "/f1-wins/context/brabham-5.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23254863",
     "title": "Brabham at 1966 Dutch Grand Prix (5)",
     "label": "1966 Dutch Grand Prix",
@@ -528,7 +528,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:23": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Ginther%2C_G._Hill%2C_Clark_and_Gurney_at_1965_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Ginther%2C_G._Hill%2C_Clark_and_Gurney_at_1965_Dutch_Grand_Prix.jpg",
+    "src": "/f1-wins/context/lotus-23.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23301672",
     "title": "Ginther, G. Hill, Clark and Gurney at 1965 Dutch Grand Prix",
     "label": "1965 Dutch Grand Prix",
@@ -536,7 +536,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:16": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Clark_at_1964_Dutch_Grand_Prix_%282%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Clark_at_1964_Dutch_Grand_Prix_%282%29.jpg",
+    "src": "/f1-wins/context/lotus-16.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23254438",
     "title": "Clark at 1964 Dutch Grand Prix (2)",
     "label": "1964 Dutch Grand Prix",
@@ -544,7 +544,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:10": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Clark_at_1963_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Clark_at_1963_Dutch_Grand_Prix.jpg",
+    "src": "/f1-wins/context/lotus-10.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23254231",
     "title": "Clark at 1963 Dutch Grand Prix",
     "label": "1963 Dutch Grand Prix",
@@ -552,7 +552,7 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
   },
   "lotus:3": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Lotus_18_Stirling_Moss_Monaco_1961.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Lotus_18_Stirling_Moss_Monaco_1961.jpg",
+    "src": "/f1-wins/context/lotus-3.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2641040",
     "title": "File:Lotus 18 Stirling Moss Monaco 1961.jpg",
     "label": "1961 Monaco Grand Prix",

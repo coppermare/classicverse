@@ -28,20 +28,19 @@ function normalized(value: string): string {
 }
 
 /**
- * A direct image URL is not a reuse licence. At present the only external
- * image source admitted by the archive gate is Wikimedia Commons, whose file
- * page is retained as the attribution/reuse record. Other candidates need an
- * explicit rights field and a verified status before they can be displayed.
+ * A direct image URL is not a reuse licence. Displayed non-Ferrari photos are
+ * local WebP derivatives of Wikimedia Commons files; the Commons file page is
+ * retained as the attribution/reuse record. Other candidates remain research
+ * data and cannot be displayed.
  */
 export function hasLawfulF1ImageBasis(image: F1WinImage): boolean {
   try {
-    const imageUrl = new URL(image.src);
     const sourceUrl = new URL(image.sourceUrl);
-    const isCommonsFile = imageUrl.hostname === 'upload.wikimedia.org'
+    const isLocalCommonsPhoto = image.src.startsWith('/f1-wins/')
       && sourceUrl.hostname === 'commons.wikimedia.org';
     const hasExplicitRights = Boolean(image.reuseBasis)
       && image.verificationStatus === 'verified';
-    return isCommonsFile || hasExplicitRights;
+    return isLocalCommonsPhoto || hasExplicitRights;
   } catch {
     return false;
   }
@@ -54,7 +53,8 @@ export function hasLawfulF1ImageBasis(image: F1WinImage): boolean {
  * Circuit-only photography is useful research material, but it is not evidence
  * of a particular victory and can easily put another constructor in the wrong
  * folder. Race images also need a textual link to the winner or constructor;
- * anything uncertain falls back to the labelled editorial artwork.
+ * anything uncertain remains unavailable rather than displaying a graphic or
+ * borrowing a circuit-only/cross-team image.
  */
 export function verifiedF1WinImage(
   team: Pick<F1Team, 'id' | 'name'>,

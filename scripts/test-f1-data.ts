@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
@@ -79,9 +80,13 @@ assert.equal(new Set(imageSources).size, imageSources.length, 'archive photograp
 for (const [key, image] of Object.entries(F1_WIN_IMAGES)) {
   const [teamId, number] = key.split(':');
   assert.ok(winsFor(teamId).some((win) => win.number === Number(number)), `image has no matching win: ${key}`);
-  assert.ok(image.src.startsWith('https://'), `${key}: photo must be a web image`);
+  assert.ok(image.src.startsWith('/f1-wins/') || image.src.startsWith('https://'), `${key}: photo must be a web or research image`);
   assert.ok(image.sourceUrl.startsWith('https://'), `${key}: photo needs a source page`);
   assert.ok(image.title, `${key}: photo needs its source title`);
+  if (image.src.startsWith('/f1-wins/')) {
+    assert.ok(image.src.endsWith('.webp'), `${key}: local display photos must be WebP`);
+    assert.ok(existsSync(`public${image.src}`), `${key}: local display photo must exist`);
+  }
   if (image.kind === 'race' && hasLawfulF1ImageBasis(image)) {
     assert.equal(image.sourceUrl.startsWith('https://commons.wikimedia.org/'), true, `${key}: cleared photo needs a Commons file page`);
   }
@@ -100,25 +105,33 @@ for (const win of F1_WINS_BY_TEAM.mclaren) {
 const enabledWins = F1_TEAMS.flatMap((team) => winsFor(team.id).map((win) => ({ team, win })));
 assert.equal(F1_WIN_IMAGE_MANIFEST.length, enabledWins.length, 'every enabled win must have a manifest entry');
 assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.recordKey)).size, enabledWins.length, 'manifest record keys must be unique');
-assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.src)).size, enabledWins.length, 'displayed contextual images must be unique');
+const displayedEntries = F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.display);
+assert.equal(new Set(displayedEntries.map((entry) => entry.src)).size, displayedEntries.length, 'displayed contextual images must be unique');
+assert.equal('generatedArtwork' in F1_IMAGE_MANIFEST_SUMMARY, false, 'generated artwork must not be part of the F1 image summary');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 298, 'photo coverage must match the localized source set');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 715, 'unavailable coverage must be reported honestly');
 
 for (const { team, win } of enabledWins) {
   const key = `${team.id}:${win.number}`;
   const resolved = resolveF1WinImage(team, win);
   const entry = F1_WIN_IMAGE_MANIFEST.find((candidate) => candidate.recordKey === key);
   assert.ok(entry, `${key}: resolved image needs a manifest entry`);
-  assert.ok(resolved.src, `${key}: every win needs a display image`);
-  assert.ok(resolved.fallbackSrc, `${key}: every win needs a deterministic fallback`);
-  assert.equal(entry?.display, true, `${key}: manifest image must be marked for display`);
+  assert.equal(entry?.display, resolved.verificationStatus === 'verified', `${key}: only verified photos may be marked for display`);
   assert.ok(entry?.subject.team === team.name, `${key}: manifest image subject must name the winning team`);
   assert.ok(entry?.subject.driver === win.driver, `${key}: manifest image subject must name the winning driver`);
   assert.equal(entry?.subject.season, win.year, `${key}: manifest image subject must name the winning season`);
-  assert.ok(entry?.imageRole, `${key}: displayed image needs an honest role label`);
+  assert.ok(entry?.imageRole, `${key}: manifest image needs an honest role label`);
   assert.ok(entry?.reuseBasis, `${key}: displayed image needs a reuse basis`);
-  assert.ok(entry?.verificationStatus === 'verified' || entry?.verificationStatus === 'generated', `${key}: invalid verification status`);
-  if (entry?.verificationStatus === 'generated') {
-    assert.equal(entry.imageRole, 'editorial-artwork', `${key}: generated image must be labelled editorial artwork`);
-    assert.equal(entry.sourcePage, null, `${key}: generated artwork must not invent a source page`);
+  assert.ok(entry?.verificationStatus === 'verified' || entry?.verificationStatus === 'unavailable', `${key}: invalid verification status`);
+  if (entry?.verificationStatus === 'verified') {
+    assert.ok(entry.src?.startsWith('/f1-wins/'), `${key}: displayed photo must be local`);
+    assert.ok(entry.src?.endsWith('.webp'), `${key}: displayed photo must be WebP`);
+    assert.notEqual(entry.imageRole, 'unavailable', `${key}: displayed photo needs a context role`);
+  } else {
+    assert.equal(entry?.src, null, `${key}: unavailable record must not have an image source`);
+    assert.equal(entry?.display, false, `${key}: unavailable record must not be displayed as a photo`);
+    assert.equal(entry?.imageRole, 'unavailable', `${key}: unavailable record needs an unavailable role`);
+    assert.equal(resolved.src, undefined, `${key}: unavailable record must not resolve an image source`);
   }
 }
 for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
@@ -135,7 +148,7 @@ for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
 const circuitCandidates = Object.values(F1_WIN_IMAGES).filter((image) => image.kind === 'circuit').length;
 
 console.log(
-  `F1 archive validated: ${F1_TEAMS.length} retained winning teams, ${F1_WIN_IMAGE_MANIFEST.length} unique contextual images displayed `
-  + `(${F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos} verified photos + ${F1_IMAGE_MANIFEST_SUMMARY.generatedArtwork} editorial artworks), `
+  `F1 archive validated: ${F1_TEAMS.length} retained winning teams, ${F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos} real photos displayed `
+  + `(${F1_IMAGE_MANIFEST_SUMMARY.unavailable} records honestly unavailable), `
   + `${circuitCandidates} circuit candidates and ${F1_CROSS_TEAM_IMAGE_KEYS.size} cross-team photos quarantined through ${F1_DATA_CUTOFF}.`,
 );

@@ -85,10 +85,9 @@ const carsFolder: FolderNode = {
 /* ── F1 Archive: team folders → one win each ── */
 
 function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
-  // The resolver admits only rights-cleared, team/driver-contextual photos.
-  // Every other record receives unique, deterministic artwork that names the
-  // actual team, driver, season and race instead of borrowing a misleading
-  // circuit or cross-team photograph.
+  // The resolver admits only local, rights-cleared, team/driver-contextual
+  // photos. Every other record remains explicitly unavailable instead of
+  // borrowing a misleading circuit, cross-team photograph or graphic.
   const resolvedImage = resolveF1WinImage(team, win);
   const record: F1Win = {
     ...win,
@@ -97,15 +96,16 @@ function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode 
     teamMark: team.mark,
     teamAccent: team.accent,
     teamWinCount,
-    teamImage: resolvedImage.src,
-    teamImageLabel: resolvedImage.label,
-    ...(resolvedImage.sourceUrl ? { teamImageSourceUrl: resolvedImage.sourceUrl } : {}),
-    teamImageKind: resolvedImage.kind,
-    teamImageRole: resolvedImage.role,
-    teamImageReuseBasis: resolvedImage.reuseBasis,
-    ...(resolvedImage.creator ? { teamImageCreator: resolvedImage.creator } : {}),
+    ...(resolvedImage.src ? {
+      teamImage: resolvedImage.src,
+      teamImageLabel: resolvedImage.label,
+      ...(resolvedImage.sourceUrl ? { teamImageSourceUrl: resolvedImage.sourceUrl } : {}),
+      ...(resolvedImage.kind ? { teamImageKind: resolvedImage.kind } : {}),
+      ...(resolvedImage.role !== 'unavailable' ? { teamImageRole: resolvedImage.role } : {}),
+      teamImageReuseBasis: resolvedImage.reuseBasis,
+      ...(resolvedImage.creator ? { teamImageCreator: resolvedImage.creator } : {}),
+    } : {}),
     teamImageVerificationStatus: resolvedImage.verificationStatus,
-    teamImageFallback: resolvedImage.fallbackSrc,
   };
   const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
   const thumbnail = img?.src ?? resolvedImage.src;

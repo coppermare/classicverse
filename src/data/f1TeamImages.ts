@@ -1,6 +1,6 @@
 import type { F1ArchiveImage } from '@/types/f1';
 
-/** Representative photographed constructor cars for generated F1 records. */
+/** Representative photographed constructor cars for the generated F1 results snapshot. */
 export const F1_TEAM_IMAGES: Record<string, F1ArchiveImage> = {
   mclaren: { label: 'McLaren M23', sourceUrl: 'https://en.wikipedia.org/wiki/McLaren_M23', src: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Emerson_Fittipaldi_McLaren_M23_1974_Britain.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail_unscaled' },
   mercedes: { label: 'Mercedes-Benz W196', sourceUrl: 'https://en.wikipedia.org/wiki/Mercedes-Benz_W196', src: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/KlingK-MB-W196-1976.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail_unscaled' },

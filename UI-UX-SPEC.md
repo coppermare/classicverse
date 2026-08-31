@@ -91,7 +91,7 @@ The car folder is a chronological gallery covering 1885–1984. A car detail vie
 
 ### Formula One
 
-The F1 root presents constructor folders. Enabled teams open to a chronological victory gallery. Every victory view identifies the team, Grand Prix, year, driver, circuit and its position in that constructor's archive. Ferrari's curated records also show chassis and engine details plus licensed chassis media where mapped. Every record displays either a verified contextual photograph with an honest same-event, same-season or team-era label, or a unique editorial archive artwork card that names the record and is explicitly not a race photograph; circuit-only, cross-team and rights-unverified candidates never appear as fallbacks.
+The F1 root presents constructor folders. Enabled teams open to a chronological victory gallery. Every victory view identifies the team, Grand Prix, year, driver, circuit and its position in that constructor's archive. Ferrari's curated records also show chassis and engine details plus licensed chassis media where mapped. Every record displays a locally hosted verified contextual photograph with an honest same-event, same-season or team-era label when one is available; otherwise it shows an explicit source-photo-unavailable state. Circuit-only, cross-team and rights-unverified candidates never appear as fallbacks.
 
 ## 7. Physical Controls
 

@@ -24,10 +24,9 @@ export type F1ImageRole =
   | 'exact-win'
   | 'same-event'
   | 'same-season'
-  | 'team-era'
-  | 'editorial-artwork';
+  | 'team-era';
 
-export type F1ImageVerificationStatus = 'verified' | 'generated';
+export type F1ImageVerificationStatus = 'verified' | 'unavailable';
 
 export interface F1Team {
   id: string;        // 'ferrari', 'red-bull', 'mercedes', ...
@@ -86,11 +85,9 @@ export interface F1Win extends F1WinRecord {
   teamImage?: string;
   teamImageLabel?: string;
   teamImageSourceUrl?: string;
-  teamImageKind?: F1WinImage['kind'] | 'artwork';
+  teamImageKind?: F1WinImage['kind'];
   teamImageRole?: F1ImageRole;
   teamImageReuseBasis?: string;
   teamImageCreator?: string;
   teamImageVerificationStatus?: F1ImageVerificationStatus;
-  /** Deterministic record artwork used if a remote contextual photo fails. */
-  teamImageFallback?: string;
 }

@@ -5,7 +5,6 @@ import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
-import { getF1WinArtwork } from '@/data/f1WinArtwork';
 import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import type {
   F1ImageRole,
@@ -18,8 +17,8 @@ import type {
 
 export interface F1WinImageManifestEntry {
   recordKey: string;
-  src: string;
-  imageRole: F1ImageRole;
+  src: string | null;
+  imageRole: F1ImageRole | 'unavailable';
   subject: {
     team: string;
     driver: string;
@@ -30,21 +29,20 @@ export interface F1WinImageManifestEntry {
   reuseBasis: string;
   creator?: string;
   verificationStatus: F1ImageVerificationStatus;
-  /** True when this is the image selected for the record's primary display. */
+  /** True only when a real photograph is selected for primary display. */
   display: boolean;
   note?: string;
 }
 
 export interface ResolvedF1WinImage {
-  src: string;
+  src?: string;
   label: string;
   sourceUrl?: string;
-  kind: F1WinImage['kind'] | 'artwork';
-  role: F1ImageRole;
+  kind?: F1WinImage['kind'];
+  role: F1ImageRole | 'unavailable';
   reuseBasis: string;
   creator?: string;
   verificationStatus: F1ImageVerificationStatus;
-  fallbackSrc: string;
 }
 
 function normalized(value: string): string {
@@ -79,31 +77,20 @@ function roleFor(team: F1Team, win: F1WinRecord, image: F1WinImage): F1ImageRole
   return 'team-era';
 }
 
-function artworkFor(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
+function unavailableFor(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
   return {
-    src: getF1WinArtwork(
-      { name: team.name, mark: team.mark, accent: team.accent },
-      win,
-    ),
-    label: 'Editorial archive artwork — not a race photograph',
-    kind: 'artwork',
-    role: 'editorial-artwork',
-    reuseBasis: 'Original Classicverse-generated artwork',
-    verificationStatus: 'generated',
-    fallbackSrc: getF1WinArtwork(
-      { name: team.name, mark: team.mark, accent: team.accent },
-      win,
-    ),
+    label: `Source photograph unavailable — ${team.name} ${win.grand_prix} ${win.year}`,
+    role: 'unavailable',
+    reuseBasis: 'No verified contextual photograph is available in the current source set',
+    verificationStatus: 'unavailable',
   };
 }
 
-/** Resolve one safe primary image and retain a deterministic fallback. */
+/** Resolve one safe primary photograph, or an honest unavailable state. */
 export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
-  const fallback = artworkFor(team, win);
-
   if (team.id === 'ferrari') {
     const image = getWinImage(win as FerrariWin);
-    if (!image) return fallback;
+    if (!image || !image.src.startsWith('/f1-wins/')) return unavailableFor(team, win);
     return {
       src: image.src,
       label: image.note ? `Car-context photograph — ${image.note}` : 'Car-context photograph',
@@ -113,13 +100,12 @@ export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1Win
       reuseBasis: image.license,
       creator: image.creator,
       verificationStatus: 'verified',
-      fallbackSrc: fallback.src,
     };
   }
 
   const candidate = candidateFor(team, win);
   const verified = verifiedF1WinImage(team, win, candidate);
-  if (!verified) return fallback;
+  if (!verified) return unavailableFor(team, win);
 
   return {
     src: verified.src,
@@ -130,14 +116,13 @@ export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1Win
     reuseBasis: verified.reuseBasis ?? 'Wikimedia Commons file; licence and attribution are recorded on the source page',
     creator: verified.creator,
     verificationStatus: 'verified',
-    fallbackSrc: fallback.src,
   };
 }
 
 /**
- * A generated manifest for every displayed win image. Keeping this derived
- * from the results and candidate indexes means a new result cannot silently
- * arrive without either a verified source photo or labelled artwork.
+ * A manifest for every win. Keeping this derived from the results and
+ * candidate indexes means a new result cannot silently arrive with a graphic,
+ * a circuit-only image or a cross-team photograph.
  */
 export function buildF1WinImageManifest(): F1WinImageManifestEntry[] {
   const entries: F1WinImageManifestEntry[] = [];
@@ -147,14 +132,14 @@ export function buildF1WinImageManifest(): F1WinImageManifestEntry[] {
       const resolved = resolveF1WinImage(team, win);
       entries.push({
         recordKey: `${team.id}:${win.number}`,
-        src: resolved.src,
+        src: resolved.src ?? null,
         imageRole: resolved.role,
         subject: { team: team.name, driver: win.driver, season: win.year, ...(win.chassis ? { car: win.chassis } : {}) },
         sourcePage: resolved.sourceUrl ?? null,
         reuseBasis: resolved.reuseBasis,
         ...(resolved.creator ? { creator: resolved.creator } : {}),
         verificationStatus: resolved.verificationStatus,
-        display: true,
+        display: Boolean(resolved.src),
       });
     }
   }
@@ -166,14 +151,14 @@ export function buildF1WinImageManifest(): F1WinImageManifestEntry[] {
     const resolved = resolveF1WinImage(team, win);
     entries.push({
       recordKey: `ferrari:${win.number}`,
-      src: resolved.src,
+      src: resolved.src ?? null,
       imageRole: resolved.role,
       subject: { team: team.name, driver: win.driver, season: win.year, car: win.chassis },
       sourcePage: resolved.sourceUrl ?? null,
       reuseBasis: resolved.reuseBasis,
       ...(resolved.creator ? { creator: resolved.creator } : {}),
       verificationStatus: resolved.verificationStatus,
-      display: true,
+      display: Boolean(resolved.src),
     });
   }
   return entries;
@@ -184,5 +169,5 @@ export const F1_WIN_IMAGE_MANIFEST = buildF1WinImageManifest();
 export const F1_IMAGE_MANIFEST_SUMMARY = {
   total: F1_WIN_IMAGE_MANIFEST.length,
   verifiedPhotos: F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.verificationStatus === 'verified').length,
-  generatedArtwork: F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.verificationStatus === 'generated').length,
+  unavailable: F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.verificationStatus === 'unavailable').length,
 };
