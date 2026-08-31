@@ -1094,46 +1094,33 @@ body {
 .cv-tv-screen.on  { background: #14140e; }
 .cv-tv-screen.off { background: #060604; }
 
-/* F1 photographs are intentionally held behind this CRT-toned skeleton until
-   decoding completes.  The actual screen always has a fixed size, so this
-   prevents both a flash of empty black and layout movement between victories. */
+/* The image slot stays still while decoding. A single photo icon identifies
+   the pending content without turning a quick load into a distracting show. */
 .cv-f1-image-skeleton {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  background:
-    linear-gradient(112deg, transparent 20%, rgba(235, 224, 189, 0.12) 46%, transparent 72%),
-    radial-gradient(ellipse at 50% 32%, #4b4333 0%, #242019 43%, #100f0c 100%);
-}
-.cv-f1-image-skeleton::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.03)) 7% 72% / 15% 13% no-repeat,
-    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.03)) 25% 76% / 39% 4% no-repeat,
-    linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.02)) 25% 83% / 27% 3% no-repeat;
-}
-.cv-f1-image-skeleton::after {
-  content: '';
-  position: absolute;
-  inset: -10% -65%;
-  background: linear-gradient(104deg, transparent 42%, rgba(255, 244, 205, 0.16) 50%, transparent 58%);
-  animation: cv-f1-image-skeleton-sweep 1.2s ease-in-out infinite;
+  display: grid;
+  place-items: center;
+  background: #161512;
 }
 .cv-f1-thumbnail-skeleton {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(112deg, transparent 18%, rgba(235, 224, 189, 0.14) 48%, transparent 74%),
-    radial-gradient(ellipse at 50% 35%, #4b4333 0%, #242019 50%, #100f0c 100%);
+  display: grid;
+  place-items: center;
+  background: #161512;
 }
-@keyframes cv-f1-image-skeleton-sweep {
-  from { transform: translateX(-32%); }
-  to { transform: translateX(32%); }
+.cv-f1-image-placeholder-icon {
+  width: clamp(30px, 6cqw, 52px);
+  height: auto;
+  fill: none;
+  stroke: rgba(220, 213, 196, 0.5);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-@media (prefers-reduced-motion: reduce) {
-  .cv-f1-image-skeleton::after { animation: none; }
+.cv-f1-thumbnail-skeleton .cv-f1-image-placeholder-icon {
+  width: 28px;
 }
 
 /* Hide system cursor inside the screen — pixel cursor handles it.

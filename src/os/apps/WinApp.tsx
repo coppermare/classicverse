@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { getWinImage } from '@/data/ferrariChassisImages';
+import F1ImagePlaceholder from '../F1ImagePlaceholder';
 import type { F1Win, FerrariWin } from '@/types/f1';
 import type { AppProps } from '../types';
 import { RetroButton, TitleBar, Bevel, INK, RADIUS, WELL } from '../ui';
@@ -79,7 +80,7 @@ export default function WinApp({ node, os }: AppProps) {
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-busy={Boolean(primaryImage && !photoLoaded && !photoFailed)}>
       {primaryImage && !imageFailed ? (
         <>
-          {!photoLoaded && <div className="cv-f1-image-skeleton" aria-hidden="true" />}
+          {!photoLoaded && <F1ImagePlaceholder />}
           {/* Local F1 cars are 1280px WebP. Wikimedia circuit sources use its
               own 1280px derivative; other remote sources use Next's cache. */}
           <Image

@@ -4,6 +4,7 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { isFolder, type FolderNode, type OSNode } from './types';
 import PixelArt from './PixelArt';
+import F1ImagePlaceholder from './F1ImagePlaceholder';
 import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
 import * as sfx from './sound';
 import { F1_REMOTE_IMAGE_HOSTS } from '@/data/f1ImageHosts';
@@ -152,7 +153,7 @@ const GalleryTile = memo(function GalleryTile({
       {photo ? (
         optimizedF1Photo ? (
           <>
-            {!photoLoaded && <span className="cv-f1-thumbnail-skeleton" aria-hidden="true" />}
+            {!photoLoaded && <F1ImagePlaceholder thumbnail />}
             <Image
               key={deliveredPhoto}
               src={deliveredPhoto!}
