@@ -20,6 +20,11 @@ const F1_CAR_MODEL_PATTERN = /\b(?:car|racing car|chassis|mp\d+[a-z]?|mcl\d+[a-z
 export function isF1CarImage(image: Pick<F1WinImage, 'title' | 'label' | 'file'>): boolean {
   const sourceText = normalized([image.title, image.label, image.file].join(' '));
   if (NON_CAR_IMAGE_TERMS.some((term) => sourceText.includes(term))) return false;
+  // “McLaren F1” is also the name of a road car. A bare chassis reference is
+  // not enough to identify a Formula 1 car, so require racing-series/model
+  // evidence before allowing that otherwise ambiguous name.
+  if (sourceText.includes('mclaren f1')
+    && !/\b(?:formula one|formula 1|f1 car|mp\d|mcl\d)\b/.test(sourceText)) return false;
   return F1_CAR_MODEL_PATTERN.test(sourceText);
 }
 
@@ -88,17 +93,19 @@ export function verifiedF1CircuitImage(
   image: F1WinImage | undefined,
 ): F1WinImage | undefined {
   if (!image || image.kind !== 'circuit') return undefined;
+  if (image.mediaType !== 'photograph') return undefined;
   if (!hasLawfulF1ImageBasis(image)) return undefined;
 
   const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));
   const forbiddenTerms = [
+    'map', 'diagram', 'schematic', 'layout', 'illustration', 'render', 'poster', 'graphic',
     'car', 'driver', 'podium', 'garage', 'model', 'toy', 'truck', 'road', 'road car', 'roadcar',
     'vehicle', 'automobile', 'motorcycle', 'toyota', 'supra', 'automatic', 'corvette', 'porsche',
     'museum', 'monument', 'statue', 'sculpture', 'helmet', 'wing', 'engine', 'steering', 'cockpit',
   ];
   const sourceWords = sourceText.split(' ');
   if (forbiddenTerms.some((term) => term.includes(' ') ? sourceText.includes(term) : sourceWords.includes(term))) return undefined;
-  if (!['circuit', 'track', 'speedway', 'autodrome', 'autodromo', 'aerial', 'satellite', 'skysat'].some((term) => sourceText.includes(term))) return undefined;
+  if (!['circuit', 'track', 'raceway', 'speedway', 'autodrome', 'autodromo', 'aerial', 'satellite', 'skysat'].some((term) => sourceText.includes(term))) return undefined;
   const circuitText = normalized(win.circuit);
   const sourceTokens = new Set(sourceText.split(' '));
   const circuitTokens = circuitText.split(' ').filter((token) => token.length > 3);

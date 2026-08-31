@@ -96,9 +96,16 @@ for (const [key, image] of Object.entries(F1_WIN_IMAGES)) {
 }
 for (const [circuit, image] of Object.entries(F1_CIRCUIT_PHOTOS)) {
   assert.equal(image.kind, 'circuit', `${circuit}: fallback must be a circuit image`);
+  assert.equal(image.mediaType, 'photograph', `${circuit}: fallback must be explicitly classified as a photograph`);
   assert.ok(image.src.startsWith('https://'), `${circuit}: fallback must be a real source image`);
-  assert.ok(image.sourceUrl.startsWith('https://commons.wikimedia.org/'), `${circuit}: fallback needs a Commons source page`);
+  assert.ok(image.sourceUrl.startsWith('https://'), `${circuit}: fallback needs a source page`);
   assert.equal(hasLawfulF1ImageBasis(image), true, `${circuit}: fallback needs cleared local rights metadata`);
+  const visualMetadata = [image.file, image.title, image.src].join(' ').toLowerCase();
+  assert.equal(
+    /(?:^|[ _-])(map|diagram|schematic|layout|illustration|render|poster|graphic)(?:$|[ ._?&-])/i.test(visualMetadata),
+    false,
+    `${circuit}: map/graphic/illustration media cannot be a fallback photograph`,
+  );
   const circuitWin = enabledWins.find(({ team, win }) => team.id !== 'ferrari' && win.circuit === circuit)?.win;
   assert.ok(circuitWin, `${circuit}: fallback must correspond to a retained non-Ferrari circuit`);
   assert.equal(verifiedF1CircuitImage(circuitWin, image)?.src, image.src, `${circuit}: fallback must pass the circuit-only image policy`);
@@ -128,6 +135,22 @@ assert.deepEqual(
   [...retainedCircuits].filter((circuit) => !F1_CIRCUIT_PHOTOS[circuit]),
   [],
   'every retained circuit must have a verified fallback candidate',
+);
+assert.equal(Object.keys(F1_CIRCUIT_PHOTOS).length, retainedCircuits.size, 'every retained circuit must have exactly one photographic fallback record');
+
+assert.equal(
+  isF1CarImage({
+    file: 'File:1996 McLaren F1 Chassis No 63 6.1 Front.jpg',
+    title: '1996 McLaren F1 Chassis No 63 6.1 Front.jpg',
+    label: '1996 McLaren F1 Chassis No 63 6.1 Front.jpg',
+  }),
+  false,
+  'McLaren F1 road cars must never pass the Formula 1 car policy',
+);
+assert.equal(
+  isF1CarImage(F1_WIN_PHOTOS['mclaren:1']),
+  true,
+  'McLaren win 1 must use the Formula 1 replacement, not the McLaren F1 road car',
 );
 
 for (const { team, win } of enabledWins) {

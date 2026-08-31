@@ -2633,11 +2633,11 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "verificationStatus": "verified"
   },
   "mclaren:1": {
-    "file": "File:1996 McLaren F1 Chassis No 63 6.1 Front.jpg",
+    "file": "File:McLaren MP4 2C TAG Porsche F1.jpg",
     "src": "/f1-wins/context/mclaren-1.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81984018",
-    "title": "1996 McLaren F1 Chassis No 63 6.1 Front.jpg",
-    "label": "1996 McLaren F1 Chassis No 63 6.1 Front.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=733841",
+    "title": "McLaren MP4 2C TAG Porsche F1.jpg",
+    "label": "McLaren MP4 2C TAG Porsche F1.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"

@@ -101,7 +101,9 @@ function isPhotoCandidate(page: CommonsPage, teamName: string, win: F1WinRecord,
     && coreText.includes('mclaren f1')
     && !coreText.includes('formula one')
     && !coreText.includes('formula 1')
+    && !coreText.includes('f1 car')
     && !/\bmp\d/.test(coreText)
+    && !/\bmcl\d/.test(coreText)
     && !hasDriver;
   if (isMcLarenRoadCar) return false;
   if (carOnly && !isF1CarImage({

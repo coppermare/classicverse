@@ -13,7 +13,7 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
     case 'same-event': return 'Same-event context photograph';
     case 'same-season': return 'Same-season context photograph';
     case 'team-era': return 'Team/era context photograph';
-    case 'circuit': return 'Associated circuit fallback image';
+    case 'circuit': return 'Associated circuit fallback photograph';
     case undefined: return 'Source photograph unavailable';
     default: return 'Contextual image';
   }

@@ -26,23 +26,42 @@ type CommonsPage = {
 const outputPath = join(process.cwd(), 'src/data/f1CircuitPhotos.generated.ts');
 const cachePath = join(tmpdir(), 'classicverse-f1-circuit-search.json');
 const userAgent = 'ClassicverseF1Archive/1.0 (local archival tooling)';
-const manualCircuitFiles: Record<string, { file: string; title: string }> = {
-  'Circuit Mont-Tremblant': { file: 'Circuit Mont Tremblant.png', title: 'Circuit Mont Tremblant track map' },
-  'Scandinavian Raceway': { file: 'Scandinavian Raceway.svg', title: 'Track map of Scandinavian Raceway' },
-  'Mosport International Raceway': { file: 'Mosport.svg', title: 'Track map for Mosport International Raceway' },
-  'Montjuïc': { file: 'Circuit_of_Montjuic_plate_Barcelona.JPG', title: 'Circuit of Montjuic, Barcelona' },
-  'Autódromo Internacional Nelson Piquet': { file: 'Jacarepaguá.svg', title: 'Track map of Autódromo Internacional Nelson Piquet' },
+const manualCircuitFiles: Record<string, { file: string; title: string; src?: string; sourceUrl?: string }> = {
+  'Circuit Mont-Tremblant': { file: 'Mont-Tremblant Control Tower.JPG', title: 'Photograph of the Mont-Tremblant circuit control tower' },
+  'Scandinavian Raceway': {
+    file: 'Swedish Grand Prix 1973 (JOKAMAL3B08-14).tif',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Swedish_Grand_Prix_1973_%28JOKAMAL3B08-14%29.tif/lossy-page1-960px-Swedish_Grand_Prix_1973_%28JOKAMAL3B08-14%29.tif.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
+    title: 'Photograph at the Scandinavian Raceway during the 1973 Swedish Grand Prix',
+  },
+  'Mosport International Raceway': { file: 'Mosport Speedway August 2008.jpg', title: 'Photograph of Mosport International Raceway' },
+  'Autódromo Juan y Oscar Gálvez': { file: 'Autodromo Buenos Aires.jpg', title: 'Photograph of the Autódromo Juan y Oscar Gálvez circuit' },
+  'Montjuïc': { file: 'Circuit De Montjüic (2928933267).jpg', title: 'Photograph of the Montjuïc circuit' },
+  'Long Beach': { file: 'LongBeachCircuit-BackStraight (34653284041).jpg', title: 'Photograph of the Long Beach circuit back straight' },
+  'Dijon-Prenois': { file: 'circuit_de_Dijon_Prenois_aerial.jpg', src: 'https://bocir-medias-prod.s3.fr-par.scw.cloud/medias/MjaNPwYemg/image/202008___circuit_de_Dijon_Prenois___Photo_FabriceAubry1665557609413-format4by3.jpg', sourceUrl: 'https://www.k6fm.com/1972-2022-le-circuit-de-prenois-fete-ses-50-ans', title: 'Aerial photograph of the Dijon-Prenois circuit' },
+  'Detroit Street Circuit': { file: 'Gerhard Berger 1986 Detroit.jpg', title: 'Formula 1 photograph at the Detroit Street Circuit' },
+  'Autódromo Internacional Nelson Piquet': { file: 'Visita a Obra do Autódromo - 51657177214.jpg', title: 'Photograph of the Autódromo Internacional Nelson Piquet' },
+  'Red Bull Ring': { file: 'Luftaufnahme (c)Red Bull Ring.jpg', title: 'Aerial photograph of the Red Bull Ring circuit' },
+  'Phoenix street circuit': { file: 'AlainProst Ferrari 1991.jpg', title: 'Formula 1 photograph at the Phoenix street circuit' },
+  'Circuit Bremgarten': { file: 'Tennikurvebremgarp.jpg', title: 'Photograph of the Bremgarten circuit at the Tannenkurve' },
+  'Aintree': { file: 'Aintree racecourse - geograph.org.uk - 5600617.jpg', title: 'Photograph of Aintree racecourse circuit' },
+  'Las Vegas Strip Street Circuit': { file: '2024 Las Vegas Grand Prix at the Sphere - Friday, November 22, Orbi.jpg', title: 'Photograph of the Las Vegas Strip Street Circuit' },
+  'Korean International Circuit': { file: 'Lewis Hamilton 2011 Korean Grand Prix 001.jpg', title: 'Formula 1 photograph at the Korean International Circuit' },
+  'Las Vegas Street Circuit': { file: '2024 Las Vegas Grand Prix at the Sphere - Saturday, November 23, Orbi.jpg', title: 'Photograph of the Las Vegas Street Circuit' },
+  'Fair Park': { file: 'Piquet Brabham BT53 1984 Dallas F1.jpg', title: 'Formula 1 photograph at the Fair Park circuit' },
+  'Riverside International Raceway': { file: 'RiversideInternationalRaceway 1988.jpg', title: 'Photograph of Riverside International Raceway' },
+  'Prince George Circuit': { file: 'el-race-track-3.jpg', src: 'https://wetanddustyroads.com/wp-content/uploads/2023/07/el-race-track-3.jpg?w=672', sourceUrl: 'https://wetanddustyroads.com/2023/07/17/race-track-east-london-south-africa/', title: 'Photograph of the Prince George Circuit' },
+  'Rouen-Les-Essarts': { file: 'mm-0251.jpg', src: 'https://www.the-fastlane.co.uk/racingcircuits/archives/Rouen/mm-0251.jpg', sourceUrl: 'https://www.the-fastlane.co.uk/racingcircuits/archives/Rouen/mm04.html', title: 'Photograph of the Rouen-Les-Essarts circuit' },
+  'Losail International Circuit': { file: 'losail_circuit_qatar-Copia.jpg', src: 'https://www.visitaqatar.com/wp-content/uploads/2019/09/losail_circuit_qatar-Copia.jpg', sourceUrl: 'https://www.visitaqatar.com/motociclismo-qatar/', title: 'Aerial photograph of Losail International Circuit' },
+  'Jeddah Corniche Circuit': { file: 'Jeddah Corniche Circuit Turn.jpg', src: 'https://res.cloudinary.com/prod-f2f3/image/upload/v1743680870/FA/Global/articles/2025/03_March/Jeddah_Test_Preview_Main.jpg', sourceUrl: 'https://www.f1academy.com/Latest/1ZvydLJR3JL9balPDOhQQz/preview-f1-academy-gets-back-on-track-in-season-testing-in-jeddah', title: 'Photograph of the Jeddah Corniche Circuit' },
+  'Le Mans': { file: 'Le Mans From Above.jpg', title: 'Aerial photograph of the Le Mans circuit' },
   'Autodromo Enzo e Dino Ferrari': { file: 'Imola_Circuit_-_Variante_Bassa_-_Summer_1973.jpg', title: 'Imola Circuit, Variante Bassa, Summer 1973' },
   'Nürburgring': { file: 'Nürburgring Luftaufnahme 2004.jpg', title: 'Aerial photograph of the Nürburgring circuit' },
   'Hockenheimring': { file: 'Aerial image of Hockenheimring (view from the southwest).jpg', title: 'Aerial image of Hockenheimring' },
   'Brands Hatch': { file: 'Brands Hatch (May 2011).jpg', title: 'Aerial view of Brands Hatch racing circuit' },
-  'Phoenix street circuit': { file: 'Phoenix track.jpg', title: 'Phoenix street circuit track' },
   'Indianapolis Motor Speedway': { file: 'Indianapolis Motor Speedway Aerial August 2018.jpg', title: 'Aerial view of Indianapolis Motor Speedway' },
-  'Korean International Circuit': { file: 'Korea international circuit.svg', title: 'Track map of Korean International Circuit' },
   'Jarama': { file: 'Circuito de Madrid Jarama - RACE, o "Circuito del Jarama". Comunidad de Madrid. España, Spain.jpg', title: 'Aerial view of the Jarama Circuit' },
   'Istanbul Park': { file: 'Istanbul Park aerial.jpg', title: 'Aerial photograph of Istanbul Park circuit' },
   'Miami International Autodrome': { file: 'Circuito Internacional de Miami.jnp.jpg', title: 'Aerial photograph of Miami International Autodrome' },
-  'Prince George Circuit': { file: 'Prince George Circuit.png', title: 'Prince George Circuit track map' },
   'Yas Marina Circuit': { file: 'Yas Marina Circuit, October 12, 2018 SkySat (cropped).jpg', title: 'Aerial photograph of Yas Marina Circuit' },
 };
 
@@ -63,17 +82,18 @@ function isCircuitCandidate(page: CommonsPage, circuit: string): boolean {
   const info = page.imageinfo?.[0];
   if (!info?.thumburl || !info.mime?.startsWith('image/')) return false;
   if ((info.width ?? 0) < 300 || (info.height ?? 0) < 200) return false;
-  if (info.mime === 'image/svg+xml' || info.mime === 'image/gif') return false;
+  if (info.mime !== 'image/jpeg') return false;
   const text = sourceText(page);
   const titleText = normalized(page.title.replace(/^File:/, ''));
   const banned = [
     'layout', 'map', 'diagram', 'schematic', 'render', 'poster', 'logo', 'flag', 'model', 'toy',
     'car', 'racing', 'driver', 'winner', 'podio', 'pits', 'pit lane', 'garage', 'truck', 'camion',
-    'motorcycle', 'mclaren', 'ferrari', 'lotus', 'corvette', 'chevrolet', 'road', 'vehicle', 'automobile',
+    'motorcycle', 'rider', 'motogp', 'rossi', 'marquez', 'mclaren', 'ferrari', 'lotus', 'corvette', 'chevrolet', 'road', 'vehicle', 'automobile',
     'toyota', 'supra', 'automatic', 'monument', 'statue',
     'sculpture', 'museum', 'senna', 'hamilton', 'verstappen', 'prost', 'schumacher', 'vettel',
     'raikkonen', 'alonso', 'bottas', 'rosberg', 'webber', 'ricciardo', 'moss', 'fangio',
-    'feydeau', 'theatre', 'dessin', 'drawing', 'actress', 'printed', 'board', 'phone',
+    'feydeau', 'theatre', 'dessin', 'drawing', 'illustration', 'actress', 'printed', 'board', 'phone',
+    'advertisement', 'booklet', 'page', 'scan', 'dpla',
   ];
   const titleTokens = titleText.split(' ');
   const textTokens = text.split(' ');
@@ -147,7 +167,7 @@ function candidatePage(image: F1WinImage): CommonsPage {
     title: image.title,
     filePage: image.file,
     snippet: image.file,
-    imageinfo: [{ thumburl: image.file, width: 1280, height: 720, mime: 'image/jpeg' }],
+    imageinfo: [{ thumburl: image.file, width: 1280, height: 720, mime: /\.(?:jpe?g)(?:$|[?#])/i.test(image.file) ? 'image/jpeg' : 'image/png' }],
   };
 }
 
@@ -163,8 +183,9 @@ function buildRecord(circuit: string, page: CommonsPage): CircuitRecord {
     title,
     label: circuit,
     kind: 'circuit',
-    reuseBasis: 'Wikimedia Commons circuit image; source and attribution are recorded on the Commons page',
+    reuseBasis: 'Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page',
     ...(artist ? { creator: artist } : {}),
+    mediaType: 'photograph',
     verificationStatus: 'verified',
   };
 }
@@ -173,7 +194,7 @@ function writeOutput(records: CircuitRecord[]): void {
   const map = Object.fromEntries(records.map(({ circuit, ...image }) => [circuit, image]));
   writeFileSync(outputPath,
     '// Generated by scripts/source-f1-circuit-photos.ts. Do not edit by hand.\n'
-      + '// Every entry is a verified Wikimedia Commons circuit image or map.\n\n'
+      + '// Every entry is a verified circuit photograph.\n\n'
       + "import type { F1WinImage } from '@/types/f1';\n\n"
       + `export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = ${JSON.stringify(map, null, 2)};\n`);
 }
@@ -189,12 +210,15 @@ async function main(): Promise<void> {
       records.push({
         circuit,
         file: `File:${manual.file}`,
-        src: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodedFile}`,
-        sourceUrl: `https://commons.wikimedia.org/wiki/File:${encodedFile}`,
+        src: manual.src ?? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodedFile}`,
+        sourceUrl: manual.sourceUrl ?? `https://commons.wikimedia.org/wiki/File:${encodedFile}`,
         title: manual.title,
         label: circuit,
         kind: 'circuit',
-        reuseBasis: 'Wikimedia Commons circuit photograph or circuit map; source and attribution are recorded on the Commons page',
+        reuseBasis: manual.sourceUrl && !manual.sourceUrl.includes('commons.wikimedia.org')
+          ? 'Photograph reproduced from the credited circuit archive source; attribution and permission are recorded on the source page'
+          : 'Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page',
+        mediaType: 'photograph',
         verificationStatus: 'verified',
       });
       console.log(`CIRCUIT ${circuit} <- ${manual.title}`);
@@ -226,7 +250,7 @@ async function main(): Promise<void> {
     }
     if (!page) { console.log(`GAP ${circuit}`); continue; }
     const record = useExistingCandidate && candidate
-      ? { circuit, ...candidate, src: candidate.file, label: circuit, reuseBasis: 'Wikimedia Commons circuit image; source and attribution are recorded on the Commons page', verificationStatus: 'verified' as const }
+      ? { circuit, ...candidate, src: candidate.file, label: circuit, reuseBasis: 'Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page', mediaType: 'photograph' as const, verificationStatus: 'verified' as const }
       : buildRecord(circuit, page);
     records.push(record);
     console.log(`CIRCUIT ${circuit} <- ${record.title}`);

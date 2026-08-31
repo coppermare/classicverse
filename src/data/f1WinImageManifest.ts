@@ -99,11 +99,11 @@ function resolveCircuitFallback(team: F1Team, win: F1WinRecord): ResolvedF1WinIm
   if (!verified) return undefined;
   return {
     src: verified.src,
-    label: `Circuit fallback image — ${verified.label}`,
+    label: `Circuit fallback photograph — ${verified.label}`,
     sourceUrl: verified.sourceUrl,
     kind: 'circuit',
     role: 'circuit',
-    reuseBasis: verified.reuseBasis ?? 'Wikimedia Commons circuit image; licence and attribution are recorded on the source page',
+    reuseBasis: verified.reuseBasis ?? 'Circuit photograph; licence and attribution are recorded on the source page',
     creator: verified.creator,
     verificationStatus: 'verified',
   };

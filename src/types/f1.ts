@@ -16,6 +16,8 @@ export interface F1WinImage {
   /** Optional rights metadata for future non-Commons sources. */
   reuseBasis?: string;
   creator?: string;
+  /** Explicit media classification; circuit records must be photographs. */
+  mediaType?: 'photograph';
   verificationStatus?: 'verified' | 'quarantined';
 }
 
