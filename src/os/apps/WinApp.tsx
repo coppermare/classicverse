@@ -31,6 +31,12 @@ function directFallbackSource(source: string): string {
   return url.toString();
 }
 
+function isPreSizedWikimediaSource(source: string | undefined): source is string {
+  if (!source) return false;
+  const url = new URL(source);
+  return url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/');
+}
+
 /** One Grand Prix victory: the car that scored it, and the record behind it. */
 export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
@@ -46,7 +52,12 @@ export default function WinApp({ node, os }: AppProps) {
   const photoLoaded = loadedImage === primaryImage;
   const retryCount = imageAttempt.src === primaryImage ? imageAttempt.count : 0;
   const useDirectFallback = bypassedOptimizer === primaryImage;
-  const deliveredImage = primaryImage && useDirectFallback ? directFallbackSource(primaryImage) : primaryImage;
+  // Wikimedia's redirect endpoint is reliable in the browser but its
+  // server-side optimizer fetch is frequently throttled. Start with the
+  // publisher's 1280px derivative so circuit cards paint immediately.
+  const usePreSizedWikimediaSource = isPreSizedWikimediaSource(primaryImage);
+  const bypassesOptimizer = usePreSizedWikimediaSource || useDirectFallback;
+  const deliveredImage = primaryImage && bypassesOptimizer ? directFallbackSource(primaryImage) : primaryImage;
   const preserveWholeCar = primaryImage === '/f1-wins/context/renault-9.webp';
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
@@ -69,8 +80,8 @@ export default function WinApp({ node, os }: AppProps) {
       {primaryImage && !imageFailed ? (
         <>
           {!photoLoaded && <div className="cv-f1-image-skeleton" aria-hidden="true" />}
-          {/* Local F1 cars are 1280px WebP; remote circuit/first-party images
-              are resized and cached by Next before delivery to this screen. */}
+          {/* Local F1 cars are 1280px WebP. Wikimedia circuit sources use its
+              own 1280px derivative; other remote sources use Next's cache. */}
           <Image
             key={`${deliveredImage}-${retryCount}`}
             src={deliveredImage!}
@@ -80,13 +91,13 @@ export default function WinApp({ node, os }: AppProps) {
             loading="eager"
             decoding="async"
             fetchPriority="high"
-            unoptimized={useDirectFallback}
+            unoptimized={bypassesOptimizer}
             onLoad={() => setLoadedImage(primaryImage)}
             onError={() => {
               // Some archival hosts throttle Next's server-side image fetches
               // while permitting a browser request. Preserve the correct,
               // pre-sized source and bypass the proxy before retrying.
-              if (!useDirectFallback) {
+              if (!bypassesOptimizer) {
                 setBypassedOptimizer(primaryImage);
                 return;
               }
