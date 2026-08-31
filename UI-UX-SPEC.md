@@ -1,236 +1,160 @@
-# Classicverse UI UX Specification
+# Classicverse UI/UX Specification
 
-**Product type**: Interactive classic car timeline
-**Scope**: 1885 to 2000
-**Design goal**: Useful archive first, beautiful portfolio piece second
+**Status:** Implemented interaction model
 
-## 1. Experience Principle
+**Product form:** A working archive OS inside a vintage television
 
-Classicverse should feel like a collector archive brought to life.
+**Design goal:** Make discovery tactile and memorable without sacrificing clarity
 
-The interface should not start with a marketing pitch. Users should immediately land inside the timeline with a selected year, a hero car, and clear ways to move through history.
+## 1. Experience Model
 
-## 2. Opening Screen
+The page presents one physical object: a television set. The screen contains the Classicverse desktop, while the cabinet contains controls that operate it. The interface should feel like tuning and exploring a machine, not browsing a conventional dashboard.
 
-Default state:
+The television metaphor has three layers:
 
-1. Selected year: 1885.
-2. Hero car: Benz Patent Motorwagen.
-3. Large hero image.
-4. Car name and manufacturer.
-5. One sentence explaining why the car matters.
-6. Three quick facts.
-7. Year scrubber from 1885 to 2000.
-8. Visible source and confidence label.
+1. **Cabinet** — power, tuning, volume, display controls and fill-view presentation.
+2. **System** — toolbar, folders, global search, navigation history and cursor.
+3. **Channels** — archives and applications such as Cars, F1, Radio, Weather and Snake.
 
-The first screen should make the product understandable without explanatory onboarding.
+The desktop also includes a Changelog system application: a scrollable, visitor-facing record of meaningful product milestones derived from repository history.
 
-## 3. Desktop Layout
+## 2. Opening And Power
 
-Use a three zone archive layout.
-
-### Left Zone
-
-Purpose: time navigation.
-
-Content:
-
-1. Decade rail.
-2. Era labels.
-3. Current year marker.
-4. Keyboard hint shown subtly when focused.
-
-### Center Zone
-
-Purpose: emotional and visual focus.
-
-Content:
-
-1. Hero image.
-2. Year.
-3. Car name.
-4. Manufacturer and country.
-5. Short description.
-6. Long story section.
-
-### Right Zone
-
-Purpose: context and trust.
-
-Content:
-
-1. Quick facts.
-2. Why this year.
-3. Why iconic.
-4. Selection basis.
-5. Confidence label.
-6. Source links.
-7. Alternate cars.
-
-## 4. Mobile Layout
-
-Use a single column.
-
-Order:
-
-1. Hero image.
-2. Year and car name.
-3. Quick facts.
-4. Story.
-5. Tabbed context.
-6. Sources.
-7. Alternates.
-
-Mobile navigation:
-
-1. Sticky compact year selector at the bottom.
-2. Horizontal decade tray.
-3. Search opens as a full screen command view.
-
-## 5. Navigation
-
-Primary navigation:
-
-1. Era jumps.
-2. Decade jumps.
-3. Keyboard arrows for year by year movement.
-4. Search command.
-
-The year scrubber (1885 to 2000) serves as a visual position indicator, not a precise interaction surface. At typical desktop widths, 116 years produces roughly 5 pixels per year, making drag-to-year unreliable. The scrubber should snap to the nearest decade when dragged and display the exact year only as a label. Precise year selection happens via keyboard or decade navigation.
-
-Keyboard behavior:
-
-1. Left arrow moves one year back.
-2. Right arrow moves one year forward.
-3. Shift plus left arrow moves one decade back.
-4. Shift plus right arrow moves one decade forward.
-5. Escape closes search or panels.
-
-Search should support:
-
-1. Year.
-2. Make.
-3. Model.
-4. Country.
-5. Category.
-6. Era.
-
-## 6. Era Labels
-
-Use era labels to help people understand the shape of automotive history.
-
-Suggested eras:
-
-1. Origins: 1885 to 1904.
-2. Brass Era: 1905 to 1918.
-3. Interwar: 1919 to 1938.
-4. WWII: 1939 to 1944.
-5. Postwar: 1945 to 1959.
-6. Jet Age: 1960 to 1969.
-7. Transition: 1970 to 1979.
-8. Modern Classic: 1980 to 2000.
-
-These labels are navigation aids, not strict historical claims.
-
-Note on the 1970s label: this decade is defined by the fuel crisis, emissions regulation, Japanese import growth, and the end of American muscle. Transition is a more accurate label than Muscle And Motorsport, which better describes the late 1960s.
-
-## 7. Visual System
-
-Palette:
-
-1. Warm white for the page background.
-2. Charcoal for primary text.
-3. Muted steel for borders and secondary surfaces.
-4. Deep racing red for active states.
-5. Brass accents for historical details.
-
-Typography:
-
-1. Clean sans for navigation, metadata, and interface labels.
-2. Characterful serif for car names and historical notes.
-3. Avoid oversized type inside dense panels.
-4. Keep labels short and scannable.
-
-Imagery:
-
-1. Images should show the full silhouette where possible.
-2. Avoid overly cropped hero images.
-3. Preserve attribution visibility.
-4. Use a neutral image frame that does not overpower the car.
-
-## 8. Components
-
-Core components:
-
-1. Timeline scrubber.
-2. Decade rail.
-3. Era jump tray.
-4. Hero car panel.
-5. Quick facts grid.
-6. Historical story section.
-7. Source panel.
-8. Confidence badge.
-9. Alternate cars module.
-10. Search command.
-11. Mobile year selector.
-
-## 9. Motion
-
-Motion should be quiet and tactile.
-
-Year change:
-
-1. Hero image cross fades.
-2. Content slides slightly along the horizontal axis.
-3. Facts stagger in under 300 ms.
-4. Timeline thumb glides to the new year.
-
-Reduced motion:
-
-1. Disable slide motion.
-2. Use simple opacity changes.
-3. Keep all content accessible without animation.
-
-## 10. Accessibility
+The set begins off. The power button is a real button with an explicit accessible name and pressed state. Turning it on plays the rare, explanatory CRT boot sequence; routine navigation after boot is immediate.
 
 Requirements:
 
-1. Use real buttons for year and decade controls.
-2. Provide visible focus states.
-3. Label the current year for screen readers.
-4. Do not rely on color alone for confidence.
-5. Use strong contrast for all text.
-6. Provide meaningful alt text for car images.
-7. Make keyboard navigation complete.
-8. Support reduced motion.
+1. The unlit screen explains to assistive technology that the set is off.
+2. Power transitions cannot destroy the current OS path or archive selection.
+3. Repeated power clicks are ignored while a transition is active.
+4. Reduced motion replaces scan, scale and static movement with a short opacity transition.
+5. The real pointer remains available while the screen is off; the custom pixel pointer is confined to the lit screen.
 
-Image alt text should describe the car and visible angle, not only repeat the model name.
+## 3. Fill-View TV
 
-Example:
+Fill view is an explicit cabinet layout action. It does not invoke the browser Fullscreen API or hide browser chrome.
 
-`Three quarter front view of a 1959 Mini in red, showing its compact two box silhouette.`
+Requirements:
 
-## 11. Empty And Uncertain States
+1. A compact icon-only cabinet button exposes stateful `Fill television viewport` and `Restore television frame` accessible names.
+2. Remove the decorative outer cabinet, base and shadow while leaving their structural nodes mounted.
+3. Promote the inner bezel to a square-cornered surface spanning the full viewport width and height.
+4. Keep browser chrome and normal browser mode unchanged.
+5. Preserve power, path, current media and application state while changing presentation.
+6. Retain every operative cabinet control in the expanded layout.
+7. Do not animate the layout change; the immediate response keeps this frequently toggled control crisp and avoids animating layout properties.
 
-The final V1 should not have empty years.
+## 4. System Navigation
 
-During research and prototype work, incomplete years should show:
+Every location is an OS path serialized in the `?p=` query parameter. The toolbar and browser history operate the same path stack.
 
-1. Year.
-2. Research status.
-3. Candidate cars.
-4. Missing source count.
-5. Next review action.
+Toolbar actions:
 
-Low confidence records should remain visible with a confidence label and notes.
+1. Back.
+2. Forward.
+3. Up one level.
+4. Home.
+5. Clickable address breadcrumbs.
+6. Global search.
+7. Mute.
 
-## 12. Design Acceptance Criteria
+Folder behavior:
 
-The interface direction is ready for build when:
+- Icon folders use pointer hover or arrow keys to select and Enter/click to open.
+- Gallery folders use rendered tile positions for vertical keyboard movement rather than assuming a fixed column count.
+- The F1 folder roster is limited to the nine selected major constructors; smaller and short-history constructors are not user-visible destinations.
 
-1. The 1885 opening screen is designed.
-2. Year navigation works in prototype form.
-3. Mobile year selection is designed.
-4. Source and confidence panels are visible.
-5. A low confidence state is designed.
-6. The 10 car vertical slice can be displayed without layout changes.
+Application behavior:
+
+- The tuning roller moves through the list that owns the current screen.
+- Archive detail screens offer previous/next controls.
+- Radio and other apps can temporarily claim the roller through the tuner contract.
+
+## 5. Search
+
+Search opens with `Ctrl/Command + K` or the toolbar button and indexes the OS registry rather than maintaining a separate destination list.
+
+Requirements:
+
+1. Results support car names, years, manufacturers, countries, categories, eras, drivers, circuits, constructors and app keywords.
+2. The field receives focus on open.
+3. Up/Down changes selection, Enter opens and Escape closes.
+4. Empty queries show deterministic suggestions and top-level destinations.
+5. Empty results explain useful query types.
+6. Opening search from the keyboard is immediate and does not wait for decorative animation.
+
+## 6. Archive Views
+
+### Cars
+
+The car folder is a chronological gallery covering 1885–1984. A car detail view uses the image as the visual focus and keeps name, year, manufacturer and country legible on the television. Supporting panels expose facts, selection reasoning, the long story, sources, confidence and attribution.
+
+### Formula One
+
+The F1 root presents constructor folders. Enabled teams open to a chronological victory gallery. Every victory view identifies the team, Grand Prix, year, driver, circuit and its position in that constructor's archive. Ferrari's curated records also show chassis and engine details plus licensed chassis media where mapped. Every record displays a locally hosted verified contextual photograph with an honest same-event, same-season or team-era label when one is available; otherwise it shows an explicit source-photo-unavailable state. Circuit-only, cross-team and rights-unverified candidates never appear as fallbacks.
+
+## 7. Physical Controls
+
+### Tuning roller
+
+The roller is a list-control surface. Drag, wheel and keyboard input change discrete options and provide restrained tick feedback. It must not invent a separate navigation state.
+
+### Volume
+
+The volume dial controls all synthesized interface sounds and application audio through one shared level. Mute is reflected both in the toolbar and output graph.
+
+### Brightness and contrast
+
+These knobs adjust the screen presentation without reducing text below a usable contrast threshold. Values remain bounded and support pointer and wheel input.
+
+### Press feedback
+
+Buttons use immediate depressed styling or a subtle `scale(0.97)` response. Hover-only effects are limited to devices with a fine pointer.
+
+## 8. Responsive Layout
+
+Above the compact breakpoint, the screen and control column sit side by side in the cabinet. At smaller widths, the screen becomes a 4:3 region and the physical controls stack below it.
+
+Requirements:
+
+1. The screen remains operable before decorative cabinet details.
+2. Toolbar controls do not collide or become unreachable.
+3. Galleries respond to available screen width.
+4. Snake accepts direct swipe controls on touch devices without adding a persistent directional pad.
+5. Fill-view presentation spans the viewport at desktop sizes and remains fully scrollable when compact layouts need more than one viewport of height.
+6. Test at a narrow phone viewport, a tablet viewport and a desktop viewport.
+
+## 9. Motion
+
+Motion expresses physical state or prevents a jarring change:
+
+- Boot explains the screen acquiring a signal.
+- Power-off explains the screen collapsing.
+- Radio identification marks a newly tuned station.
+- Small press feedback confirms input.
+
+Routine folder navigation, keyboard commands and fast archive stepping should not accumulate animation delay. UI transitions stay below 300 ms unless they are rare explanatory sequences such as first boot.
+
+## 10. Accessibility
+
+1. All controls use native buttons, inputs or sliders with accessible names.
+2. Keyboard behavior covers folders, archives, search and Snake; the fill-view control is a native keyboard-focusable button.
+3. Focus remains visible even where pointer selection uses a retro dotted highlight.
+4. Status changes such as screen power and item counts have live text.
+5. Meaning is never encoded by colour alone.
+6. Reduced motion removes position/scale movement while retaining useful fades.
+7. Images use meaningful alt text where they convey content; decorative logos and thumbnails may be empty when the adjacent label supplies the name.
+8. Sound is optional and muteable.
+9. The custom cursor never prevents use of the system pointer outside the lit screen.
+
+## 11. Acceptance Criteria
+
+The experience is ready when:
+
+1. Power, fill-view state and OS navigation remain synchronized through mouse, keyboard and browser Back actions.
+2. Every enabled desktop item opens a complete or explicitly bounded experience.
+3. Search reaches all enabled archives and apps.
+4. Archive galleries remain responsive with hundreds of items.
+5. Media failure does not hide textual history or navigation.
+6. The set is usable with muted sound, reduced motion and keyboard-only input.
+7. Narrow and fill-view layouts retain the television's operative controls.

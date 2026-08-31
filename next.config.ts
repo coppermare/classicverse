@@ -1,19 +1,13 @@
 import type { NextConfig } from "next";
+import { F1_REMOTE_IMAGE_HOSTS } from "./src/data/f1ImageHosts";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "upload.wikimedia.org",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "commons.wikimedia.org",
-        pathname: "/**",
-      },
-    ],
+    remotePatterns: F1_REMOTE_IMAGE_HOSTS.map((hostname) => ({
+      protocol: "https",
+      hostname,
+      pathname: "/**",
+    })),
   },
 };
 

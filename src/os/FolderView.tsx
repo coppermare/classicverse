@@ -1,10 +1,43 @@
 'use client';
 
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import { isFolder, type FolderNode, type OSNode } from './types';
 import PixelArt from './PixelArt';
+import F1ImagePlaceholder from './F1ImagePlaceholder';
 import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
 import * as sfx from './sound';
+import { F1_REMOTE_IMAGE_HOSTS } from '@/data/f1ImageHosts';
+
+const F1_REMOTE_IMAGE_HOST_SET = new Set<string>(F1_REMOTE_IMAGE_HOSTS);
+
+function isOptimizedF1Photo(src: string): boolean {
+  if (src.startsWith('/f1-wins/')) return true;
+  try {
+    return F1_REMOTE_IMAGE_HOST_SET.has(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
+
+function isWikimediaSpecialFilePath(src: string): boolean {
+  try {
+    const url = new URL(src);
+    return url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/');
+  } catch {
+    return false;
+  }
+}
+
+function directPreviewSource(src: string): string {
+  const url = new URL(src);
+  if (url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/')) {
+    // A 640px derivative is sharp at this 4:3 grid size, including high-DPI
+    // displays, without waiting for a server-side image proxy.
+    url.searchParams.set('width', '640');
+  }
+  return url.toString();
+}
 
 /**
  * Renders any folder's contents. It knows nothing about cars or Ferrari — it
@@ -94,6 +127,12 @@ const GalleryTile = memo(function GalleryTile({
   onSelect: (id: string) => void; onOpen: (node: OSNode) => void;
 }) {
   const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
+  const [loadedPhoto, setLoadedPhoto] = useState<string>();
+  const [bypassedOptimizer, setBypassedOptimizer] = useState<string>();
+  const optimizedF1Photo = photo ? isOptimizedF1Photo(photo) : false;
+  const photoLoaded = loadedPhoto === photo;
+  const useDirectPreview = photo !== null && (isWikimediaSpecialFilePath(photo) || bypassedOptimizer === photo);
+  const deliveredPhoto = photo && useDirectPreview ? directPreviewSource(photo!) : photo;
   return (
     <button
       data-id={node.id}
@@ -112,9 +151,32 @@ const GalleryTile = memo(function GalleryTile({
       }}
     >
       {photo ? (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={photo} alt="" loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        optimizedF1Photo ? (
+          <>
+            {!photoLoaded && <F1ImagePlaceholder thumbnail />}
+            <Image
+              key={deliveredPhoto}
+              src={deliveredPhoto!}
+              alt=""
+              fill
+              sizes="(max-width: 800px) 33vw, 250px"
+              loading="lazy"
+              decoding="async"
+              unoptimized={useDirectPreview}
+              onLoad={() => setLoadedPhoto(photo)}
+              onError={() => {
+                // Preserve a real preview if an archival host rejects the
+                // optimizer request; Wikimedia receives a small derivative.
+                if (!useDirectPreview) setBypassedOptimizer(photo);
+              }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: photoLoaded ? 1 : 0, transition: 'opacity 160ms ease-out' }}
+            />
+          </>
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={photo} alt="" loading="lazy" decoding="async"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        )
       ) : (
         <span style={{
           width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -140,7 +202,8 @@ const IconTile = memo(function IconTile({
       type="button"
       onPointerEnter={() => { onSelect(node.id); if (!off) sfx.hover(); }}
       onClick={() => onOpen(node)}
-      aria-label={`${node.name}${off ? ' (coming soon)' : ''}`}
+      aria-label={`${node.name}${off ? ` (${node.subtitle ?? 'unavailable'})` : ''}`}
+      aria-disabled={off || undefined}
       aria-current={active ? 'true' : undefined}
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
@@ -289,7 +352,14 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
       background: 'linear-gradient(180deg, #F7F3E9 0%, #EFE9DA 100%)',
       display: 'flex', flexDirection: 'column',
     }}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto' }}>
+      <div style={{
+        flex: 1, minHeight: 0, display: 'flex',
+        // A long icon grid must start at the top of its scroll port. Centring it
+        // on the cross axis places its first rows in negative, unreachable
+        // overflow; small desktop folders still benefit from centred icons.
+        alignItems: children.length > 12 ? 'flex-start' : 'center',
+        justifyContent: 'center', overflowY: 'auto',
+      }}>
         <div ref={gridRef} style={{
           display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
           /* Air between the tiles. maxWidth carries the column gap with it so

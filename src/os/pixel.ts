@@ -96,6 +96,38 @@ export function blit(dst: Grid, src: Grid, x: number, y: number) {
   }
 }
 
+/**
+ * Wrap every filled region in `colour`.
+ *
+ * The alternative is hand-drawing the outline, which works for a rectangle and
+ * falls apart for anything made of overlapping shapes: a cloud is three discs,
+ * and outlining each one leaves the seams where they meet drawn straight
+ * through the middle of the silhouette. This traces the union instead, and
+ * stays correct when a shape is nudged.
+ *
+ * Runs off a snapshot of the grid — outlining in place would treat the ink it
+ * just laid down as fill and grow a second ring around the first.
+ *
+ * Note it grows the shape by one pixel on every side, so leave a pixel of air
+ * inside the grid or the keyline is what gets clipped.
+ */
+export function keyline(g: Grid, colour: string) {
+  const before = g.map((row) => row.slice());
+  const h = before.length;
+  const w = before[0].length;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (before[y][x]) continue;
+      const touching =
+        (y > 0 && before[y - 1][x]) ||
+        (y < h - 1 && before[y + 1][x]) ||
+        (x > 0 && before[y][x - 1]) ||
+        (x < w - 1 && before[y][x + 1]);
+      if (touching) g[y][x] = colour;
+    }
+  }
+}
+
 export interface Run { x: number; y: number; w: number; c: string }
 
 /** Merge each row's identical neighbours into single spans. */

@@ -1,13 +1,18 @@
 import { CARS } from '@/data/cars';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
+import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
+import { resolveF1WinImage } from '@/data/f1WinImageManifest';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { toThumb, THUMB_TILE } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
-import type { FerrariWin } from '@/types/f1';
+import type { F1Team, F1Win, F1WinRecord, FerrariWin } from '@/types/f1';
 import CarApp from './apps/CarApp';
 import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
+import WeatherApp from './apps/WeatherApp';
+import SnakeApp from './apps/SnakeApp';
+import ChangelogApp from './apps/ChangelogApp';
 import type { AppNode, FolderNode, OSNode } from './types';
 
 /**
@@ -79,19 +84,48 @@ const carsFolder: FolderNode = {
 
 /* ── F1 Archive: team folders → one win each ── */
 
-function winNode(win: FerrariWin): AppNode {
-  const img = getWinImage(win, THUMB_TILE);
+function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
+  // The resolver admits only local, rights-cleared, team/driver-contextual
+  // photos. Every other record remains explicitly unavailable instead of
+  // borrowing a misleading circuit, cross-team photograph or graphic.
+  const resolvedImage = resolveF1WinImage(team, win);
+  const record: F1Win = {
+    ...win,
+    teamId: team.id,
+    teamName: team.name,
+    teamMark: team.mark,
+    teamAccent: team.accent,
+    teamWinCount,
+    ...(resolvedImage.src ? {
+      teamImage: resolvedImage.src,
+      teamImageLabel: resolvedImage.label,
+      ...(resolvedImage.sourceUrl ? { teamImageSourceUrl: resolvedImage.sourceUrl } : {}),
+      ...(resolvedImage.kind ? { teamImageKind: resolvedImage.kind } : {}),
+      ...(resolvedImage.role !== 'unavailable' ? { teamImageRole: resolvedImage.role } : {}),
+      teamImageReuseBasis: resolvedImage.reuseBasis,
+      ...(resolvedImage.creator ? { teamImageCreator: resolvedImage.creator } : {}),
+    } : {}),
+    teamImageVerificationStatus: resolvedImage.verificationStatus,
+  };
+  const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
+  const thumbnail = img?.src ?? resolvedImage.src;
   return {
     id: String(win.number),
     kind: 'app',
     name: `${win.grand_prix} Grand Prix`,
     subtitle: `${win.year} - ${win.driver}`,
-    icon: img?.src ? { kind: 'photo', src: img.src } : { kind: 'label', text: String(win.number) },
+    icon: thumbnail ? { kind: 'photo', src: thumbnail } : { kind: 'label', text: team.mark },
     component: WinApp,
     chrome: 'bleed',
-    data: win,
-    keywords: [win.driver, win.chassis, win.circuit, String(win.year), `win ${win.number}`].join(' '),
+    data: record,
+    keywords: [team.name, win.driver, win.chassis, win.circuit, String(win.year), `win ${win.number}`]
+      .filter(Boolean)
+      .join(' '),
   };
+}
+
+function winsForTeam(team: F1Team): F1WinRecord[] {
+  return team.id === 'ferrari' ? FERRARI_WINS : (F1_WINS_BY_TEAM[team.id] ?? []);
 }
 
 const f1Folder: FolderNode = {
@@ -102,17 +136,24 @@ const f1Folder: FolderNode = {
   icon: { kind: 'glyph', id: 'f1' },
   layout: 'icons',
   keywords: 'formula one grand prix racing motorsport',
-  children: lazy(() => F1_TEAMS.map((team): FolderNode => ({
-    id: team.id,
-    kind: 'folder',
-    name: team.name,
-    subtitle: team.enabled ? team.tagline : 'Coming soon',
-    icon: { kind: 'image', src: team.logo },
-    enabled: team.enabled,
-    layout: 'gallery',
-    keywords: `${team.name} formula one`,
-    children: lazy(() => (team.id === 'ferrari' ? FERRARI_WINS.map(winNode) : [])),
-  }))),
+  children: lazy(() => F1_TEAMS.map((team): FolderNode => {
+    const wins = winsForTeam(team);
+    return {
+      id: team.id,
+      kind: 'folder',
+      name: team.name,
+      subtitle: team.enabled ? team.tagline : 'No Grand Prix wins yet',
+      icon: team.logo
+        ? { kind: 'image', src: team.logo }
+        : team.archiveImage
+          ? { kind: 'photo', src: team.archiveImage.src }
+          : { kind: 'label', text: team.mark },
+      enabled: team.enabled,
+      layout: 'gallery',
+      keywords: `${team.name} formula one constructor grand prix wins`,
+      children: lazy(() => wins.map((win) => winNode(team, win, wins.length))),
+    };
+  })),
 };
 
 /* ── Apps ── */
@@ -130,11 +171,46 @@ const radioApp: AppNode = {
   keywords: 'music stations tuner fm song listen live broadcast band',
 };
 
+const weatherApp: AppNode = {
+  id: 'weather',
+  kind: 'app',
+  name: 'Weather',
+  subtitle: 'Live forecast',
+  icon: { kind: 'glyph', id: 'weather' },
+  component: WeatherApp,
+  chrome: 'panel',
+  // Like the Radio, what it shows is whatever is true at the moment, so there
+  // is nothing static to index beyond the channel itself.
+  keywords: 'forecast temperature rain sun cloud wind climate outlook meteo',
+};
+
+const snakeApp: AppNode = {
+  id: 'snake',
+  kind: 'app',
+  name: 'Snake',
+  subtitle: 'The game',
+  icon: { kind: 'glyph', id: 'snake' },
+  component: SnakeApp,
+  chrome: 'panel',
+  keywords: 'game play arcade classic nokia retro snake pellet high score',
+};
+
+const changelogApp: AppNode = {
+  id: 'changelog',
+  kind: 'app',
+  name: 'Changelog',
+  subtitle: 'What changed',
+  icon: { kind: 'glyph', id: 'guide' },
+  component: ChangelogApp,
+  chrome: 'panel',
+  keywords: 'updates releases history milestones new archive f1 cars radio weather snake',
+};
+
 /** The root. Everything the set can show hangs off here. */
 export const DESKTOP: FolderNode = {
   id: 'root',
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp]),
+  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp, snakeApp, changelogApp]),
 };

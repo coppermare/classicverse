@@ -1,6 +1,7 @@
 import {
-  blit, disc, fillRect, hLine, line, makeGrid, plot, ring, strokeRect, vLine, type Grid,
+  blit, disc, fillRect, hLine, keyline, line, makeGrid, plot, ring, strokeRect, vLine, type Grid,
 } from './pixel';
+import { skyGrid } from './weatherArt';
 
 /**
  * The icon set, drawn on a 90s palette.
@@ -126,6 +127,36 @@ function guideIcon(): Grid {
   return g;
 }
 
+/** A green snake reaching for an amber pellet — the game, in one glyph. */
+function snakeIcon(): Grid {
+  const g = makeGrid(32, 32);
+  const green = '#3fae5a';
+  const greenLit = '#5be07a';
+  // An arch: up the left, across the top, the head reaching to the right.
+  fillRect(g, 6, 12, 5, 12, green);
+  fillRect(g, 6, 9, 13, 5, green);
+  disc(g, 8, 23, 2.6, green);   // rounded tail
+  disc(g, 8, 11, 2.6, green);   // rounded corner
+  disc(g, 18, 12, 3.4, green);  // head
+  hLine(g, 7, 9, 11, greenLit); // lit top edge
+  keyline(g, P.ink);
+  // Eye, laid over the head after the keyline so it isn't swallowed by it.
+  plot(g, 19, 11, P.white);
+  plot(g, 20, 11, P.white);
+  plot(g, 19, 12, P.ink);
+
+  // The pellet, keylined on its own so its outline reads against the head.
+  const pellet = makeGrid(32, 32);
+  disc(pellet, 25, 10, 2.6, '#f0b34a');
+  keyline(pellet, P.ink);
+  plot(pellet, 25, 7, P.wood);   // stem
+  plot(pellet, 26, 6, P.green);  // leaf
+  for (let y = 0; y < 32; y++) {
+    for (let x = 0; x < 32; x++) if (pellet[y][x]) g[y][x] = pellet[y][x];
+  }
+  return g;
+}
+
 /** An info disc. */
 function infoIcon(): Grid {
   const g = makeGrid(32, 32);
@@ -139,6 +170,18 @@ function infoIcon(): Grid {
   fillRect(g, 12, 14, 3, 2, P.white);
   return g;
 }
+
+/**
+ * Sun behind a cloud — the universal shorthand for a forecast.
+ *
+ * This is the Weather channel's own partly-cloudy symbol, not a second drawing
+ * of one. The channel needs the full set of nine anyway, and an emblem drawn
+ * separately here would be the same cloud maintained twice: the first pass at
+ * it had a hand-drawn outline that left gaps along the underside, and a paler
+ * cloud that vanished against the desktop's cream — both bugs the real symbol
+ * had already been fixed for.
+ */
+const weatherIcon = () => skyGrid('partly');
 
 /** A decade folder's stamp: two big numerals, e.g. "60s". */
 function labelIcon(text: string): Grid {
@@ -182,6 +225,8 @@ export const EMBLEMS: Record<string, () => Grid> = {
   cars: carsIcon,
   f1: f1Icon,
   radio: radioIcon,
+  weather: weatherIcon,
+  snake: snakeIcon,
   guide: guideIcon,
   info: infoIcon,
 };

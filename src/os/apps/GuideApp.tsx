@@ -44,7 +44,7 @@ export default function GuideApp({ os }: AppProps) {
                   <span style={{ font: '700 14px/1 var(--font-sans)', color: '#1c1a17' }}>{node.name}</span>
                   <span style={{ font: '400 12px/1 var(--font-sans)', color: '#5a554d' }}>
                     {node.enabled === false
-                      ? 'Coming soon'
+                      ? (node.subtitle ?? 'Unavailable')
                       : isFolder(node)
                         ? `${countLeaves(node)} items`
                         : 'Application'}

@@ -1,147 +1,75 @@
-# Classicverse Planning Summary
+# Classicverse Product Summary
 
-**Date**: 2026-04-29
-**Status**: Planning revised, not ready to build
-**Project type**: Experiment and portfolio piece
-**Scope**: Classic iconic cars from 1885 to 2000
+**Updated:** 2026-08-16
 
-## What Changed
+**Status:** Working portfolio product under active development
 
-The existing marketplace planning has been replaced with Classicverse planning, then revised after a critical review.
-
-Classicverse is now defined as an interactive classic car timeline archive. It is not a marketplace and should not be planned as one.
-
-Changes made in the revision:
-
-1. Era labels corrected: Postwar now starts at 1945 (not 1939). WWII (1939 to 1944) is a separate era. "Muscle And Motorsport" replaced with "Transition" for the 1970s, which more accurately reflects the fuel crisis, emissions regulations, and rise of Japanese imports that defined the decade.
-2. Scrubber redesigned as a position indicator that snaps to decades. Era and decade jumps are now the primary navigation controls.
-3. Selection rubric now uses weighted scoring (historical importance x3, engineering innovation x2, cultural recognition x2, design influence x2, production impact x1, motorsport impact x1, museum relevance x1). Global representation is a tiebreaker signal only, not a scored dimension.
-4. Image rights contingency added: clear fallback order when an acceptable image does not exist for a record.
-5. Phase timeline estimates corrected to realistic ranges. The vertical slice is 1 to 2 weeks, full dataset research is 6 to 10 weeks, content production is 4 to 8 weeks.
-6. McLaren F1 year in the vertical slice corrected to 1994 (first production delivery), flagged as medium confidence.
-7. Geographic diversity gap in the vertical slice sample noted: 8 of 10 cars are European.
-8. Minimum shippable path added: one complete era (recommended Origins plus Brass Era, 1885 to 1918, 34 years) can be shipped before the full 116 year dataset is complete.
+**Form:** A registry-driven archive OS inside an operable vintage television
 
 ## What Classicverse Is
 
-Classicverse is a curated archive of classic iconic cars. Users move through the years from 1885 to 2000 and discover one hero car for every year.
+Classicverse is a collection of historical archives and live applications presented as channels on a television. Visitors turn on the set, browse its desktop, tune lists with a physical roller, search the entire registry and open detailed records without leaving the product metaphor.
 
-Each hero car should include:
+It currently combines:
 
-1. A clear selection reason.
-2. Verified facts.
-3. Original writing.
-4. Source links.
-5. Image attribution.
-6. Confidence label.
-7. Alternate cars where useful.
+1. A Formula One archive with 1,013 constructor victories across nine selected major team identities, current through 2026-07-26.
+2. An exact century of iconic cars, 1885–1984.
+3. Live internet radio.
+4. Live weather.
+5. A complete Snake game.
+6. A visitor-facing changelog distilled from the project history.
 
-## Product Positioning
+## What Changed From The Original Plan
 
-Classicverse is a portfolio piece first.
+The repository's original planning described an unbuilt 1885–2000 car timeline with a conventional scrubber and three-column editorial layout. The implemented product took a different, stronger direction:
 
-It should demonstrate:
+1. The scope expanded from a single car timeline to a universe of classic subjects and utilities.
+2. The primary interface became a functioning physical TV and desktop-style OS.
+3. The car exhibition became an exact 100-year run from 1885 through 1984.
+4. The archive opens as a chronological gallery rather than decade folders and a global scrubber.
+5. F1 constructor victories became a second major historical archive.
+6. Radio, Weather and Snake demonstrate that the system can host applications as well as static records.
+7. Search, browser history, deep links, sound, a custom cursor and hardware-style controls became shared platform capabilities.
 
-1. Product thinking.
-2. Historical research.
-3. Data modeling.
-4. Editorial judgment.
-5. Visual design.
-6. Interaction design.
-7. Responsible use of sources.
+The old 116-year promise, "do not build" status and pre-implementation gates are superseded. They have been removed from the active documentation.
 
-## Key Decisions
+## Current Product Decisions
 
-1. The working name is Classicverse.
-2. The full scope is 1885 to 2000 inclusive.
-3. V1 guarantees one hero car per year.
-4. The first implementation should begin with a 10 car vertical slice.
-5. Open and properly attributed sources are the default.
-6. AI can help draft content only after verified facts are locked.
-7. The folder path remains unchanged for now.
-8. No code implementation is part of this planning update.
-9. The selection rubric uses weighted scoring; global representation is a tiebreaker only.
-10. The minimum shippable version is one complete era, not the full 116 years.
-11. The year scrubber is a position indicator; era and decade jumps are primary navigation.
-12. The 1970s era label is Transition, not Muscle And Motorsport.
+1. **Exact-century cars:** 1885–1984 is intentional and should be presented consistently.
+2. **Constructor-specific F1 records:** A win belongs to the statistically recognized constructor identity represented by its team folder; aliases require documented mappings.
+3. **No hidden ownership claims:** Historical sources, Wikimedia media, logos and radio streams retain attribution or ownership context.
+4. **No account system:** Preferences such as station, weather place, units and Snake best score stay in local storage.
+5. **URL location is authoritative:** `?p=` makes destinations deep-linkable and keeps toolbar/browser history aligned.
+6. **Fill view changes presentation, not application state:** Expanding or restoring the cabinet must not remount the TV or reset a channel.
+7. **The TV metaphor serves usability:** Physical delight is welcome; inaccessible controls, misleading fallbacks or slow routine actions are not.
 
-## Source Strategy
+## Current Strengths
 
-Preferred source tiers:
+- A distinctive, coherent visual identity.
+- A generic registry and folder/app contract that supports new channels.
+- Rich car records with sources and rights metadata.
+- Large archive navigation with memoized gallery tiles and keyboard support.
+- Live radio and weather states that tolerate changing external services.
+- A pure, deterministic Snake rulebook separated from rendering.
+- Shareable OS paths and global search.
 
-1. Manufacturer archives, museum collections, and concours records.
-2. Books, period materials, and reputable automotive publications.
-3. Wikidata and Wikimedia Commons for seed data and image discovery.
-4. Enthusiast sites only as supporting context.
+## Active Risks
 
-Important rules:
+1. F1 result cutoffs and team aliases can drift unless regenerated and validated deliberately.
+2. Remote car images and public radio streams can disappear.
+3. Large archive data currently contributes to client payload size.
+4. The manual visual QA surface is broader than the automated test suite.
+5. Some older application files may be implemented but unreachable; each should be registered intentionally or removed.
 
-1. Every hero car needs at least two credible source links.
-2. Every image needs license and attribution metadata.
-3. Wikimedia Commons images require file level review.
-4. NHTSA vPIC is useful only from 1981 onward.
-5. Wikipedia can help discover references, but it should not be the hidden primary source.
+## Immediate Priorities
 
-## Interface Direction
+1. Maintain the selected nine-team F1 constructor snapshot and its documented source/2026-07-26 cutoff, while replacing quarantined circuit-only and cross-team image candidates with exact-win photography.
+2. Verify edge-to-edge fill-view behavior across desktop and narrow layouts.
+3. Stabilize Snake across resize, focus, timing and persistence edge cases.
+4. Add archive-data validation and browser smoke coverage.
+5. Split heavy channel data and generate smaller gallery thumbnails.
+6. Keep the active documentation synchronized with the registry and generated counts.
 
-Classicverse should open directly into the archive.
+## Definition Of Done
 
-Opening screen:
-
-1. 1885 selected.
-2. Benz Patent Motorwagen shown as the hero car.
-3. Large image.
-4. One sentence of significance.
-5. Three quick facts.
-6. Year scrubber from 1885 to 2000.
-7. Source and confidence visible.
-
-Desktop layout:
-
-1. Left decade rail.
-2. Center hero car story.
-3. Right context and sources.
-
-Mobile layout:
-
-1. Single column.
-2. Hero image first.
-3. Sticky year selector.
-4. Tabs for story, specs, context, and sources.
-
-## Planning Deliverables
-
-Updated documents:
-
-1. [README.md](README.md): Project overview and scope.
-2. [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md): Research workflow, data contract, source ledger, and phased plan.
-3. [UI-UX-SPEC.md](UI-UX-SPEC.md): Timeline interface and design direction.
-4. [CONTENT-STRATEGY.md](CONTENT-STRATEGY.md): Writing rules, source policy, and content templates.
-5. [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md): Planning only checklist.
-6. [PLANNING-SUMMARY.md](PLANNING-SUMMARY.md): Current summary.
-
-## Next Step
-
-Do not build yet.
-
-The next step is to create the 10 car vertical slice and source ledger. That work should prove the research workflow before expanding to the complete 116 year dataset.
-
-## Build Readiness Criteria
-
-The project is ready to build only when:
-
-1. The 10 car vertical slice is complete.
-2. Every sample record has at least two credible sources.
-3. Every sample image has license and attribution metadata.
-4. The data contract has been validated.
-5. The selection rubric has been tested.
-6. The writing style has been reviewed.
-7. The interface direction can display all sample records.
-
-## Known Constraints
-
-1. This update does not rename the folder.
-2. This update does not create code.
-3. This update does not install dependencies.
-4. This update does not update Linear.
-5. This update does not touch unrelated files.
+Classicverse is release-ready when lint, tests and the production build pass; every enabled folder contains a coherent experience; data counts and cutoffs validate; fill-view mode and OS navigation preserve state; live applications fail gracefully; and the television remains operable with keyboard, reduced motion and narrow viewports.

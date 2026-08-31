@@ -1094,6 +1094,35 @@ body {
 .cv-tv-screen.on  { background: #14140e; }
 .cv-tv-screen.off { background: #060604; }
 
+/* The image slot stays still while decoding. A single photo icon identifies
+   the pending content without turning a quick load into a distracting show. */
+.cv-f1-image-skeleton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #161512;
+}
+.cv-f1-thumbnail-skeleton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #161512;
+}
+.cv-f1-image-placeholder-icon {
+  width: clamp(30px, 6cqw, 52px);
+  height: auto;
+  fill: none;
+  stroke: rgba(220, 213, 196, 0.5);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cv-f1-thumbnail-skeleton .cv-f1-image-placeholder-icon {
+  width: 28px;
+}
+
 /* Hide system cursor inside the screen — pixel cursor handles it.
    Only while the set is lit; with the screen off nothing draws a pointer, so
    the real one has to stay. */
@@ -1242,6 +1271,69 @@ body {
   gap: 24px;
   overflow: hidden;
   padding-bottom: 8px;
+}
+
+.cv-tv-power-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: auto 4px 0;
+}
+
+.cv-tv-fill-button {
+  box-sizing: border-box;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: #d8d3cb;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
+    #211a15;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 0 rgba(0, 0, 0, 0.72),
+    0 4px 7px rgba(0, 0, 0, 0.32);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.cv-tv-fill-button:active {
+  transform: scale(0.97);
+}
+
+.cv-tv-fill-button[aria-pressed='true'] {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    #17120f;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cv-tv-fill-button:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.22);
+  }
 }
 
 /* Force vars for all scrubbers/knobs inside TV (bezel is always dark) */
@@ -1520,6 +1612,237 @@ body {
     height: 70px !important;
     margin: 20px 24px !important;
     padding: 12px 22px !important;
+  }
+}
+
+/* Fill-view mode promotes the bezel from an object inside the cabinet to the
+   viewport surface. The structural cabinet node stays mounted but loses every
+   decorative layer, preserving the running app while removing the outer box. */
+.cv-tv-stage--filled {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 100%;
+  padding: 0;
+  align-items: stretch;
+  overflow: auto;
+}
+
+.cv-tv-stage--filled .cv-tv {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  filter: none;
+}
+
+.cv-tv-stage--filled .cv-tv-cabinet {
+  inset: 0;
+  margin: 0;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.cv-tv-stage--filled .cv-tv-cabinet-grain,
+.cv-tv-stage--filled .cv-tv-cabinet-edge-top,
+.cv-tv-stage--filled .cv-tv-cabinet-edge-bottom,
+.cv-tv-stage--filled .cv-tv-base,
+.cv-tv-stage--filled .cv-tv-shadow {
+  display: none;
+}
+
+.cv-tv-stage--filled .cv-tv-bezel {
+  inset: 0;
+  margin: 0;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .cv-tv-stage--filled,
+  .cv-tv-stage--filled .cv-tv {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .cv-tv-stage--filled .cv-tv-cabinet,
+  .cv-tv-stage--filled .cv-tv-bezel {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .cv-tv-stage--filled .cv-tv-cabinet {
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-tv-fill-button {
+    transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  }
+
+  .cv-tv-fill-button:active {
+    transform: none;
+  }
+}
+
+/* Changelog — a paper register inside the same chrome as the other system
+   applications. It is intentionally still: this is a frequently scanned list,
+   so immediate scrolling is more useful than decorative entry animation. */
+.cv-changelog {
+  position: absolute;
+  inset: 0;
+  padding-top: 44px;
+  overflow-y: auto;
+  color: #1c1a17;
+  background:
+    linear-gradient(90deg, transparent 0 17px, rgba(154, 42, 42, 0.16) 17px 18px, transparent 18px),
+    linear-gradient(180deg, #fdfbf5 0%, #f4efe2 100%);
+  font-family: var(--font-sans);
+}
+
+.cv-changelog-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1.3fr);
+  gap: 24px;
+  align-items: end;
+  padding: 18px 28px 16px 34px;
+  border-bottom: 1px solid #c8c1b4;
+  background: rgba(253, 251, 245, 0.96);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.cv-changelog-kicker,
+.cv-changelog-category {
+  margin: 0;
+  color: #8c2b2b;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cv-changelog-header h1 {
+  margin: 3px 0 0;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.cv-changelog-intro {
+  max-width: 440px;
+  margin: 0;
+  color: #625c52;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.cv-changelog-list {
+  margin: 0;
+  padding: 0 28px 28px 34px;
+  list-style: none;
+}
+
+.cv-changelog-entry {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 22px;
+  padding: 17px 0 18px;
+  border-bottom: 1px solid #d8d2c7;
+}
+
+.cv-changelog-date {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  color: #777066;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cv-changelog-date > span {
+  color: #b5aea2;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cv-changelog-entry article {
+  min-width: 0;
+}
+
+.cv-changelog-entry h2 {
+  margin: 3px 0 7px;
+  font-size: clamp(17px, 2.8vw, 22px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cv-changelog-entry article > p:last-child {
+  max-width: 680px;
+  margin: 0;
+  color: #4f4941;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 500px) {
+  .cv-changelog-header {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    padding: 15px 18px 13px 24px;
+  }
+
+  .cv-changelog-header h1 {
+    font-size: 25px;
+  }
+
+  .cv-changelog-intro {
+    font-size: 11px;
+  }
+
+  .cv-changelog-list {
+    padding: 0 18px 22px 24px;
+  }
+
+  .cv-changelog-entry {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 14px 0 15px;
+  }
+
+  .cv-changelog-date {
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .cv-changelog-date > span {
+    font-size: 16px;
+  }
+
+  .cv-changelog-entry h2 {
+    font-size: 18px;
+  }
+
+  .cv-changelog-entry article > p:last-child {
+    font-size: 11px;
+    line-height: 1.5;
   }
 }
 

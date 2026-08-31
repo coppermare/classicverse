@@ -24,3 +24,6 @@ npm-debug.log*
 # otherwise leave it out of the repo, and the deployed set would find nothing
 # on the dial.
 !public/live-band.json
+
+# The F1 archive generator reads its tracked constructor/alias configuration.
+!src/data/f1TeamConfig.json

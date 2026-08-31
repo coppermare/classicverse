@@ -1,210 +1,137 @@
 # Classicverse Content Strategy
 
-**Goal**: Turn verified automotive history into clear, elegant, original writing.
-**Audience**: Classic car enthusiasts, design reviewers, recruiters, and curious visitors.
-**Tone**: Knowledgeable, calm, visual, and precise.
+**Goal:** Preserve classic objects and events with clear, original and traceable editorial context
 
-## 1. Content Principle
+**Audience:** Enthusiasts, design reviewers and curious visitors
 
-Classicverse should read like a thoughtful automotive archive, not a promotional page.
+**Tone:** Knowledgeable, calm, visual and precise
 
-Every description must be grounded in verified facts. The writing can be evocative, but it should never exaggerate, invent, or imply certainty where the sources are weak.
+## 1. Editorial Principle
 
-## 2. Content Unit
-
-Each hero car needs:
-
-1. Hero car name.
-2. Manufacturer.
-3. Year.
-4. Country.
-5. Category.
-6. Three verified facts.
-7. Why this year.
-8. Why iconic.
-9. Short description.
-10. Long description.
-11. Source links.
-12. Image attribution.
-13. Confidence label.
-14. Alternate cars if relevant.
-
-## 3. Writing Rules
+Classicverse is an archive, not promotional copy. Writing can be evocative, but factual claims, dates and superlatives must remain traceable. The interface may be playful; the history must be careful.
 
 Do:
 
-1. Explain why the car mattered in its own era.
-2. Connect engineering, design, culture, and adoption.
-3. Use plain language.
-4. Name uncertainty when it exists.
-5. Keep claims traceable to sources.
-6. Write original prose from verified notes.
+1. Explain why something mattered in its own moment.
+2. Connect engineering, design, competition, culture and adoption where sources support it.
+3. Name uncertainty and disagreement.
+4. Use plain language and original prose.
+5. Keep results data distinct from editorial interpretation.
 
 Do not:
 
 1. Copy source prose.
-2. Use promotional language.
-3. Call every car revolutionary.
-4. Invent technical details.
-5. Overstate cultural impact.
-6. Hide uncertainty.
+2. Call every subject revolutionary, legendary or the greatest.
+3. Invent technical specifications or historical context.
+4. Treat a generated structured dataset as sufficient evidence for a broader significance claim.
+5. Hide missing media behind a misleading substitute.
 
-## 4. Source Rules
+## 2. Car Records
 
-Each hero car requires at least two credible source links.
+The car archive contains one hero car for each year from 1885 through 1984.
 
-Preferred source tiers:
+Each record requires:
 
-1. Manufacturer archives, museum collections, and concours records.
-2. Books, period materials, and reputable automotive publications.
-3. Wikidata and Wikimedia Commons for seed data and image discovery.
-4. Enthusiast sites only as supporting context.
+1. Year, name, manufacturer, country, era and category.
+2. Production years and the basis for choosing this timeline year.
+3. Why this year and why the car is iconic.
+4. At least three verified facts.
+5. Historical context.
+6. Short and long original descriptions.
+7. At least two credible source links.
+8. Image URL, licence, creator and attribution page.
+9. Alternates where the choice was genuinely contested.
+10. Confidence and review status.
 
-Wikimedia Commons images are allowed only when the license, creator, and attribution URL are recorded.
+### Car source order
 
-NHTSA vPIC may support modern records from 1981 onward, but it should not be used for earlier years.
+1. Manufacturer archives, museums, patents and concours records.
+2. Period material, books and established automotive publications.
+3. Wikidata/Wikimedia for discovery and rights-cleared media.
+4. Enthusiast sources only as corroborating context.
 
-## 5. AI Usage
+Wikimedia files require review at the file page; the existence of an upload URL does not establish a usable licence by itself.
 
-AI can help draft prose after verified facts are locked.
+## 3. Formula One Records
+
+F1 victory records are structured historical results, not original narrative articles. They require a documented source, a cutoff date and a reproducible normalization process.
+
+Each victory requires:
+
+1. Constructor/team identity.
+2. Stable chronological win number within that constructor archive.
+3. Season year and Grand Prix.
+4. Circuit.
+5. Driver.
+6. Chassis and engine when supplied reliably by the source.
+7. Car number when supplied reliably by the source.
+
+Rules:
+
+1. Team aliases and historical constructor identities must be mapped explicitly.
+2. Do not merge statistically distinct constructors merely because they share an owner, engine or later brand.
+3. Display the dataset cutoff wherever a live/current total might otherwise be implied.
+4. Validate chronological order, unique identifiers and team counts after generation.
+5. Ferrari's licensed chassis imagery is a separate attribution layer and must not alter result records.
+
+## 4. Live Radio And Weather
+
+Radio station names, descriptions and streams belong to their broadcasters. Classicverse acts as a tuner and does not imply endorsement or ownership. Dead, duplicated or unsafe streams should be removed when rebuilding the band snapshot.
+
+Weather data is live utility content. Copy should state conditions plainly and distinguish a loading state, unavailable forecast and unknown place. Do not persist precise geolocation; only store the chosen place identifier and display preferences locally.
+
+## 5. AI Use
+
+AI may help normalize structured data or draft prose only after the source facts and schema are fixed.
 
 AI cannot:
 
-1. Select the hero car.
-2. Invent historical context.
-3. Fill missing specs.
-4. Replace source review.
-5. Decide confidence level.
+1. Invent missing results or specifications.
+2. Select a hero car without an editorial decision.
+3. Replace image-rights review.
+4. Turn a low-confidence claim into a confident sentence.
+5. silently change a source cutoff or team-alias rule.
 
-Recommended workflow:
+Generated work must be reviewable through a script, source field, validation output or stored source notes.
 
-1. Researcher locks facts.
-2. Researcher records source links.
-3. AI drafts short and long descriptions from the locked facts.
-4. Human reviews claims against sources.
-5. Human edits for tone and accuracy.
-6. Record is marked reviewed.
+## 6. Voice And Length
 
-## 6. Description Templates
+### Short car description
 
-### Short Description
+Target 35–70 words. State the defining contribution and why the subject belongs in the exhibition.
 
-Length: 35 to 60 words.
+### Long car description
 
-Purpose: explain why this car belongs in the timeline.
+Target 140–350 words. Begin with the historical moment, explain the relevant design or engineering, connect it to wider use or culture, and end with the reason it still matters.
 
-Template:
+### Interface copy
 
-`The [year] [car] earns its place because [core reason]. It [specific contribution], helping define [era, category, or cultural shift].`
-
-### Long Description
-
-Length: 140 to 220 words.
-
-Purpose: tell the deeper story while staying factual.
-
-Structure:
-
-1. Start with the historical moment.
-2. Explain the car’s design or engineering significance.
-3. Connect it to broader automotive culture.
-4. End with why it still matters.
-
-### Why This Year
-
-Length: 20 to 40 words.
-
-Purpose: justify timeline placement.
-
-Examples:
-
-1. Production began this year.
-2. The model was publicly introduced this year.
-3. The patent or registration belongs to this year.
-4. This year marks the car’s defining motorsport or cultural breakthrough.
-
-### Why Iconic
-
-Length: 30 to 80 words.
-
-Purpose: explain the curation decision.
-
-It should reference at least one of:
-
-1. Historical first.
-2. Engineering innovation.
-3. Design influence.
-4. Cultural recognition.
-5. Motorsport impact.
-6. Production impact.
-7. Collector or museum relevance.
-
-## 7. Confidence Labels
-
-Use confidence labels honestly.
-
-### High
-
-Use when the year, model, and significance are supported by strong sources.
-
-### Medium
-
-Use when the car is a strong choice, but year placement or significance has some debate.
-
-### Low
-
-Use when the year needs more research, sources conflict, or the selection is provisional.
-
-Low confidence records can appear in prototypes, but they should not be considered launch ready.
-
-## 8. Voice Examples
+Keep labels concise and literal: `Sources`, `Image credit`, `Selection basis`, `Confidence`, `Previous win`, `Fill view`. Retro character comes from the object and visual system, not cryptic control names.
 
 ### Good
 
-`The 1959 Mini turned small car packaging into a cultural event. Its transverse engine and front wheel drive layout created surprising interior space, while its compact shape became one of the most recognizable silhouettes of postwar Britain.`
+> The 1959 Mini turned small-car packaging into a cultural event. Its transverse engine and front-wheel-drive layout created surprising interior space, while its compact silhouette became one of the defining shapes of postwar Britain.
 
-### Bad
+### Avoid
 
-`This amazing classic is a must see icon and one of the best cars ever made.`
+> This amazing classic is a must-see icon and one of the best cars ever made.
 
-The good example gives specific reasons. The bad example says nothing traceable.
+## 7. Confidence And Review
 
-## 9. Source Panel Copy
+- **High:** Dates, identity and significance are supported by strong sources.
+- **Medium:** The subject is a strong choice, but placement or interpretation remains debatable.
+- **Low:** Sources conflict, important research is missing or the choice remains provisional.
 
-Source panels should be direct and transparent.
+Review status records workflow state; confidence records the strength of the conclusion. They are not interchangeable.
 
-Recommended labels:
+## 8. Content Acceptance
 
-1. Sources.
-2. Image credit.
-3. Selection basis.
-4. Confidence.
-5. Alternate picks.
+Before publishing or regenerating an archive:
 
-Avoid implying that Classicverse owns or certifies the source material.
-
-## 10. Review Checklist
-
-Before a record is complete:
-
-1. Year is verified.
-2. Car name is verified.
-3. Manufacturer is verified.
-4. Production context is verified.
-5. At least two source links are present.
-6. Image attribution is present.
-7. Short description is original.
-8. Long description is original.
-9. Why iconic claim is sourced.
-10. Confidence label is assigned.
-
-## 11. Content Acceptance Criteria
-
-The content workflow is ready when:
-
-1. 10 sample records are complete.
-2. Each sample has two or more credible source links.
-3. Each sample has image attribution.
-4. Each sample has original descriptions.
-5. The writing tone is consistent.
-6. Uncertainty is visible rather than hidden.
+1. Required fields are present and correctly typed.
+2. Counts and ranges match the documented scope.
+3. Sources and cutoff dates are recorded.
+4. Images have reachable attribution and licence data.
+5. Original prose has been checked against its sources.
+6. Every F1 record uses either a verified contextual image or unique editorial artwork. The role label must say whether a source image is same-event, same-season or team-era context; artwork must never be presented as a race photograph. Circuit-only, cross-team and rights-unverified photography remains research material only.
+7. No placeholder is presented as a completed archive.
