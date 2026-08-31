@@ -52,92 +52,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "label": "1961 Monaco Grand Prix",
     "kind": "race"
   },
-  "mclaren:9": {
-    "file": "File:2020 Formula One tests Barcelona, McLaren MCL35, Norris.jpg",
-    "src": "/f1-wins/context/mclaren-9.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=87424407",
-    "title": "2020 Formula One tests Barcelona, McLaren MCL35, Norris.jpg",
-    "label": "McLaren Denny Hulme Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:20": {
-    "file": "File:2024 McLaren MCL38 Lando Norris F1.jpg",
+    "file": "File:James Hunt - McLaren M23 - 1976 Race of Champions, Brands Hatch.jpg",
     "src": "/f1-wins/context/mclaren-20.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=157487820",
-    "title": "2024 McLaren MCL38 Lando Norris F1.jpg",
-    "label": "McLaren James Hunt Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:25": {
-    "file": "File:McLaren MP4.jpg",
-    "src": "/f1-wins/context/mclaren-25.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2634198",
-    "title": "McLaren MP4.jpg",
-    "label": "McLaren John Watson Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:27": {
-    "file": "File:John Watson McLaren MP4 1 2019 Silverstone Classic (48557916077).jpg",
-    "src": "/f1-wins/context/mclaren-27.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81476072",
-    "title": "John Watson McLaren MP4 1 2019 Silverstone Classic (48557916077).jpg",
-    "label": "McLaren John Watson Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:28": {
-    "file": "File:McLaren MP4 at Silverstone Classic 2011 (1).jpg",
-    "src": "/f1-wins/context/mclaren-28.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23315037",
-    "title": "McLaren MP4 at Silverstone Classic 2011 (1).jpg",
-    "label": "McLaren John Watson Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:29": {
-    "file": "File:Lauda McLaren MP4-2 1984 Dallas F1.jpg",
-    "src": "/f1-wins/context/mclaren-29.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=3361144",
-    "title": "Lauda McLaren MP4-2 1984 Dallas F1.jpg",
-    "label": "McLaren Niki Lauda Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:37": {
-    "file": "File:The 1980 McLaren-Ford M29-5 Formula 1 racing car, driven by Alain Prost (14662385401).jpg",
-    "src": "/f1-wins/context/mclaren-37.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116049354",
-    "title": "The 1980 McLaren-Ford M29-5 Formula 1 racing car, driven by Alain Prost (14662385401).jpg",
-    "label": "McLaren Alain Prost Formula One photograph",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:46": {
-    "file": "File:Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 01.jpg",
-    "src": "/f1-wins/context/mclaren-46.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=129024166",
-    "title": "Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 01.jpg",
-    "label": "Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:47": {
-    "file": "File:Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 02.jpg",
-    "src": "/f1-wins/context/mclaren-47.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=129024167",
-    "title": "Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 02.jpg",
-    "label": "Mika Häkkinen's 1999 McLaren Mercedes MP4 14 F1 car display at London Science Museum (Ank Kumar, INFOSYS Limited) 02.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:James_Hunt_-_McLaren_M23_-_1976_Race_of_Champions,_Brands_Hatch.jpg",
+    "title": "James Hunt - McLaren M23 - 1976 Race of Champions, Brands Hatch.jpg",
+    "label": "James Hunt driving the 1976 McLaren M23 Formula One car",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -172,26 +92,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:72": {
-    "file": "File:Honda RACING Gallery Senna 1992 McLaren MP4-7A 1989 McLaren MP4-5.jpg",
-    "src": "/f1-wins/context/mclaren-72.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154458950",
-    "title": "Honda RACING Gallery Senna 1992 McLaren MP4-7A 1989 McLaren MP4-5.jpg",
-    "label": "Honda RACING Gallery Senna 1992 McLaren MP4-7A 1989 McLaren MP4-5.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:73": {
-    "file": "File:Suzuka Fan Thanksgiving Day 2022 (3) - McLaren Honda MP4-5 in 1991 FIA Formula One World Championship.jpg",
-    "src": "/f1-wins/context/mclaren-73.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116620429",
-    "title": "Suzuka Fan Thanksgiving Day 2022 (3) - McLaren Honda MP4-5 in 1991 FIA Formula One World Championship.jpg",
-    "label": "Suzuka Fan Thanksgiving Day 2022 (3) - McLaren Honda MP4-5 in 1991 FIA Formula One World Championship.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:77": {
     "file": "File:McLaren Honda MP4 5 of Ayrton Senna in 1989.jpg",
     "src": "/f1-wins/context/mclaren-77.webp",
@@ -202,32 +102,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:78": {
-    "file": "File:F1 maclaren mp4-4 1988-a senna.jpg",
-    "src": "/f1-wins/context/mclaren-78.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=70509525",
-    "title": "F1 maclaren mp4-4 1988-a senna.jpg",
-    "label": "F1 maclaren mp4-4 1988-a senna.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:80": {
-    "file": "File:Mclaren MP4-6 F1 car at Goodwood Festival of Speed - geograph.org.uk - 5008601.jpg",
-    "src": "/f1-wins/context/mclaren-80.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=133633452",
-    "title": "Mclaren MP4-6 F1 car at Goodwood Festival of Speed - geograph.org.uk - 5008601.jpg",
-    "label": "Mclaren MP4-6 F1 car at Goodwood Festival of Speed - geograph.org.uk - 5008601.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:81": {
-    "file": "File:NEC Birmingham 1992 Car Show Mclaren Honda F1 Car No 12.jpg",
+    "file": "File:McLaren MP4-5B front-left1 Honda Collection Hall.jpg",
     "src": "/f1-wins/context/mclaren-81.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115064957",
-    "title": "NEC Birmingham 1992 Car Show Mclaren Honda F1 Car No 12.jpg",
-    "label": "NEC Birmingham 1992 Car Show Mclaren Honda F1 Car No 12.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:McLaren_MP4-5B_front-left1_Honda_Collection_Hall.jpg",
+    "title": "McLaren MP4-5B front-left1 Honda Collection Hall.jpg",
+    "label": "Ayrton Senna's 1990 McLaren MP4/5B Formula One car",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -282,26 +162,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:103": {
-    "file": "File:Michael Andretti - Mclaren MP4-8 heads for Copse during practice for the 1993 British Grand Prix (33557350241).jpg",
-    "src": "/f1-wins/context/mclaren-103.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=61205371",
-    "title": "Michael Andretti - Mclaren MP4-8 heads for Copse during practice for the 1993 British Grand Prix (33557350241).jpg",
-    "label": "Michael Andretti - Mclaren MP4-8 heads for Copse during practice for the 1993 British Grand Prix (33557350241).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:108": {
-    "file": "File:McLaren Mercedes F1 Car.jpg",
-    "src": "/f1-wins/context/mclaren-108.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27789689",
-    "title": "McLaren Mercedes F1 Car.jpg",
-    "label": "McLaren Mercedes F1 Car.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:109": {
     "file": "File:McLaren-Mercedes MP4-13 1998 F1 Mika Häkkinen LSideFront MBMuse 9June2013 (14983288602).jpg",
     "src": "/f1-wins/context/mclaren-109.webp",
@@ -332,32 +192,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:115": {
-    "file": "File:McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed LSideFront MBMuse 9June2013 (14980546161).jpg",
-    "src": "/f1-wins/context/mclaren-115.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=35672200",
-    "title": "McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed LSideFront MBMuse 9June2013 (14980546161).jpg",
-    "label": "McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed LSideFront MBMuse 9June2013 (14980546161).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:117": {
     "file": "File:McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed RSideFront MBMuse 9June2013 (14796962979).jpg",
     "src": "/f1-wins/context/mclaren-117.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=35672202",
     "title": "McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed RSideFront MBMuse 9June2013 (14796962979).jpg",
     "label": "McLaren-Mercedes MP4-14 1999 F1 Mika Häkkinen Deconstructed RSideFront MBMuse 9June2013 (14796962979).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:127": {
-    "file": "File:2006 McLaren MP4-21 Formula 1 race car (5963352826).jpg",
-    "src": "/f1-wins/context/mclaren-127.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=38834738",
-    "title": "2006 McLaren MP4-21 Formula 1 race car (5963352826).jpg",
-    "label": "2006 McLaren MP4-21 Formula 1 race car (5963352826).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -382,16 +222,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:138": {
-    "file": "File:Michael Schumacher - Ferrari F2004 leads Kimi Raikkonen - Mclaren MP4-19B and Rubens Barrichello out of Luffield at the 2004 British Grand Prix (50834837008).jpg",
-    "src": "/f1-wins/context/mclaren-138.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=99120437",
-    "title": "Michael Schumacher - Ferrari F2004 leads Kimi Raikkonen - Mclaren MP4-19B and Rubens Barrichello out of Luffield at the 2004 British Grand Prix (50834837008).jpg",
-    "label": "Michael Schumacher - Ferrari F2004 leads Kimi Raikkonen - Mclaren MP4-19B and Rubens Barrichello out of Luffield at the 2004 British Grand Prix (50834837008).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:155": {
     "file": "File:McLaren MP4 22 de 2007 vista frontal.jpg",
     "src": "/f1-wins/context/mclaren-155.webp",
@@ -412,62 +242,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:172": {
-    "file": "File:Lewis Hamilton McLaren MP4 Goodwood 2011.jpg",
-    "src": "/f1-wins/context/mclaren-172.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=16309843",
-    "title": "Lewis Hamilton McLaren MP4 Goodwood 2011.jpg",
-    "label": "Lewis Hamilton McLaren MP4 Goodwood 2011.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:174": {
-    "file": "File:Vodafone McLaren Mercedes Formula 1 Car (7322757828).jpg",
-    "src": "/f1-wins/context/mclaren-174.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95497965",
-    "title": "Vodafone McLaren Mercedes Formula 1 Car (7322757828).jpg",
-    "label": "Vodafone McLaren Mercedes Formula 1 Car (7322757828).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:179": {
-    "file": "File:Vodafone McLaren Mercedes Formula 1 Car (7322760694).jpg",
-    "src": "/f1-wins/context/mclaren-179.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95497892",
-    "title": "Vodafone McLaren Mercedes Formula 1 Car (7322760694).jpg",
-    "label": "Vodafone McLaren Mercedes Formula 1 Car (7322760694).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:181": {
-    "file": "File:McLaren-Mercedes MP4-23 2008 F1 Lewis Hamilton LFront MBMuse 9June2013 (14796892749).jpg",
-    "src": "/f1-wins/context/mclaren-181.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=35672209",
-    "title": "McLaren-Mercedes MP4-23 2008 F1 Lewis Hamilton LFront MBMuse 9June2013 (14796892749).jpg",
-    "label": "McLaren-Mercedes MP4-23 2008 F1 Lewis Hamilton LFront MBMuse 9June2013 (14796892749).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:182": {
     "file": "File:2012 Canadian GP - Jenson Button MP4-27 01.jpg",
     "src": "/f1-wins/context/mclaren-182.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=20646415",
     "title": "2012 Canadian GP - Jenson Button MP4-27 01.jpg",
     "label": "2012 Canadian GP - Jenson Button MP4-27 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:4": {
-    "file": "File:1954 Mercedes-Benz W196 + 1955 Mercedes-Benz W196 R Stromlinie Goodwood, 2009 (01).jpg",
-    "src": "/f1-wins/context/mercedes-4.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=176047438",
-    "title": "1954 Mercedes-Benz W196 + 1955 Mercedes-Benz W196 R Stromlinie Goodwood, 2009 (01).jpg",
-    "label": "1954 Mercedes-Benz W196 + 1955 Mercedes-Benz W196 R Stromlinie Goodwood, 2009 (01).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -492,132 +272,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mercedes:9": {
-    "file": "File:2019 Formula One Test Days - Valtteri Bottas Mercedes F1 W10.jpg",
-    "src": "/f1-wins/context/mercedes-9.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76811559",
-    "title": "2019 Formula One Test Days - Valtteri Bottas Mercedes F1 W10.jpg",
-    "label": "2019 Formula One Test Days - Valtteri Bottas Mercedes F1 W10.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:10": {
-    "file": "File:Nico Rosberg, Mercedes F1 W02 interim car (7510562028).jpg",
-    "src": "/f1-wins/context/mercedes-10.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95497053",
-    "title": "Nico Rosberg, Mercedes F1 W02 interim car (7510562028).jpg",
-    "label": "Nico Rosberg, Mercedes F1 W02 interim car (7510562028).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:13": {
-    "file": "File:Mercedes AMG F1 W04 - Lewis Hamilton (8493461760).jpg",
-    "src": "/f1-wins/context/mercedes-13.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=24765777",
-    "title": "Mercedes AMG F1 W04 - Lewis Hamilton (8493461760).jpg",
-    "label": "Mercedes AMG F1 W04 - Lewis Hamilton (8493461760).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mercedes:15": {
     "file": "File:Lewis Hamilton's 2014 Mercedes W05 Hybrid Formula 1 Car (52338795301).jpg",
     "src": "/f1-wins/context/mercedes-15.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749734",
     "title": "Lewis Hamilton's 2014 Mercedes W05 Hybrid Formula 1 Car (52338795301).jpg",
     "label": "Lewis Hamilton's 2014 Mercedes W05 Hybrid Formula 1 Car (52338795301).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:21": {
-    "file": "File:2020 Formula One tests Barcelona, Mercedes-AMG F1 W11 EQ Performance, Hamilton.jpg",
-    "src": "/f1-wins/context/mercedes-21.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=87400334",
-    "title": "2020 Formula One tests Barcelona, Mercedes-AMG F1 W11 EQ Performance, Hamilton.jpg",
-    "label": "2020 Formula One tests Barcelona, Mercedes-AMG F1 W11 EQ Performance, Hamilton.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:25": {
-    "file": "File:Lewis Hamilton's 2015 Mercedes W06 Hybrid Formula 1 Car (52339220475).jpg",
-    "src": "/f1-wins/context/mercedes-25.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749735",
-    "title": "Lewis Hamilton's 2015 Mercedes W06 Hybrid Formula 1 Car (52339220475).jpg",
-    "label": "Lewis Hamilton's 2015 Mercedes W06 Hybrid Formula 1 Car (52339220475).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:26": {
-    "file": "File:Lewis Hamilton's 2017 Mercedes AMG W08 Hybrid Formula 1 Car (52339096879).jpg",
-    "src": "/f1-wins/context/mercedes-26.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749733",
-    "title": "Lewis Hamilton's 2017 Mercedes AMG W08 Hybrid Formula 1 Car (52339096879).jpg",
-    "label": "Lewis Hamilton's 2017 Mercedes AMG W08 Hybrid Formula 1 Car (52339096879).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:27": {
-    "file": "File:Lewis Hamilton's 2018 Mercedes AMG W09 Hybrid Formula 1 Car (52339096904).jpg",
-    "src": "/f1-wins/context/mercedes-27.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749732",
-    "title": "Lewis Hamilton's 2018 Mercedes AMG W09 Hybrid Formula 1 Car (52339096904).jpg",
-    "label": "Lewis Hamilton's 2018 Mercedes AMG W09 Hybrid Formula 1 Car (52339096904).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:29": {
-    "file": "File:Lewis Hamilton's Mercedes F1 car (49640759222).jpg",
-    "src": "/f1-wins/context/mercedes-29.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=109398439",
-    "title": "Lewis Hamilton's Mercedes F1 car (49640759222).jpg",
-    "label": "Lewis Hamilton's Mercedes F1 car (49640759222).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:31": {
-    "file": "File:Lewis Hamilton (Mercedes F1 W06 Hybrid).jpg",
-    "src": "/f1-wins/context/mercedes-31.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=46950068",
-    "title": "Lewis Hamilton (Mercedes F1 W06 Hybrid).jpg",
-    "label": "Lewis Hamilton (Mercedes F1 W06 Hybrid).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:44": {
-    "file": "File:Mercedes F1 W06.jpg",
-    "src": "/f1-wins/context/mercedes-44.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=38491509",
-    "title": "Mercedes F1 W06.jpg",
-    "label": "Mercedes F1 W06.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:55": {
-    "file": "File:Mercedes AMG F1 W04 - Lewis Hamilton (8493462052).jpg",
-    "src": "/f1-wins/context/mercedes-55.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=24765772",
-    "title": "Mercedes AMG F1 W04 - Lewis Hamilton (8493462052).jpg",
-    "label": "Mercedes AMG F1 W04 - Lewis Hamilton (8493462052).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:56": {
-    "file": "File:Mercedes F1 W06 Hybrid Lewis Hamilton (97952575).jpg",
-    "src": "/f1-wins/context/mercedes-56.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=74902587",
-    "title": "Mercedes F1 W06 Hybrid Lewis Hamilton (97952575).jpg",
-    "label": "Mercedes F1 W06 Hybrid Lewis Hamilton (97952575).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -632,292 +292,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mercedes:67": {
-    "file": "File:2022 Emilia Romagna GP - Mercedes-AMG F1 W13 E Performance of Lewis Hamilton.jpg",
-    "src": "/f1-wins/context/mercedes-67.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=119964244",
-    "title": "2022 Emilia Romagna GP - Mercedes-AMG F1 W13 E Performance of Lewis Hamilton.jpg",
-    "label": "2022 Emilia Romagna GP - Mercedes-AMG F1 W13 E Performance of Lewis Hamilton.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:68": {
-    "file": "File:Lewis Hamilton- Mercedes F1 W04 Japan 2013.jpg",
-    "src": "/f1-wins/context/mercedes-68.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=127546800",
-    "title": "Lewis Hamilton- Mercedes F1 W04 Japan 2013.jpg",
-    "label": "Lewis Hamilton- Mercedes F1 W04 Japan 2013.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:70": {
-    "file": "File:Lewis Hamilton Mercedes F1 W06 Hybrid (22037437505).jpg",
-    "src": "/f1-wins/context/mercedes-70.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95951213",
-    "title": "Lewis Hamilton Mercedes F1 W06 Hybrid (22037437505).jpg",
-    "label": "Lewis Hamilton Mercedes F1 W06 Hybrid (22037437505).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:71": {
-    "file": "File:Lewis Hamilton on Mercedes F1 W06 Hybrid 2015 Australian Grand Prix - Qualifying (16265819744).jpg",
-    "src": "/f1-wins/context/mercedes-71.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81950973",
-    "title": "Lewis Hamilton on Mercedes F1 W06 Hybrid 2015 Australian Grand Prix - Qualifying (16265819744).jpg",
-    "label": "Lewis Hamilton on Mercedes F1 W06 Hybrid 2015 Australian Grand Prix - Qualifying (16265819744).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:72": {
-    "file": "File:Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 001.jpg",
-    "src": "/f1-wins/context/mercedes-72.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=36385766",
-    "title": "Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 001.jpg",
-    "label": "Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 001.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:73": {
-    "file": "File:Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 002.jpg",
-    "src": "/f1-wins/context/mercedes-73.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=36385767",
-    "title": "Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 002.jpg",
-    "label": "Mercedes F1 W03 Lewis Hamilton at Goodwood 2014 002.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:75": {
-    "file": "File:Mercedes F1 W05 Hybrid (Lewis Hamilton).jpg",
-    "src": "/f1-wins/context/mercedes-75.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=46982068",
-    "title": "Mercedes F1 W05 Hybrid (Lewis Hamilton).jpg",
-    "label": "Mercedes F1 W05 Hybrid (Lewis Hamilton).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:80": {
-    "file": "File:2014 Mercedes-F1 W05 HCC25.jpg",
-    "src": "/f1-wins/context/mercedes-80.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=175110028",
-    "title": "2014 Mercedes-F1 W05 HCC25.jpg",
-    "label": "2014 Mercedes-F1 W05 HCC25.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:81": {
-    "file": "File:2014 Mercedes-F1 W05 Hybrid.jpg",
-    "src": "/f1-wins/context/mercedes-81.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=174611549",
-    "title": "2014 Mercedes-F1 W05 Hybrid.jpg",
-    "label": "2014 Mercedes-F1 W05 Hybrid.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:83": {
-    "file": "File:Mercedes F1 W05 Hybrid.jpg",
-    "src": "/f1-wins/context/mercedes-83.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=128552561",
-    "title": "Mercedes F1 W05 Hybrid.jpg",
-    "label": "Mercedes F1 W05 Hybrid.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:84": {
-    "file": "File:Mercedes F1 car 01.jpg",
-    "src": "/f1-wins/context/mercedes-84.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156210",
-    "title": "Mercedes F1 car 01.jpg",
-    "label": "Mercedes F1 car 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:85": {
-    "file": "File:Mercedes F1 car 02.jpg",
-    "src": "/f1-wins/context/mercedes-85.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156211",
-    "title": "Mercedes F1 car 02.jpg",
-    "label": "Mercedes F1 car 02.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:86": {
-    "file": "File:Mercedes F1 car 03.jpg",
-    "src": "/f1-wins/context/mercedes-86.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156214",
-    "title": "Mercedes F1 car 03.jpg",
-    "label": "Mercedes F1 car 03.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:87": {
-    "file": "File:Mercedes F1 car 04.jpg",
-    "src": "/f1-wins/context/mercedes-87.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156216",
-    "title": "Mercedes F1 car 04.jpg",
-    "label": "Mercedes F1 car 04.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:89": {
-    "file": "File:Mercedes F1 car 05.jpg",
-    "src": "/f1-wins/context/mercedes-89.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156217",
-    "title": "Mercedes F1 car 05.jpg",
-    "label": "Mercedes F1 car 05.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:90": {
-    "file": "File:Mercedes F1 car 06.jpg",
-    "src": "/f1-wins/context/mercedes-90.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156218",
-    "title": "Mercedes F1 car 06.jpg",
-    "label": "Mercedes F1 car 06.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:92": {
-    "file": "File:Mercedes F1 car 07.jpg",
-    "src": "/f1-wins/context/mercedes-92.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156223",
-    "title": "Mercedes F1 car 07.jpg",
-    "label": "Mercedes F1 car 07.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:93": {
-    "file": "File:Mercedes F1 car 08.jpg",
-    "src": "/f1-wins/context/mercedes-93.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156221",
-    "title": "Mercedes F1 car 08.jpg",
-    "label": "Mercedes F1 car 08.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:95": {
-    "file": "File:Mercedes F1 car 09.jpg",
-    "src": "/f1-wins/context/mercedes-95.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=96156228",
-    "title": "Mercedes F1 car 09.jpg",
-    "label": "Mercedes F1 car 09.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:102": {
-    "file": "File:Formula 1 Medical Car Mercedes GLE.jpg",
-    "src": "/f1-wins/context/mercedes-102.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81130664",
-    "title": "Formula 1 Medical Car Mercedes GLE.jpg",
-    "label": "Formula 1 Medical Car Mercedes GLE.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:103": {
-    "file": "File:Valtteri Bottas, Williams-Mercedes FW38, 2016 Formula One Mid Season Testing, Silverstone, 13th July (27770863043).jpg",
-    "src": "/f1-wins/context/mercedes-103.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=113374942",
-    "title": "Valtteri Bottas, Williams-Mercedes FW38, 2016 Formula One Mid Season Testing, Silverstone, 13th July (27770863043).jpg",
-    "label": "Valtteri Bottas, Williams-Mercedes FW38, 2016 Formula One Mid Season Testing, Silverstone, 13th July (27770863043).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:104": {
-    "file": "File:Mercedes-AMG F1 W14 E Performance (53439699022).jpg",
-    "src": "/f1-wins/context/mercedes-104.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=150148051",
-    "title": "Mercedes-AMG F1 W14 E Performance (53439699022).jpg",
-    "label": "Mercedes-AMG F1 W14 E Performance (53439699022).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:105": {
-    "file": "File:Mercedes-AMG F1 W14 E Performance (53439699202).jpg",
-    "src": "/f1-wins/context/mercedes-105.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=150148055",
-    "title": "Mercedes-AMG F1 W14 E Performance (53439699202).jpg",
-    "label": "Mercedes-AMG F1 W14 E Performance (53439699202).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:112": {
-    "file": "File:Mercedes-AMG F1 W14 E Performance (53440939354).jpg",
-    "src": "/f1-wins/context/mercedes-112.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=150148053",
-    "title": "Mercedes-AMG F1 W14 E Performance (53440939354).jpg",
-    "label": "Mercedes-AMG F1 W14 E Performance (53440939354).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:113": {
-    "file": "File:Mercedes-AMG F1 W14 E Performance (53441035595).jpg",
-    "src": "/f1-wins/context/mercedes-113.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=150148050",
-    "title": "Mercedes-AMG F1 W14 E Performance (53441035595).jpg",
-    "label": "Mercedes-AMG F1 W14 E Performance (53441035595).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:114": {
-    "file": "File:Mercedes-Benz Formula One car inside Suria KLCC (DSCF0805).jpg",
-    "src": "/f1-wins/context/mercedes-114.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=181762414",
-    "title": "Mercedes-Benz Formula One car inside Suria KLCC (DSCF0805).jpg",
-    "label": "Mercedes-Benz Formula One car inside Suria KLCC (DSCF0805).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:115": {
-    "file": "File:Mercedes AMG F1 W08 EQ Power+ Fuel Tank at Formula 1 Exhibition, London.jpg",
-    "src": "/f1-wins/context/mercedes-115.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160376573",
-    "title": "Mercedes AMG F1 W08 EQ Power+ Fuel Tank at Formula 1 Exhibition, London.jpg",
-    "label": "Mercedes AMG F1 W08 EQ Power+ Fuel Tank at Formula 1 Exhibition, London.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mercedes:125": {
     "file": "File:2022 British GP - Mercedes-AMG F1 W13 E Performance of George Russell (1).jpg",
     "src": "/f1-wins/context/mercedes-125.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=120232869",
     "title": "2022 British GP - Mercedes-AMG F1 W13 E Performance of George Russell (1).jpg",
     "label": "2022 British GP - Mercedes-AMG F1 W13 E Performance of George Russell (1).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:132": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of George Russell (028A8051).jpg",
-    "src": "/f1-wins/context/mercedes-132.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185893290",
-    "title": "Mercedes-AMG F1 W17 E Performance of George Russell (028A8051).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of George Russell (028A8051).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -932,212 +312,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mercedes:135": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8052).jpg",
-    "src": "/f1-wins/context/mercedes-135.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185893295",
-    "title": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8052).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8052).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:136": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8057).jpg",
-    "src": "/f1-wins/context/mercedes-136.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185893297",
-    "title": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8057).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8057).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:137": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8072).jpg",
-    "src": "/f1-wins/context/mercedes-137.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185893878",
-    "title": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8072).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8072).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:138": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of George Russell (028A8068).jpg",
-    "src": "/f1-wins/context/mercedes-138.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185893874",
-    "title": "Mercedes-AMG F1 W17 E Performance of George Russell (028A8068).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of George Russell (028A8068).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mercedes:139": {
-    "file": "File:Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8073).jpg",
-    "src": "/f1-wins/context/mercedes-139.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=185945148",
-    "title": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8073).jpg",
-    "label": "Mercedes-AMG F1 W17 E Performance of Andrea Kimi Antonelli (028A8073).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:4": {
-    "file": "File:Red Bull RB9 Vettel F1 Jerez 2013.jpg",
-    "src": "/f1-wins/context/red-bull-4.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=24716582",
-    "title": "Red Bull RB9 Vettel F1 Jerez 2013.jpg",
-    "label": "Red Bull RB9 Vettel F1 Jerez 2013.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:5": {
-    "file": "File:Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 08.jpg",
-    "src": "/f1-wins/context/red-bull-5.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179302829",
-    "title": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 08.jpg",
-    "label": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 08.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:7": {
-    "file": "File:Sebastian Vettel (GER) Red Bull Racing RB7.Formula One Testing, Day 1, Valencia, Spain, Tuesday 1 February 2011.jpg",
-    "src": "/f1-wins/context/red-bull-7.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=184703992",
-    "title": "Sebastian Vettel (GER) Red Bull Racing RB7.Formula One Testing, Day 1, Valencia, Spain, Tuesday 1 February 2011.jpg",
-    "label": "Sebastian Vettel (GER) Red Bull Racing RB7.Formula One Testing, Day 1, Valencia, Spain, Tuesday 1 February 2011.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:8": {
-    "file": "File:Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 15.jpg",
-    "src": "/f1-wins/context/red-bull-8.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179302846",
-    "title": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 15.jpg",
-    "label": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 15.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:9": {
-    "file": "File:Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 18.jpg",
-    "src": "/f1-wins/context/red-bull-9.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179302855",
-    "title": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 18.jpg",
-    "label": "Brendon Hartley Driving an RB7 for Red Bull Racing at the 2025 Adelaide Grand Final - 18.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "red-bull:12": {
     "file": "File:Mark Webber - Red Bull RB6 - 2010 Korean Grand Prix.jpeg",
     "src": "/f1-wins/context/red-bull-12.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=94784688",
     "title": "Mark Webber - Red Bull RB6 - 2010 Korean Grand Prix.jpeg",
     "label": "Mark Webber - Red Bull RB6 - 2010 Korean Grand Prix.jpeg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:25": {
-    "file": "File:Red Bull RB16B at Formula 1 Exhibition, London 01.jpg",
-    "src": "/f1-wins/context/red-bull-25.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160201085",
-    "title": "Red Bull RB16B at Formula 1 Exhibition, London 01.jpg",
-    "label": "Red Bull RB16B at Formula 1 Exhibition, London 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:26": {
-    "file": "File:Red Bull RB16B at Formula 1 Exhibition, London 02.jpg",
-    "src": "/f1-wins/context/red-bull-26.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160201083",
-    "title": "Red Bull RB16B at Formula 1 Exhibition, London 02.jpg",
-    "label": "Red Bull RB16B at Formula 1 Exhibition, London 02.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:30": {
-    "file": "File:Red Bull Racing RB8 Webber Faces-For-Charity-Edition (Bargeboard).jpg",
-    "src": "/f1-wins/context/red-bull-30.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=133182699",
-    "title": "Red Bull Racing RB8 Webber Faces-For-Charity-Edition (Bargeboard).jpg",
-    "label": "Red Bull Racing RB8 Webber Faces-For-Charity-Edition (Bargeboard).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:33": {
-    "file": "File:Red Bull RB16B at Formula 1 Exhibition, London 03.jpg",
-    "src": "/f1-wins/context/red-bull-33.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160201084",
-    "title": "Red Bull RB16B at Formula 1 Exhibition, London 03.jpg",
-    "label": "Red Bull RB16B at Formula 1 Exhibition, London 03.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:34": {
-    "file": "File:Red Bull RB16B at Formula 1 Exhibition, London 04.jpg",
-    "src": "/f1-wins/context/red-bull-34.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160201091",
-    "title": "Red Bull RB16B at Formula 1 Exhibition, London 04.jpg",
-    "label": "Red Bull RB16B at Formula 1 Exhibition, London 04.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:37": {
-    "file": "File:Red Bull RB16B at Formula 1 Exhibition, London 05.jpg",
-    "src": "/f1-wins/context/red-bull-37.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160201090",
-    "title": "Red Bull RB16B at Formula 1 Exhibition, London 05.jpg",
-    "label": "Red Bull RB16B at Formula 1 Exhibition, London 05.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:54": {
-    "file": "File:Red Bull's 2021 RB16 Formula 1 Car Driven by Max Verstappen and Sergio Perez (52338795261).jpg",
-    "src": "/f1-wins/context/red-bull-54.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749736",
-    "title": "Red Bull's 2021 RB16 Formula 1 Car Driven by Max Verstappen and Sergio Perez (52338795261).jpg",
-    "label": "Red Bull's 2021 RB16 Formula 1 Car Driven by Max Verstappen and Sergio Perez (52338795261).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:55": {
-    "file": "File:Red Bull RB16 @ F1 2020 tests - Max Verstappen.jpg",
-    "src": "/f1-wins/context/red-bull-55.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=101383911",
-    "title": "Red Bull RB16 @ F1 2020 tests - Max Verstappen.jpg",
-    "label": "Red Bull RB16 @ F1 2020 tests - Max Verstappen.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:64": {
-    "file": "File:Max Verstappen 2024 F1 Red Bull RB20 Honda RACING Gallery Suzuka.jpg",
-    "src": "/f1-wins/context/red-bull-64.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154457814",
-    "title": "Max Verstappen 2024 F1 Red Bull RB20 Honda RACING Gallery Suzuka.jpg",
-    "label": "Max Verstappen 2024 F1 Red Bull RB20 Honda RACING Gallery Suzuka.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:67": {
-    "file": "File:Sergio Perez Red Bull F1 Car Replica at First Place Las Vegas.jpg",
-    "src": "/f1-wins/context/red-bull-67.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=147453415",
-    "title": "Sergio Perez Red Bull F1 Car Replica at First Place Las Vegas.jpg",
-    "label": "Sergio Perez Red Bull F1 Car Replica at First Place Las Vegas.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1152,76 +332,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "red-bull:128": {
-    "file": "File:Red Bull Racing F1 Car.jpg",
-    "src": "/f1-wins/context/red-bull-128.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=162577120",
-    "title": "Red Bull Racing F1 Car.jpg",
-    "label": "Red Bull Racing F1 Car.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "red-bull:129": {
-    "file": "File:Sebastien Buemi demonstrating the Red Bull Energy Formula one car in Motomachi Yokohama Japan.jpg",
-    "src": "/f1-wins/context/red-bull-129.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=16114735",
-    "title": "Sebastien Buemi demonstrating the Red Bull Energy Formula one car in Motomachi Yokohama Japan.jpg",
-    "label": "Sebastien Buemi demonstrating the Red Bull Energy Formula one car in Motomachi Yokohama Japan.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:1": {
-    "file": "File:Williams F1 FW07 Crop.jpg",
-    "src": "/f1-wins/context/williams-1.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1705851",
-    "title": "Williams F1 FW07 Crop.jpg",
-    "label": "Williams F1 FW07 Crop.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:2": {
-    "file": "File:Williams FW07 Mont-Tremblant noBG 2.jpg",
-    "src": "/f1-wins/context/williams-2.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=120598924",
-    "title": "Williams FW07 Mont-Tremblant noBG 2.jpg",
-    "label": "Williams FW07 Mont-Tremblant noBG 2.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:3": {
-    "file": "File:Alan Jones 1978 Williams Fw06 F1 (51862362920).jpg",
-    "src": "/f1-wins/context/williams-3.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115010649",
-    "title": "Alan Jones 1978 Williams Fw06 F1 (51862362920).jpg",
-    "label": "Alan Jones 1978 Williams Fw06 F1 (51862362920).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:5": {
-    "file": "File:Alan Jones 1978 Williams Fw06 F1 2 (51860748602).jpg",
-    "src": "/f1-wins/context/williams-5.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115010651",
-    "title": "Alan Jones 1978 Williams Fw06 F1 2 (51860748602).jpg",
-    "label": "Alan Jones 1978 Williams Fw06 F1 2 (51860748602).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:6": {
-    "file": "File:The car that won the 1980 F1 World Championship Alan Jones' Williams FW07B 7 (14642436566).jpg",
-    "src": "/f1-wins/context/williams-6.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116048921",
-    "title": "The car that won the 1980 F1 World Championship Alan Jones' Williams FW07B 7 (14642436566).jpg",
-    "label": "The car that won the 1980 F1 World Championship Alan Jones' Williams FW07B 7 (14642436566).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:7": {
     "file": "File:1980 Williams-Ford FW07B Goodwood, 2009 (01).jpg",
     "src": "/f1-wins/context/williams-7.webp",
@@ -1232,52 +342,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "williams:8": {
-    "file": "File:Front view of Alan Jones' 1978 Williams-Ford FW06 F1 car in the Donington Grand Prix collection (14665066532).jpg",
-    "src": "/f1-wins/context/williams-8.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116048905",
-    "title": "Front view of Alan Jones' 1978 Williams-Ford FW06 F1 car in the Donington Grand Prix collection (14665066532).jpg",
-    "label": "Front view of Alan Jones' 1978 Williams-Ford FW06 F1 car in the Donington Grand Prix collection (14665066532).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:9": {
-    "file": "File:1980 Williams FW07 (20295467266).jpg",
-    "src": "/f1-wins/context/williams-9.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=60478181",
-    "title": "1980 Williams FW07 (20295467266).jpg",
-    "label": "1980 Williams FW07 (20295467266).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:10": {
-    "file": "File:1995 Williams FW17 Formula 1 Car (53436039038).jpg",
-    "src": "/f1-wins/context/williams-10.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=143444780",
-    "title": "1995 Williams FW17 Formula 1 Car (53436039038).jpg",
-    "label": "1995 Williams FW17 Formula 1 Car (53436039038).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:11": {
-    "file": "File:2008 Williams FW30 Formula 1 Car (53436218059).jpg",
-    "src": "/f1-wins/context/williams-11.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=143444783",
-    "title": "2008 Williams FW30 Formula 1 Car (53436218059).jpg",
-    "label": "2008 Williams FW30 Formula 1 Car (53436218059).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:15": {
-    "file": "File:2016 Williams FW38 Formula 1 Car (53436323345).jpg",
+    "file": "File:Williams FW07-C at Formula 1 Exhibition, London 01.jpg",
     "src": "/f1-wins/context/williams-15.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=143444785",
-    "title": "2016 Williams FW38 Formula 1 Car (53436323345).jpg",
-    "label": "2016 Williams FW38 Formula 1 Car (53436323345).jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Williams_FW07-C_at_Formula_1_Exhibition,_London_01.jpg",
+    "title": "Williams FW07-C at Formula 1 Exhibition, London 01.jpg",
+    "label": "Alan Jones' 1981 Williams FW07C that won the Las Vegas Grand Prix",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1297,117 +367,7 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "src": "/f1-wins/context/williams-23.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1704539",
     "title": "Williams F1 FW11.jpg",
-    "label": "Williams F1 FW11.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:28": {
-    "file": "File:Williams F1 FW11 Crop.jpg",
-    "src": "/f1-wins/context/williams-28.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1705838",
-    "title": "Williams F1 FW11 Crop.jpg",
-    "label": "Williams F1 FW11 Crop.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:29": {
-    "file": "File:Beaulieu Motor Museum, Williams FW15C Renault (1993), Williams FW11 Honda (1986) - geograph.org.uk - 8064805.jpg",
-    "src": "/f1-wins/context/williams-29.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=172738077",
-    "title": "Beaulieu Motor Museum, Williams FW15C Renault (1993), Williams FW11 Honda (1986) - geograph.org.uk - 8064805.jpg",
-    "label": "Beaulieu Motor Museum, Williams FW15C Renault (1993), Williams FW11 Honda (1986) - geograph.org.uk - 8064805.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:30": {
-    "file": "File:2020 Formula One tests Barcelona, Williams FW43, Russell.jpg",
-    "src": "/f1-wins/context/williams-30.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=87325305",
-    "title": "2020 Formula One tests Barcelona, Williams FW43, Russell.jpg",
-    "label": "2020 Formula One tests Barcelona, Williams FW43, Russell.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:33": {
-    "file": "File:1987 Williams-Honda FW11B + 1992 Williams-Renault FW14B Goodwood, 2009 (01).jpg",
-    "src": "/f1-wins/context/williams-33.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=175989325",
-    "title": "1987 Williams-Honda FW11B + 1992 Williams-Renault FW14B Goodwood, 2009 (01).jpg",
-    "label": "1987 Williams-Honda FW11B + 1992 Williams-Renault FW14B Goodwood, 2009 (01).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:36": {
-    "file": "File:2022 Williams FW44 Formula 1 Car. Driven by Alex Albon and Nicholas Latifi (52339096754).jpg",
-    "src": "/f1-wins/context/williams-36.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=122749737",
-    "title": "2022 Williams FW44 Formula 1 Car. Driven by Alex Albon and Nicholas Latifi (52339096754).jpg",
-    "label": "2022 Williams FW44 Formula 1 Car. Driven by Alex Albon and Nicholas Latifi (52339096754).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:37": {
-    "file": "File:F1 Hockenheimring 1992 beide Williams FW14B 002.jpg",
-    "src": "/f1-wins/context/williams-37.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=174858087",
-    "title": "F1 Hockenheimring 1992 beide Williams FW14B 002.jpg",
-    "label": "F1 Hockenheimring 1992 beide Williams FW14B 002.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:38": {
-    "file": "File:Formula One Test Days 2019 - Williams FW42 - Kubica.jpeg",
-    "src": "/f1-wins/context/williams-38.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76957486",
-    "title": "Formula One Test Days 2019 - Williams FW42 - Kubica.jpeg",
-    "label": "Formula One Test Days 2019 - Williams FW42 - Kubica.jpeg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:39": {
-    "file": "File:F1 1991 Williams FW14 Nigel Mansell 1 (55405887992).jpg",
-    "src": "/f1-wins/context/williams-39.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196341640",
-    "title": "F1 1991 Williams FW14 Nigel Mansell 1 (55405887992).jpg",
-    "label": "F1 1991 Williams FW14 Nigel Mansell 1 (55405887992).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:40": {
-    "file": "File:F1 1991 Williams FW14 Nigel Mansell 2 (55407239800).jpg",
-    "src": "/f1-wins/context/williams-40.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196341647",
-    "title": "F1 1991 Williams FW14 Nigel Mansell 2 (55407239800).jpg",
-    "label": "F1 1991 Williams FW14 Nigel Mansell 2 (55407239800).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:42": {
-    "file": "File:Williams FW14B Sidepod 01 at Formula 1 Exhibition, London.jpg",
-    "src": "/f1-wins/context/williams-42.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160376547",
-    "title": "Williams FW14B Sidepod 01 at Formula 1 Exhibition, London.jpg",
-    "label": "Williams FW14B Sidepod 01 at Formula 1 Exhibition, London.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:44": {
-    "file": "File:Williams FW14B Sidepod 02 at Formula 1 Exhibition, London.jpg",
-    "src": "/f1-wins/context/williams-44.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160376556",
-    "title": "Williams FW14B Sidepod 02 at Formula 1 Exhibition, London.jpg",
-    "label": "Williams FW14B Sidepod 02 at Formula 1 Exhibition, London.jpg",
+    "label": "Nelson Piquet 1986 Williams FW11 Formula One car",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1452,26 +412,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "williams:56": {
-    "file": "File:Williams FW14B 1992 Drivers and Numbers.jpg",
-    "src": "/f1-wins/context/williams-56.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=175132153",
-    "title": "Williams FW14B 1992 Drivers and Numbers.jpg",
-    "label": "Williams FW14B 1992 Drivers and Numbers.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:59": {
-    "file": "File:Williams Fw15 F1 (51862037294).jpg",
-    "src": "/f1-wins/context/williams-59.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115010998",
-    "title": "Williams Fw15 F1 (51862037294).jpg",
-    "label": "Williams Fw15 F1 (51862037294).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:62": {
     "file": "File:Alain Prost - Williams FW15C during practice for the 1993 British Grand Prix (32873611163).jpg",
     "src": "/f1-wins/context/williams-62.webp",
@@ -1502,36 +442,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "williams:66": {
-    "file": "File:Damon Hill - Williams FW15C during practice for the 1993 British Grand Prix (33686734825).jpg",
-    "src": "/f1-wins/context/williams-66.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=61205249",
-    "title": "Damon Hill - Williams FW15C during practice for the 1993 British Grand Prix (33686734825).jpg",
-    "label": "Damon Hill - Williams FW15C during practice for the 1993 British Grand Prix (33686734825).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:69": {
-    "file": "File:Damon Hill 1996 F1 Williams FW18 Silverstone Museum.jpg",
-    "src": "/f1-wins/context/williams-69.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=158132939",
-    "title": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum.jpg",
-    "label": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:70": {
-    "file": "File:Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 1.jpg",
-    "src": "/f1-wins/context/williams-70.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196696962",
-    "title": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 1.jpg",
-    "label": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 1.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:74": {
     "file": "File:1994 Williams-Renault FW16B Goodwood, 2009.JPG",
     "src": "/f1-wins/context/williams-74.webp",
@@ -1542,42 +452,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "williams:76": {
-    "file": "File:F1 1994 Williams FW16 Damon Hill (55407239935).jpg",
-    "src": "/f1-wins/context/williams-76.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196341777",
-    "title": "F1 1994 Williams FW16 Damon Hill (55407239935).jpg",
-    "label": "F1 1994 Williams FW16 Damon Hill (55407239935).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:77": {
-    "file": "File:F1 1994 Williams FW16 Damon Hill 2 (55406851586).jpg",
-    "src": "/f1-wins/context/williams-77.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196341779",
-    "title": "F1 1994 Williams FW16 Damon Hill 2 (55406851586).jpg",
-    "label": "F1 1994 Williams FW16 Damon Hill 2 (55406851586).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:79": {
     "file": "File:Williams FW17 of Damon Hill, 1995.jpg",
     "src": "/f1-wins/context/williams-79.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=68975153",
     "title": "Williams FW17 of Damon Hill, 1995.jpg",
     "label": "Williams FW17 of Damon Hill, 1995.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:81": {
-    "file": "File:Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 2.jpg",
-    "src": "/f1-wins/context/williams-81.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196697149",
-    "title": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 2.jpg",
-    "label": "Damon Hill 1996 F1 Williams FW18 Silverstone Museum - 2.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1622,62 +502,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "williams:104": {
-    "file": "File:WilliamsF1-BMW FW23-05 a.JPG",
-    "src": "/f1-wins/context/williams-104.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23654797",
-    "title": "WilliamsF1-BMW FW23-05 a.JPG",
-    "label": "WilliamsF1-BMW FW23-05 a.JPG",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:105": {
-    "file": "File:WilliamsF1-BMW FW23-05 b.JPG",
-    "src": "/f1-wins/context/williams-105.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23654812",
-    "title": "WilliamsF1-BMW FW23-05 b.JPG",
-    "label": "WilliamsF1-BMW FW23-05 b.JPG",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:106": {
-    "file": "File:Ralf Schumacher, BMW Williams F1 Team FW23 (8968570609).jpg",
-    "src": "/f1-wins/context/williams-106.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=108276082",
-    "title": "Ralf Schumacher, BMW Williams F1 Team FW23 (8968570609).jpg",
-    "label": "Ralf Schumacher, BMW Williams F1 Team FW23 (8968570609).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:107": {
     "file": "File:2001 Williams FW23 Formula 1 Car (53436323520).jpg",
     "src": "/f1-wins/context/williams-107.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=143444777",
     "title": "2001 Williams FW23 Formula 1 Car (53436323520).jpg",
     "label": "2001 Williams FW23 Formula 1 Car (53436323520).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:108": {
-    "file": "File:Historic F1-Cars Spielberg 2022 Williams FW25 (1).jpg",
-    "src": "/f1-wins/context/williams-108.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=121028466",
-    "title": "Historic F1-Cars Spielberg 2022 Williams FW25 (1).jpg",
-    "label": "Historic F1-Cars Spielberg 2022 Williams FW25 (1).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:111": {
-    "file": "File:Historic F1-Cars Spielberg 2022 Williams FW25 (2).jpg",
-    "src": "/f1-wins/context/williams-111.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=121028464",
-    "title": "Historic F1-Cars Spielberg 2022 Williams FW25 (2).jpg",
-    "label": "Historic F1-Cars Spielberg 2022 Williams FW25 (2).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1702,82 +532,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "lotus:8": {
-    "file": "File:1963 F1 Lotus 25 F1 racing car, raced by Jim Clark in 1963 (21133245490).jpg",
-    "src": "/f1-wins/context/lotus-8.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=101768043",
-    "title": "1963 F1 Lotus 25 F1 racing car, raced by Jim Clark in 1963 (21133245490).jpg",
-    "label": "1963 F1 Lotus 25 F1 racing car, raced by Jim Clark in 1963 (21133245490).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:12": {
-    "file": "File:Lotus 49-1 noBG.jpg",
-    "src": "/f1-wins/context/lotus-12.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=86462621",
-    "title": "Lotus 49-1 noBG.jpg",
-    "label": "Lotus 49-1 noBG.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:13": {
-    "file": "File:Lotus 49-1b noBG.jpg",
-    "src": "/f1-wins/context/lotus-13.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=86484597",
-    "title": "Lotus 49-1b noBG.jpg",
-    "label": "Lotus 49-1b noBG.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:14": {
-    "file": "File:At London 2025 901 - Formula One car.jpg",
-    "src": "/f1-wins/context/lotus-14.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=180468797",
-    "title": "At London 2025 901 - Formula One car.jpg",
-    "label": "At London 2025 901 - Formula One car.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:18": {
-    "file": "File:F1 2013 Jerez test - Lotus 2.jpg",
-    "src": "/f1-wins/context/lotus-18.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=24625088",
-    "title": "F1 2013 Jerez test - Lotus 2.jpg",
-    "label": "F1 2013 Jerez test - Lotus 2.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:24": {
-    "file": "File:Lotus 72 at Formula 1 Exhibition, London 01.jpg",
-    "src": "/f1-wins/context/lotus-24.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160199039",
-    "title": "Lotus 72 at Formula 1 Exhibition, London 01.jpg",
-    "label": "Lotus 72 at Formula 1 Exhibition, London 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "lotus:2": {
-    "file": "File:Lotus 72 at Formula 1 Exhibition, London 02.jpg",
+    "file": "File:Lotus 18 at the Musée National de lAutomobile.jpg",
     "src": "/f1-wins/context/lotus-2.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160199038",
-    "title": "Lotus 72 at Formula 1 Exhibition, London 02.jpg",
-    "label": "Lotus 72 at Formula 1 Exhibition, London 02.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:29": {
-    "file": "File:Lotus 79 Skirted Sidepod at Formula 1 Exhibition, London.jpg",
-    "src": "/f1-wins/context/lotus-29.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160376532",
-    "title": "Lotus 79 Skirted Sidepod at Formula 1 Exhibition, London.jpg",
-    "label": "Lotus 79 Skirted Sidepod at Formula 1 Exhibition, London.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lotus_18_at_the_Mus%C3%A9e_National_de_lAutomobile.jpg",
+    "title": "Lotus 18 at the Musée National de lAutomobile.jpg",
+    "label": "Lotus 18 Formula One car",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1788,56 +548,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23265027",
     "title": "Rindt's car at 1969 Dutch Grand Prix.jpg",
     "label": "Rindt's car at 1969 Dutch Grand Prix.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:42": {
-    "file": "File:Team Lotus F1 Car - Duxford (5687784679).jpg",
-    "src": "/f1-wins/context/lotus-42.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27814406",
-    "title": "Team Lotus F1 Car - Duxford (5687784679).jpg",
-    "label": "Team Lotus F1 Car - Duxford (5687784679).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:47": {
-    "file": "File:Team Lotus F1 Car - Duxford (5687797899).jpg",
-    "src": "/f1-wins/context/lotus-47.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27814405",
-    "title": "Team Lotus F1 Car - Duxford (5687797899).jpg",
-    "label": "Team Lotus F1 Car - Duxford (5687797899).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:48": {
-    "file": "File:Team Lotus Formula 1 Car - Duxford (5680922169).jpg",
-    "src": "/f1-wins/context/lotus-48.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27814423",
-    "title": "Team Lotus Formula 1 Car - Duxford (5680922169).jpg",
-    "label": "Team Lotus Formula 1 Car - Duxford (5680922169).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:55": {
-    "file": "File:Lotus 76, Bj. 1974, BILD7698wp.jpg",
-    "src": "/f1-wins/context/lotus-55.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=109522305",
-    "title": "Lotus 76, Bj. 1974, BILD7698wp.jpg",
-    "label": "Lotus 76, Bj. 1974, BILD7698wp.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:56": {
-    "file": "File:Lotus 76, Bj. 1974, Vorderachse, BILD6673wp.jpg",
-    "src": "/f1-wins/context/lotus-56.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=109522265",
-    "title": "Lotus 76, Bj. 1974, Vorderachse, BILD6673wp.jpg",
-    "label": "Lotus 76, Bj. 1974, Vorderachse, BILD6673wp.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -1862,106 +572,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "renault:1": {
-    "file": "File:Renault F1 RS10 L'Atelier Renault.jpg",
-    "src": "/f1-wins/context/renault-1.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27033359",
-    "title": "Renault F1 RS10 L'Atelier Renault.jpg",
-    "label": "Renault F1 RS10 L'Atelier Renault.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:7": {
-    "file": "File:Alain Prost F1 RE40 p1040458.jpg",
-    "src": "/f1-wins/context/renault-7.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936069",
-    "title": "Alain Prost F1 RE40 p1040458.jpg",
-    "label": "Alain Prost F1 RE40 p1040458.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:8": {
-    "file": "File:Alain Prost F1 RE40 p1040464.jpg",
-    "src": "/f1-wins/context/renault-8.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936100",
-    "title": "Alain Prost F1 RE40 p1040464.jpg",
-    "label": "Alain Prost F1 RE40 p1040464.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:9": {
-    "file": "File:1990's Classic Renault Team F1 Car Camel Sponsor (6005416583).jpg",
-    "src": "/f1-wins/context/renault-9.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115153367",
-    "title": "1990's Classic Renault Team F1 Car Camel Sponsor (6005416583).jpg",
-    "label": "1990's Classic Renault Team F1 Car Camel Sponsor (6005416583).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:11": {
-    "file": "File:Derek Warwick Renault RE50 1984 Dallas F1.jpg",
-    "src": "/f1-wins/context/renault-11.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=3361089",
-    "title": "Derek Warwick Renault RE50 1984 Dallas F1.jpg",
-    "label": "Derek Warwick Renault RE50 1984 Dallas F1.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:12": {
-    "file": "File:Alain Prost F1 RE40 p1040459.jpg",
-    "src": "/f1-wins/context/renault-12.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936071",
-    "title": "Alain Prost F1 RE40 p1040459.jpg",
-    "label": "Alain Prost F1 RE40 p1040459.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:13": {
-    "file": "File:Alain Prost F1 RE40 p1040462.jpg",
-    "src": "/f1-wins/context/renault-13.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936072",
-    "title": "Alain Prost F1 RE40 p1040462.jpg",
-    "label": "Alain Prost F1 RE40 p1040462.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:14": {
-    "file": "File:Alain Prost F1 RE40 p1040463.jpg",
-    "src": "/f1-wins/context/renault-14.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936099",
-    "title": "Alain Prost F1 RE40 p1040463.jpg",
-    "label": "Alain Prost F1 RE40 p1040463.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:15": {
-    "file": "File:Alain Prost F1 RE40 p1040465.jpg",
-    "src": "/f1-wins/context/renault-15.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=936073",
-    "title": "Alain Prost F1 RE40 p1040465.jpg",
-    "label": "Alain Prost F1 RE40 p1040465.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "renault:16": {
-    "file": "File:Renault 206 R26 Formula One Race Car.jpg",
-    "src": "/f1-wins/context/renault-16.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=18171498",
-    "title": "Renault 206 R26 Formula One Race Car.jpg",
-    "label": "Renault 206 R26 Formula One Race Car.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "brabham:8": {
     "file": "File:Brabham BT24 1967.jpg",
     "src": "/f1-wins/context/brabham-8.webp",
@@ -1978,16 +588,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116048765",
     "title": "Denny Hulme's 1967 Braham-Repco BT24 F1 car (14663090354).jpg",
     "label": "Denny Hulme's 1967 Braham-Repco BT24 F1 car (14663090354).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "brabham:10": {
-    "file": "File:Brabham BT46B Fan Cover at Formula 1 Exhibition, London.jpg",
-    "src": "/f1-wins/context/brabham-10.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160376543",
-    "title": "Brabham BT46B Fan Cover at Formula 1 Exhibition, London.jpg",
-    "label": "Brabham BT46B Fan Cover at Formula 1 Exhibition, London.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -2032,56 +632,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "brabham:21": {
-    "file": "File:Piquet Brabham BT53 1984 Dallas F1.jpg",
-    "src": "/f1-wins/context/brabham-21.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=3361175",
-    "title": "Piquet Brabham BT53 1984 Dallas F1.jpg",
-    "label": "Piquet Brabham BT53 1984 Dallas F1.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "brabham:32": {
-    "file": "File:Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg",
-    "src": "/f1-wins/context/brabham-32.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=121028440",
-    "title": "Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg",
-    "label": "Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:1": {
-    "file": "File:Benetton B186 at the 2025 Adelaide Grand Final - 01.jpg",
-    "src": "/f1-wins/context/benetton-1.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179307513",
-    "title": "Benetton B186 at the 2025 Adelaide Grand Final - 01.jpg",
-    "label": "Benetton B186 at the 2025 Adelaide Grand Final - 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:4": {
-    "file": "File:1993 Benetton-Ford B193 + 1990 Leyton House-Judd CG901 Goodwood, 2009 (01).jpg",
-    "src": "/f1-wins/context/benetton-4.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=176681234",
-    "title": "1993 Benetton-Ford B193 + 1990 Leyton House-Judd CG901 Goodwood, 2009 (01).jpg",
-    "label": "1993 Benetton-Ford B193 + 1990 Leyton House-Judd CG901 Goodwood, 2009 (01).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:5": {
-    "file": "File:Benetton B186 at the 2025 Adelaide Grand Final - 02.jpg",
-    "src": "/f1-wins/context/benetton-5.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179307511",
-    "title": "Benetton B186 at the 2025 Adelaide Grand Final - 02.jpg",
-    "label": "Benetton B186 at the 2025 Adelaide Grand Final - 02.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "benetton:12": {
     "file": "File:1994 Benetton B194 F1 car at Grand Basel 2018 (Ank Kumar, Infosys) 01.jpg",
     "src": "/f1-wins/context/benetton-12.webp",
@@ -2122,56 +672,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "benetton:18": {
-    "file": "File:1994 Benetton B194 F1 car at Grand Basel 2018 (Ank Kumar, Infosys) 05.jpg",
-    "src": "/f1-wins/context/benetton-18.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=102350377",
-    "title": "1994 Benetton B194 F1 car at Grand Basel 2018 (Ank Kumar, Infosys) 05.jpg",
-    "label": "1994 Benetton B194 F1 car at Grand Basel 2018 (Ank Kumar, Infosys) 05.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:21": {
-    "file": "File:Benetton Ford B192 - F1.jpg",
-    "src": "/f1-wins/context/benetton-21.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=104550712",
-    "title": "Benetton Ford B192 - F1.jpg",
-    "label": "Benetton Ford B192 - F1.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:22": {
-    "file": "File:1992 Benetton B192 F1 car at Chelsea Auto Legends 2012 (Ank Kumar).jpg",
-    "src": "/f1-wins/context/benetton-22.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=103575452",
-    "title": "1992 Benetton B192 F1 car at Chelsea Auto Legends 2012 (Ank Kumar).jpg",
-    "label": "1992 Benetton B192 F1 car at Chelsea Auto Legends 2012 (Ank Kumar).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:24": {
-    "file": "File:1994 Benetton B194 F1 noBG.jpg",
-    "src": "/f1-wins/context/benetton-24.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=138596303",
-    "title": "1994 Benetton B194 F1 noBG.jpg",
-    "label": "1994 Benetton B194 F1 noBG.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "benetton:26": {
-    "file": "File:Benetton B186 at the 2025 Adelaide Grand Final - 03.jpg",
-    "src": "/f1-wins/context/benetton-26.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=179307512",
-    "title": "Benetton B186 at the 2025 Adelaide Grand Final - 03.jpg",
-    "label": "Benetton B186 at the 2025 Adelaide Grand Final - 03.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "benetton:27": {
     "file": "File:5.15.16 Road America Spring Vintage Weekend - Berger 1997 Benetton B197 (26640283823).jpg",
     "src": "/f1-wins/context/benetton-27.webp",
@@ -2192,52 +692,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:51": {
-    "file": "File:McLaren-TAG Porsche MP4 2 Alain Prost first Formula 1 championship year (6283361872).jpg",
-    "src": "/f1-wins/context/mclaren-51.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=21351939",
-    "title": "McLaren-TAG Porsche MP4 2 Alain Prost first Formula 1 championship year (6283361872).jpg",
-    "label": "McLaren-TAG Porsche MP4 2 Alain Prost first Formula 1 championship year (6283361872).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:59": {
     "file": "File:1988 McLaren Honda MP44 4.JPG",
     "src": "/f1-wins/context/mclaren-59.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=4318319",
     "title": "1988 McLaren Honda MP44 4.JPG",
     "label": "1988 McLaren Honda MP44 4.JPG",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:67": {
-    "file": "File:McLaren MP4-4 front-left National Motor Museum, Beaulieu noBG.jpg",
-    "src": "/f1-wins/context/mclaren-67.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=86287798",
-    "title": "McLaren MP4-4 front-left National Motor Museum, Beaulieu noBG.jpg",
-    "label": "McLaren MP4-4 front-left National Motor Museum, Beaulieu noBG.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:68": {
-    "file": "File:Honda RACING Gallery 1988 McLaren MP4-4 Ayrton Senna.jpg",
-    "src": "/f1-wins/context/mclaren-68.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154459247",
-    "title": "Honda RACING Gallery 1988 McLaren MP4-4 Ayrton Senna.jpg",
-    "label": "Honda RACING Gallery 1988 McLaren MP4-4 Ayrton Senna.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:76": {
-    "file": "File:Honda RACING Gallery 1989 McLaren MP4-5 Ayrton Senna.jpg",
-    "src": "/f1-wins/context/mclaren-76.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154496572",
-    "title": "Honda RACING Gallery 1989 McLaren MP4-5 Ayrton Senna.jpg",
-    "label": "Honda RACING Gallery 1989 McLaren MP4-5 Ayrton Senna.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -2272,26 +732,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:123": {
-    "file": "File:McLaren MP4-14 at Formula 1 Exhibition, London 01.jpg",
-    "src": "/f1-wins/context/mclaren-123.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=160200723",
-    "title": "McLaren MP4-14 at Formula 1 Exhibition, London 01.jpg",
-    "label": "McLaren MP4-14 at Formula 1 Exhibition, London 01.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:129": {
-    "file": "File:The 1994 McLaren-Ford MP4-9 Formula 1 racing car, driven by Mika Hakkinen (14685487803).jpg",
-    "src": "/f1-wins/context/mclaren-129.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116049319",
-    "title": "The 1994 McLaren-Ford MP4-9 Formula 1 racing car, driven by Mika Hakkinen (14685487803).jpg",
-    "label": "The 1994 McLaren-Ford MP4-9 Formula 1 racing car, driven by Mika Hakkinen (14685487803).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "williams:57": {
     "file": "File:Car Show Nigel Mansell with His 1992 Williams-Renault FW14B Formula 1 Car.jpg",
     "src": "/f1-wins/context/williams-57.webp",
@@ -2318,16 +758,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=61205712",
     "title": "Alain Prost - Williams FW15C at the 1993 British Grand Prix (32873616913).jpg",
     "label": "Alain Prost - Williams FW15C at the 1993 British Grand Prix (32873616913).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "williams:78": {
-    "file": "File:Williams FW11 Nigel Mansell NEC Jan 1994 (51896460327).jpg",
-    "src": "/f1-wins/context/williams-78.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115494381",
-    "title": "Williams FW11 Nigel Mansell NEC Jan 1994 (51896460327).jpg",
-    "label": "Williams FW11 Nigel Mansell NEC Jan 1994 (51896460327).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -2382,26 +812,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "lotus:59": {
-    "file": "File:Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
-    "src": "/f1-wins/context/lotus-59.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=91494464",
-    "title": "Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
-    "label": "Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:60": {
-    "file": "File:Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 out of Tabac at the 1977 Monaco GP.jpg",
-    "src": "/f1-wins/context/lotus-60.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=91494471",
-    "title": "Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 out of Tabac at the 1977 Monaco GP.jpg",
-    "label": "Jochen Mass - McLaren M23 leads Mario Andretti - Lotus 78 out of Tabac at the 1977 Monaco GP.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "lotus:61": {
     "file": "File:Gunnar Nilsson - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
     "src": "/f1-wins/context/lotus-61.webp",
@@ -2418,16 +828,6 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=91494441",
     "title": "Mario Andretti - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
     "label": "Mario Andretti - Lotus 78 at Tabac at the 1977 Monaco GP.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "lotus:64": {
-    "file": "File:Mario Andretti - Lotus 79 at Druids at the 1978 British Grand Prix, Brands Hatch (50046889383).jpg",
-    "src": "/f1-wins/context/lotus-64.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=97344714",
-    "title": "Mario Andretti - Lotus 79 at Druids at the 1978 British Grand Prix, Brands Hatch (50046889383).jpg",
-    "label": "Mario Andretti - Lotus 79 at Druids at the 1978 British Grand Prix, Brands Hatch (50046889383).jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -2492,152 +892,12 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "brabham:20": {
-    "file": "File:Carlos Reutemann - Ferrari 312T3 leads Niki Lauda - Brabham BT46 at Druids at the 1978 British Grand Prix (50050267391).jpg",
-    "src": "/f1-wins/context/brabham-20.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=97344764",
-    "title": "Carlos Reutemann - Ferrari 312T3 leads Niki Lauda - Brabham BT46 at Druids at the 1978 British Grand Prix (50050267391).jpg",
-    "label": "Carlos Reutemann - Ferrari 312T3 leads Niki Lauda - Brabham BT46 at Druids at the 1978 British Grand Prix (50050267391).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "brabham:30": {
-    "file": "File:Brabham BT52 1983 noBG.jpg",
-    "src": "/f1-wins/context/brabham-30.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=193999819",
-    "title": "Brabham BT52 1983 noBG.jpg",
-    "label": "Brabham BT52 1983 noBG.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "brabham:34": {
-    "file": "File:Nelson Piquet Formula 1 car in BMW-Museum in Munich, Bayern.JPG",
-    "src": "/f1-wins/context/brabham-34.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=38413909",
-    "title": "Nelson Piquet Formula 1 car in BMW-Museum in Munich, Bayern.JPG",
-    "label": "Nelson Piquet Formula 1 car in BMW-Museum in Munich, Bayern.JPG",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:52": {
-    "file": "File:McLaren MP4-2C front-right Porsche Museum.jpg",
-    "src": "/f1-wins/context/mclaren-52.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27538754",
-    "title": "McLaren MP4-2C front-right Porsche Museum.jpg",
-    "label": "McLaren MP4-2C front-right Porsche Museum.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
   "mclaren:53": {
     "file": "File:McLaren MP4-3 mod.jpg",
     "src": "/f1-wins/context/mclaren-53.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=187244958",
     "title": "McLaren MP4-3 mod.jpg",
     "label": "McLaren MP4-3 mod.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:54": {
-    "file": "File:1985 McLaren MP4 2B (54834214658).jpg",
-    "src": "/f1-wins/context/mclaren-54.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=176304426",
-    "title": "1985 McLaren MP4 2B (54834214658).jpg",
-    "label": "1985 McLaren MP4 2B (54834214658).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:70": {
-    "file": "File:McLaren MP4-4 front-left National Motor Museum, Beaulieu.jpg",
-    "src": "/f1-wins/context/mclaren-70.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27847399",
-    "title": "McLaren MP4-4 front-left National Motor Museum, Beaulieu.jpg",
-    "label": "McLaren MP4-4 front-left National Motor Museum, Beaulieu.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:83": {
-    "file": "File:McLaren MP4-5B 2009 Japan.jpg",
-    "src": "/f1-wins/context/mclaren-83.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8039584",
-    "title": "McLaren MP4-5B 2009 Japan.jpg",
-    "label": "McLaren MP4-5B 2009 Japan.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:85": {
-    "file": "File:McLaren MP4-5B Ayrton Senna Honda RACING Gallery 24-5-2026.jpg",
-    "src": "/f1-wins/context/mclaren-85.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=193962052",
-    "title": "McLaren MP4-5B Ayrton Senna Honda RACING Gallery 24-5-2026.jpg",
-    "label": "McLaren MP4-5B Ayrton Senna Honda RACING Gallery 24-5-2026.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:86": {
-    "file": "File:McLaren MP4-5B and autograph by Ayrton Senna 2009 Japan.jpg",
-    "src": "/f1-wins/context/mclaren-86.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8039592",
-    "title": "McLaren MP4-5B and autograph by Ayrton Senna 2009 Japan.jpg",
-    "label": "McLaren MP4-5B and autograph by Ayrton Senna 2009 Japan.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:106": {
-    "file": "File:McLaren MP4-12 DSC04638.jpg",
-    "src": "/f1-wins/context/mclaren-106.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=149898241",
-    "title": "McLaren MP4-12 DSC04638.jpg",
-    "label": "McLaren MP4-12 DSC04638.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:122": {
-    "file": "File:McLaren MP4-15 and MP4-14 Donington Grand Prix Collection.jpg",
-    "src": "/f1-wins/context/mclaren-122.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=26945073",
-    "title": "McLaren MP4-15 and MP4-14 Donington Grand Prix Collection.jpg",
-    "label": "McLaren MP4-15 and MP4-14 Donington Grand Prix Collection.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:134": {
-    "file": "File:Mika Hakkinen, West McLaren Mercedes MP4-16 (8968307987).jpg",
-    "src": "/f1-wins/context/mclaren-134.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=108275831",
-    "title": "Mika Hakkinen, West McLaren Mercedes MP4-16 (8968307987).jpg",
-    "label": "Mika Hakkinen, West McLaren Mercedes MP4-16 (8968307987).jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:55": {
-    "file": "File:McLaren MP4-3.jpg",
-    "src": "/f1-wins/context/mclaren-55.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2634284",
-    "title": "McLaren MP4-3.jpg",
-    "label": "McLaren MP4-3.jpg",
-    "kind": "race",
-    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
-    "verificationStatus": "verified"
-  },
-  "mclaren:1": {
-    "file": "File:McLaren MP4 2C TAG Porsche F1.jpg",
-    "src": "/f1-wins/context/mclaren-1.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=733841",
-    "title": "McLaren MP4 2C TAG Porsche F1.jpg",
-    "label": "McLaren MP4 2C TAG Porsche F1.jpg",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
@@ -2662,12 +922,72 @@ export const F1_WIN_PHOTOS: Record<string, F1WinImage> = {
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"
   },
-  "mclaren:30": {
-    "file": "File:The 1979 McLaren MP28-3 Formula 1 racing car, driven by John Watson (14663326424).jpg",
-    "src": "/f1-wins/context/mclaren-30.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=116049361",
-    "title": "The 1979 McLaren MP28-3 Formula 1 racing car, driven by John Watson (14663326424).jpg",
-    "label": "The 1979 McLaren MP28-3 Formula 1 racing car, driven by John Watson (14663326424).jpg",
+  "mclaren:74": {
+    "file": "File:Alain Prost 1989 Belgian GP.jpg",
+    "src": "/f1-wins/context/mclaren-74.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Alain_Prost_1989_Belgian_GP.jpg",
+    "title": "Alain Prost 1989 Belgian GP.jpg",
+    "label": "Alain Prost driving the 1989 McLaren MP4/5 Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "mclaren:31": {
+    "file": "File:McLaren MP4-2.jpg",
+    "src": "/f1-wins/context/mclaren-31.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:McLaren_MP4-2.jpg",
+    "title": "McLaren MP4-2.jpg",
+    "label": "Alain Prost's 1984 McLaren MP4/2 Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "mclaren:43": {
+    "file": "File:ProstAlain McLarenMP4-2B 1985.jpg",
+    "src": "/f1-wins/context/mclaren-43.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:ProstAlain_McLarenMP4-2B_1985.jpg",
+    "title": "ProstAlain McLarenMP4-2B 1985.jpg",
+    "label": "Alain Prost driving the 1985 McLaren MP4/2B Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "mclaren:56": {
+    "file": "File:Alain Prost (McLaren Honda), 1988.jpg",
+    "src": "/f1-wins/context/mclaren-56.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Alain_Prost_(McLaren_Honda),_1988.jpg",
+    "title": "Alain Prost (McLaren Honda), 1988.jpg",
+    "label": "Alain Prost driving the 1988 McLaren MP4/4 Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "williams:13": {
+    "file": "File:Williams FW07-C at Formula 1 Exhibition, London 01.jpg",
+    "src": "/f1-wins/context/williams-13.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Williams_FW07-C_at_Formula_1_Exhibition,_London_01.jpg",
+    "title": "Williams FW07-C at Formula 1 Exhibition, London 01.jpg",
+    "label": "1981 Williams FW07C Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "renault:9": {
+    "file": "File:1982 Renault RE30 formula 1.jpg",
+    "src": "/f1-wins/context/renault-9.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:1982_Renault_RE30_formula_1.jpg",
+    "title": "1982 Renault RE30 formula 1.jpg",
+    "label": "Alain Prost's 1982 Renault RE30B Formula One car",
+    "kind": "race",
+    "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
+    "verificationStatus": "verified"
+  },
+  "brabham:29": {
+    "file": "File:Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg",
+    "src": "/f1-wins/context/brabham-29.webp",
+    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=121028440",
+    "title": "Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg",
+    "label": "1983 Brabham BT52 Formula One car",
     "kind": "race",
     "reuseBasis": "Wikimedia Commons photograph; locally optimized WebP derivative",
     "verificationStatus": "verified"

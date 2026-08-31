@@ -103,6 +103,17 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "mediaType": "photograph",
     "verificationStatus": "verified"
   },
+  "Interlagos": {
+    "file": "File:Autodromo Jose Carlos Pace main straight.jpg",
+    "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
+    "title": "Photograph of the Autódromo José Carlos Pace circuit main straight",
+    "label": "Interlagos",
+    "kind": "circuit",
+    "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
+    "mediaType": "photograph",
+    "verificationStatus": "verified"
+  },
   "Nivelles-Baulers": {
     "file": "File:Nivelles_Baulers_5.jpg",
     "src": "https://img1.advisor.travel/555x465px-Nivelles_Baulers_5.jpg",
@@ -235,17 +246,6 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "mediaType": "photograph",
     "verificationStatus": "verified"
   },
-  "Autódromo Internacional Nelson Piquet": {
-    "file": "File:autodromo-nelson-piquet-empty-track.jpg",
-    "src": "https://opiniaobrasilia.com.br/wp-content/uploads/2021/05/51162805785_1ae2dd0fd0_c.jpg",
-    "sourceUrl": "https://opiniaobrasilia.com.br/noticias/manchetes/autodromo-de-brasilia-de-volta-ao-circuito-nacional/",
-    "title": "Photograph of the empty Autódromo Internacional Nelson Piquet circuit",
-    "label": "Autódromo Internacional Nelson Piquet",
-    "kind": "circuit",
-    "reuseBasis": "Contextual circuit photograph; the original publisher page is recorded for source attribution",
-    "mediaType": "photograph",
-    "verificationStatus": "verified"
-  },
   "Autodromo Enzo e Dino Ferrari": {
     "file": "File:Imola_Circuit_-_Variante_Bassa_-_Summer_1973.jpg",
     "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Imola_Circuit_-_Variante_Bassa_-_Summer_1973.jpg",
@@ -362,17 +362,6 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154237527",
     "title": "Suzuka Circuit 21-09-2024.jpg",
     "label": "Suzuka Circuit",
-    "kind": "circuit",
-    "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
-    "mediaType": "photograph",
-    "verificationStatus": "verified"
-  },
-  "Phoenix street circuit": {
-    "file": "File:Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg",
-    "title": "Photograph of Formula 1 action on the Phoenix street circuit",
-    "label": "Phoenix street circuit",
     "kind": "circuit",
     "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
     "mediaType": "photograph",

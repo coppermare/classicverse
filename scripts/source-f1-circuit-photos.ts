@@ -32,7 +32,11 @@ const circuitsWithVerifiedPrimaryCoverage = new Set([
   'Fair Park',
   'Riverside International Raceway',
   'Le Mans',
+  'Autódromo Internacional Nelson Piquet',
 ]);
+const circuitAliases: Record<string, string> = {
+  Interlagos: 'Autódromo José Carlos Pace',
+};
 const manualCircuitFiles: Record<string, { file: string; title: string; src?: string; sourceUrl?: string }> = {
   'Dijon-Prenois': { file: 'stage-pilotage-dijon.jpg', src: 'https://www.cascadevents.fr/img/cms/Circuit/stage-pilotage-dijon.jpg', sourceUrl: 'https://www.cascadevents.fr/circuit-de-pilotage/bourgogne-franche-comte/dijon-prenois/', title: 'Photograph of an empty Dijon-Prenois circuit corner' },
   'Autódromo Hermanos Rodríguez': { file: 'Coolhuntermx_Autodromo_IL_24-min-1.jpg', src: 'https://coolhuntermx.com/wp-content/uploads/2019/10/Coolhuntermx_Autodromo_IL_24-min-1.jpg', sourceUrl: 'https://coolhuntermx.com/el-rediseno-del-autodromo-hermanos-rodriguez-como-bienvenida-a-los-esports-formula-1/', title: 'Photograph of the empty Autódromo Hermanos Rodríguez circuit starting grid' },
@@ -44,7 +48,6 @@ const manualCircuitFiles: Record<string, { file: string; title: string; src?: st
   'Circuit Paul Ricard': { file: 'circuit_paul_ricard_facade_1.jpg', src: 'https://media.businessprofilers.fr/produit/images/960x480/circuit_paul_ricard_16900/facade/circuit_paul_ricard_facade_1.jpg', sourceUrl: 'https://www.businessprofilers.com/lieu/circuit-paul-ricard.html', title: 'Photograph of the empty Circuit Paul Ricard start-finish straight' },
   'Autódromo do Estoril': { file: 'Estoril10.jpg', src: 'https://www.circuito-estoril.pt/wp-content/uploads/2023/05/Estoril10.jpg', sourceUrl: 'https://www.circuito-estoril.pt/en/technical-data/', title: 'Photograph of the empty Autódromo do Estoril circuit pit lane' },
   'Circuito de Jerez': { file: 'circuito-de-jerez.jpg', src: 'https://motorsportguides.com/wp-content/uploads/2019/01/circuito-de-jerez.jpg', sourceUrl: 'https://motorsportguides.com/circuito-de-jerez/', title: 'Photograph of the empty Circuito de Jerez main straight and pit lane' },
-  'Phoenix street circuit': { file: 'Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg', src: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg', sourceUrl: 'https://commons.wikimedia.org/wiki/File:Ayrton_Senna_McLaren_MP4-6_1991_United_States.jpg', title: 'Photograph of Formula 1 action on the Phoenix street circuit' },
   'Donington Park': { file: 'Wheatcroft-grandstand-2.jpg', src: 'https://oversteer48.com/wp-content/uploads/2023/01/Wheatcroft-grandstand-2.jpg', sourceUrl: 'https://www.oversteer48.com/donington-park-circuit/', title: 'Photograph of the empty Donington Park circuit and grandstand' },
   'Albert Park Grand Prix Circuit': { file: 'Albert-Park-Melbourne-F1-030325.jpg', src: 'https://library.sportingnews.com/styles/twitter_card_120x120/s3/2025-03/Albert%20Park%20Melbourne%20F1%20030325.jpg?itok=6VlX9lE9', sourceUrl: 'https://www.sportingnews.com/au/formula-1/news/will-it-rain-australian-grand-prix-melbourne-weather-forecast-2025/51ca44f220c6d487cc5f1fc9', title: 'Photograph of the empty Albert Park Grand Prix circuit' },
   'Circuit de Nevers Magny-Cours': { file: 'MAGNYCOURS-01.jpeg', src: 'https://www.speedactiontv.be/Getimage.aspx?d=imgnews&m=F&n=MAGNYCOURS-01.jpeg', sourceUrl: 'https://www.speedactiontv.be/Le_Live_Timing_et_les_commentaires_des_Magny_Cours_Cups_via_RIS_Timing-31454-1.aspx', title: 'Photograph of the empty Circuit de Nevers Magny-Cours pit lane' },
@@ -72,7 +75,6 @@ const manualCircuitFiles: Record<string, { file: string; title: string; src?: st
   'Circuit Mont-Tremblant': { file: 'Mont-Tremblant Control Tower.JPG', title: 'Photograph of the Mont-Tremblant circuit control tower' },
   'Mosport International Raceway': { file: 'Mosport Speedway August 2008.jpg', title: 'Photograph of Mosport International Raceway' },
   'Long Beach': { file: 'LongBeachCircuit-BackStraight (34653284041).jpg', title: 'Photograph of the Long Beach circuit back straight' },
-  'Autódromo Internacional Nelson Piquet': { file: 'autodromo-nelson-piquet-empty-track.jpg', src: 'https://opiniaobrasilia.com.br/wp-content/uploads/2021/05/51162805785_1ae2dd0fd0_c.jpg', sourceUrl: 'https://opiniaobrasilia.com.br/noticias/manchetes/autodromo-de-brasilia-de-volta-ao-circuito-nacional/', title: 'Photograph of the empty Autódromo Internacional Nelson Piquet circuit' },
   'Circuit Bremgarten': { file: 'Tennikurvebremgarp.jpg', title: 'Photograph of the Bremgarten circuit at the Tannenkurve' },
   'Aintree': { file: 'Aintree racecourse - geograph.org.uk - 5600617.jpg', title: 'Photograph of Aintree racecourse circuit' },
   'Las Vegas Strip Street Circuit': { file: '2024 Las Vegas Grand Prix at the Sphere - Friday, November 22, Orbi.jpg', title: 'Photograph of the Las Vegas Strip Street Circuit' },
@@ -282,6 +284,10 @@ async function main(): Promise<void> {
       : buildRecord(circuit, page);
     records.push(record);
     console.log(`CIRCUIT ${circuit} <- ${record.title}`);
+  }
+  for (const [alias, canonical] of Object.entries(circuitAliases)) {
+    const target = records.find((record) => record.circuit === canonical);
+    if (target) records.push({ ...target, circuit: alias, label: alias });
   }
   writeOutput(records);
   console.log(`F1 circuit sourcing complete: localized ${records.length}/${circuits.length} circuit fallbacks.`);

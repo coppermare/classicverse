@@ -1,12 +1,5 @@
 import type { F1Team, F1WinImage, F1WinRecord } from '@/types/f1';
 
-/**
- * Photos whose source metadata explicitly describes another constructor in the
- * frame. They remain in the research index so they can be replaced deliberately,
- * but they must never appear inside the winning team's folder.
- */
-export const F1_CROSS_TEAM_IMAGE_KEYS = new Set<string>();
-
 const NON_CAR_IMAGE_TERMS = [
   'helmet', 'trophy', 'championship cup', 'podium', 'parade', 'paddock', 'pit', 'garage',
   'truck', 'safety car', 'engine', 'wing', 'steering', 'cockpit', 'model', 'toy',
@@ -73,7 +66,6 @@ export function verifiedF1WinImage(
 ): F1WinImage | undefined {
   if (!image || image.kind !== 'race') return undefined;
   if (!hasLawfulF1ImageBasis(image)) return undefined;
-  if (F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`)) return undefined;
   if (!isF1CarImage(image)) return undefined;
 
   const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));

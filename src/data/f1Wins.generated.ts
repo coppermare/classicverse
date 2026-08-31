@@ -348,6 +348,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "7",
       "driver": "Alain Prost",
+      "chassis": "MP4/2",
       "date": "1984-03-25",
       "source_url": "https://en.wikipedia.org/wiki/1984_Brazilian_Grand_Prix",
       "source_constructor": "McLaren"
@@ -480,6 +481,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "2",
       "driver": "Alain Prost",
+      "chassis": "MP4/2B",
       "date": "1985-04-07",
       "source_url": "https://en.wikipedia.org/wiki/1985_Brazilian_Grand_Prix",
       "source_constructor": "McLaren"
@@ -590,6 +592,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "1",
       "driver": "Alain Prost",
+      "chassis": "MP4/3",
       "date": "1987-04-12",
       "source_url": "https://en.wikipedia.org/wiki/1987_Brazilian_Grand_Prix",
       "source_constructor": "McLaren"
@@ -623,6 +626,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "11",
       "driver": "Alain Prost",
+      "chassis": "MP4/4",
       "date": "1988-04-03",
       "source_url": "https://en.wikipedia.org/wiki/1988_Brazilian_Grand_Prix",
       "source_constructor": "McLaren"
@@ -5359,6 +5363,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "2",
       "driver": "Carlos Reutemann",
+      "chassis": "FW07C",
       "date": "1981-03-29",
       "source_url": "https://en.wikipedia.org/wiki/1981_Brazilian_Grand_Prix",
       "source_constructor": "Williams"
@@ -5381,6 +5386,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Las Vegas Street Circuit",
       "car_number": "1",
       "driver": "Alan Jones",
+      "chassis": "FW07C",
       "date": "1981-10-17",
       "source_url": "https://en.wikipedia.org/wiki/1981_Caesars_Palace_Grand_Prix",
       "source_constructor": "Williams"
@@ -5469,6 +5475,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "6",
       "driver": "Nelson Piquet",
+      "chassis": "FW11",
       "date": "1986-03-23",
       "source_url": "https://en.wikipedia.org/wiki/1986_Brazilian_Grand_Prix",
       "source_constructor": "Williams"
@@ -6494,6 +6501,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Riverside International Raceway",
       "car_number": "5",
       "driver": "Stirling Moss",
+      "chassis": "18",
       "date": "1960-11-20",
       "source_url": "https://en.wikipedia.org/wiki/1960_United_States_Grand_Prix",
       "source_constructor": "Team Lotus"
@@ -7442,6 +7450,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "15",
       "driver": "Alain Prost",
+      "chassis": "RE30B",
       "date": "1982-03-21",
       "source_url": "https://en.wikipedia.org/wiki/1982_Brazilian_Grand_Prix",
       "source_constructor": "Renault"
@@ -8049,6 +8058,7 @@ export const F1_WINS_BY_TEAM: Record<string, ConstructorWin[]> = {
       "circuit": "Autódromo Internacional Nelson Piquet",
       "car_number": "5",
       "driver": "Nelson Piquet",
+      "chassis": "BT52",
       "date": "1983-03-13",
       "source_url": "https://en.wikipedia.org/wiki/1983_Brazilian_Grand_Prix",
       "source_constructor": "Brabham"

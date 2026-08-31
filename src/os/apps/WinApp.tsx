@@ -12,6 +12,7 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
     case 'exact-win': return 'Exact win photograph';
     case 'same-event': return 'Same-event context photograph';
     case 'same-season': return 'Same-season context photograph';
+    case 'same-chassis': return 'Correct-chassis context photograph';
     case 'team-era': return 'Team/era context photograph';
     case 'circuit': return 'Associated circuit fallback photograph';
     case undefined: return 'Source photograph unavailable';
@@ -27,6 +28,7 @@ export default function WinApp({ node, os }: AppProps) {
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
   const primaryImage = img?.src ?? (win.teamImageVerificationStatus === 'verified' ? win.teamImage : undefined);
   const imageFailed = !primaryImage || photoFailed;
+  const preserveWholeCar = primaryImage === '/f1-wins/context/renault-9.webp';
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
   const facts: [string, string][] = [
@@ -50,7 +52,11 @@ export default function WinApp({ node, os }: AppProps) {
           src={primaryImage}
           alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
           onError={() => setPhotoFailed(true)}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: preserveWholeCar ? 'contain' : 'cover',
+            background: preserveWholeCar ? '#fff' : undefined,
+          }}
         />
       ) : (
         <div style={{

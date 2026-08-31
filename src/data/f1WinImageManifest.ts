@@ -1,11 +1,9 @@
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { getWinImage } from '@/data/ferrariChassisImages';
-import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
 import { F1_WIN_PHOTOS } from '@/data/f1WinPhotos.generated';
 import { F1_CIRCUIT_PHOTOS } from '@/data/f1CircuitPhotos.generated';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_TEAMS } from '@/data/f1Teams';
-import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
 import { verifiedF1CircuitImage, verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import type {
@@ -60,9 +58,9 @@ function candidateFor(team: F1Team, win: F1WinRecord): F1WinImage | undefined {
   const primaryPhoto = F1_WIN_PHOTOS[`${team.id}:${win.number}`];
   if (primaryPhoto) return primaryPhoto;
   if (team.id === 'mclaren') {
-    return MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number];
+    return MCLAREN_RECENT_WIN_IMAGES[win.number];
   }
-  return F1_WIN_IMAGES[`${team.id}:${win.number}`];
+  return undefined;
 }
 
 function circuitCandidateFor(win: F1WinRecord): F1WinImage | undefined {
@@ -79,9 +77,13 @@ function roleFor(team: F1Team, win: F1WinRecord, image: F1WinImage): F1ImageRole
     .filter(Boolean);
   const hasDriver = driver.split(' ').at(-1) && context.includes(driver.split(' ').at(-1) ?? '');
   const hasTeam = teamTerms.some((term) => context.includes(term));
+  const hasChassis = win.chassis
+    ? context.includes(normalized(`${team.name.replace(/^Team /, '')} ${win.chassis}`))
+    : false;
 
   if (context.includes(year) && context.includes(event) && (hasDriver || hasTeam)) return 'same-event';
   if (context.includes(year) && (hasDriver || hasTeam)) return 'same-season';
+  if (hasChassis) return 'same-chassis';
   return 'team-era';
 }
 
@@ -132,12 +134,19 @@ export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1Win
   const verified = verifiedF1WinImage(team, win, candidate);
   if (!verified) return resolveCircuitFallback(team, win) ?? unavailableFor(team, win);
 
+  // A constructor name by itself is not enough context for a historic win.
+  // In particular, it previously allowed modern cars to appear against wins
+  // from decades earlier. Keep car photography only when its metadata ties it
+  // to the winning season/event; the sole permitted fallback is the circuit.
+  const role = roleFor(team, win, verified);
+  if (role === 'team-era') return resolveCircuitFallback(team, win) ?? unavailableFor(team, win);
+
   return {
     src: verified.src,
     label: `Context photograph — ${verified.label}`,
     sourceUrl: verified.sourceUrl,
     kind: verified.kind,
-    role: roleFor(team, win, verified),
+    role,
     reuseBasis: verified.reuseBasis ?? 'Wikimedia Commons file; licence and attribution are recorded on the source page',
     creator: verified.creator,
     verificationStatus: 'verified',

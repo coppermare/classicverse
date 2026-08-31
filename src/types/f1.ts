@@ -26,6 +26,7 @@ export type F1ImageRole =
   | 'exact-win'
   | 'same-event'
   | 'same-season'
+  | 'same-chassis'
   | 'team-era'
   | 'circuit';
 

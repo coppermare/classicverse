@@ -1,7 +1,6 @@
 // Source-linked web photographs researched for the F1 archive.
-// Only local, rights-cleared, context-verified race images are displayed.
-// Circuit, cross-team and rights-unverified candidates remain here for
-// traceability but are quarantined by f1WinImagePolicy.ts.
+// Audited mismatches are removed by scripts/prune-f1-image-registry.ts.
+// Only the curated local catalog is eligible for runtime display.
 
 import type { F1WinImage } from '@/types/f1';
 
@@ -142,14 +141,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "2015 Australian Grand Prix",
     "kind": "race"
   },
-  "mercedes:27": {
-    "file": "https://live.staticflickr.com/3952/15684925211_af4ddf5b9e_b.jpg",
-    "src": "https://live.staticflickr.com/3952/15684925211_af4ddf5b9e_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/47557363@N00/15684925211",
-    "title": "Lewis Hamilton comes out of T2 COTA 2014 United States Grand Prix",
-    "label": "2014 United States Grand Prix",
-    "kind": "race"
-  },
   "mercedes:17": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7e/2014_Chinese_Grand_Prix_-_Lewis_Hamilton_holding_winners%27_trophy_with_Nico_Rosberg_and_Fernando_Alonso.jpg",
     "src": "/f1-wins/context/mercedes-17.webp",
@@ -172,14 +163,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27887303",
     "title": "F1 2013 Belgian Grand Prix - Sebastian Vettel",
     "label": "2013 Belgian Grand Prix",
-    "kind": "race"
-  },
-  "mclaren:181": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Lewis_Hamilton%2C_United_States_Grand_Prix%2C_Austin_2012.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Lewis_Hamilton%2C_United_States_Grand_Prix%2C_Austin_2012.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=22885057",
-    "title": "Lewis Hamilton, United States Grand Prix, Austin 2012",
-    "label": "2012 United States Grand Prix",
     "kind": "race"
   },
   "mclaren:177": {
@@ -342,36 +325,12 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "1995 British Grand Prix",
     "kind": "race"
   },
-  "benetton:19": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/7/7d/French_GP_1995_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "/f1-wins/context/benetton-19.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658698",
-    "title": "French GP 1995 winner's trophy 2019 Michael Schumacher Private Collection",
-    "label": "1995 French Grand Prix",
-    "kind": "race"
-  },
   "williams:73": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Damon_Hill_-_Williams_FW16_at_the_1994_British_Grand_Prix_%2832541472155%29.jpg",
     "src": "/f1-wins/context/williams-73.webp",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=61211964",
     "title": "Damon Hill - Williams FW16 at the 1994 British Grand Prix (32541472155)",
     "label": "1994 British Grand Prix",
-    "kind": "race"
-  },
-  "benetton:9": {
-    "file": "https://live.staticflickr.com/1058/1401678263_ecb13344bf.jpg",
-    "src": "https://live.staticflickr.com/1058/1401678263_ecb13344bf.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/8127814@N07/1401678263",
-    "title": "PACIFIC GP SCHUMACHER 1994",
-    "label": "1994 Pacific Grand Prix",
-    "kind": "race"
-  },
-  "benetton:8": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/0/00/Brazilian_GP_1994_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "/f1-wins/context/benetton-8.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658332",
-    "title": "Brazilian GP 1994 winner's trophy 2019 Michael Schumacher Private Collection",
-    "label": "1994 Brazilian Grand Prix",
     "kind": "race"
   },
   "mclaren:101": {
@@ -388,14 +347,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=31381053",
     "title": "Prost at 1993 British Grand Prix crop",
     "label": "1993 British Grand Prix",
-    "kind": "race"
-  },
-  "benetton:7": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/6/69/Portuguese_GP_1993_winner%27s_trophy_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "/f1-wins/context/benetton-7.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83781124",
-    "title": "Portuguese GP 1993 winner's trophy 2019 Michael Schumacher Private Collection",
-    "label": "1993 Portuguese Grand Prix",
     "kind": "race"
   },
   "mclaren:96": {
@@ -422,14 +373,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "1992 British Grand Prix",
     "kind": "race"
   },
-  "benetton:6": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Belgian_GP_1992_winner%27s_trophy_front_2019_Michael_Schumacher_Private_Collection.jpg",
-    "src": "/f1-wins/context/benetton-6.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83658282",
-    "title": "Belgian GP 1992 winner's trophy front 2019 Michael Schumacher Private Collection",
-    "label": "1992 Belgian Grand Prix",
-    "kind": "race"
-  },
   "mclaren:87": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Ayrton_Senna_1991_United_States_GP.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Ayrton_Senna_1991_United_States_GP.jpg",
@@ -452,14 +395,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=43891399",
     "title": "1985 European GP Nigel Mansell01",
     "label": "1985 European Grand Prix",
-    "kind": "race"
-  },
-  "mclaren:29": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Niki_Lauda_1982_British_GP.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Niki_Lauda_1982_British_GP.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=66929741",
-    "title": "File:Niki Lauda 1982 British GP.jpg",
-    "label": "1982 British Grand Prix",
     "kind": "race"
   },
   "renault:6": {
@@ -516,14 +451,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23255834",
     "title": "Clark at 1967 Dutch Grand Prix (6)",
     "label": "1967 Dutch Grand Prix",
-    "kind": "race"
-  },
-  "brabham:5": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Brabham_at_1966_Dutch_Grand_Prix_%285%29.jpg",
-    "src": "/f1-wins/context/brabham-5.webp",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23254863",
-    "title": "Brabham at 1966 Dutch Grand Prix (5)",
-    "label": "1966 Dutch Grand Prix",
     "kind": "race"
   },
   "lotus:23": {
@@ -598,35 +525,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Hungaroring",
     "kind": "circuit"
   },
-  "mercedes:105": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/4/43/Lance_Stroll_during_Hungarian_Formula_1_GP.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/43/Lance_Stroll_during_Hungarian_Formula_1_GP.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81130647",
-    "title": "Lance Stroll during Hungarian Formula 1 GP",
-    "label": "Hungaroring",
-    "kind": "circuit"
-  },
   "mercedes:97": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/b/bc/SportPesa_in_Racing_Point_RP19%2C_Hungarian_GP_%28cropped%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/b/bc/SportPesa_in_Racing_Point_RP19%2C_Hungarian_GP_%28cropped%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=83689607",
     "title": "SportPesa in Racing Point RP19, Hungarian GP (cropped)",
-    "label": "Hungaroring",
-    "kind": "circuit"
-  },
-  "mercedes:81": {
-    "file": "https://live.staticflickr.com/2849/9402785968_cb376605d0_b.jpg",
-    "src": "https://live.staticflickr.com/2849/9402785968_cb376605d0_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/26673924@N07/9402785968",
-    "title": "30/52",
-    "label": "Hungaroring",
-    "kind": "circuit"
-  },
-  "mercedes:55": {
-    "file": "https://live.staticflickr.com/3816/20183233661_e52a350ac9_b.jpg",
-    "src": "https://live.staticflickr.com/3816/20183233661_e52a350ac9_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/41862411@N03/20183233661",
-    "title": "Budapest2015-24-Hungaroring-Ricciardo-Bottas",
     "label": "Hungaroring",
     "kind": "circuit"
   },
@@ -636,22 +539,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81130683",
     "title": "Sergio Perez during Hungarian Formula 1 Grand Prix",
     "label": "Hungaroring",
-    "kind": "circuit"
-  },
-  "mercedes:13": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/8/89/Kimi_Raikkonen_during_Hungarian_Formula_1_GP.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Kimi_Raikkonen_during_Hungarian_Formula_1_GP.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81130626",
-    "title": "Kimi Raikkonen during Hungarian Formula 1 GP",
-    "label": "Hungaroring",
-    "kind": "circuit"
-  },
-  "mercedes:139": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/7/77/Circuit_de_Spa-Francorchamps%2C_April_22%2C_2018_SkySat_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/77/Circuit_de_Spa-Francorchamps%2C_April_22%2C_2018_SkySat_%28cropped%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76971880",
-    "title": "Circuit de Spa-Francorchamps, April 22, 2018 SkySat (cropped)",
-    "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
   },
   "mclaren:199": {
@@ -702,14 +589,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
   },
-  "mercedes:71": {
-    "file": "https://live.staticflickr.com/5780/20285703593_5132190006_b.jpg",
-    "src": "https://live.staticflickr.com/5780/20285703593_5132190006_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20285703593",
-    "title": "Belgian GP - Williams Martini Racing - Felipe Massa",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
   "mercedes:57": {
     "file": "https://live.staticflickr.com/635/20257275294_dcd8e9e747_b.jpg",
     "src": "https://live.staticflickr.com/635/20257275294_dcd8e9e747_b.jpg",
@@ -731,14 +610,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/642/20718752768_1ec7837be8_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20718752768",
     "title": "Belgian GP - Force India - Sergio Perez",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
-  "mclaren:179": {
-    "file": "https://live.staticflickr.com/611/20718666490_898d479e46_b.jpg",
-    "src": "https://live.staticflickr.com/611/20718666490_898d479e46_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20718666490",
-    "title": "Belgian GP - Scuderia Ferrari - Sebastian Vettel",
     "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
   },
@@ -766,34 +637,10 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
   },
-  "mclaren:138": {
-    "file": "https://live.staticflickr.com/758/20691800490_2ee6a27307_b.jpg",
-    "src": "https://live.staticflickr.com/758/20691800490_2ee6a27307_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20691800490",
-    "title": "Belgian GP - Scuderia Ferrari - Kimi Raikkonen -",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
   "mclaren:130": {
     "file": "https://live.staticflickr.com/5728/20857165732_0f2c1beab6_b.jpg",
     "src": "https://live.staticflickr.com/5728/20857165732_0f2c1beab6_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20857165732",
-    "title": "Belgian GP - Mercedes AMG Petronas - Nico Rosberg",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
-  "mclaren:122": {
-    "file": "https://live.staticflickr.com/749/20857163652_7b2b0689e3_b.jpg",
-    "src": "https://live.staticflickr.com/749/20857163652_7b2b0689e3_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20857163652",
-    "title": "Belgian GP - Infiniti Red Bull Racing - Daniil Kvyat",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
-  "benetton:22": {
-    "file": "https://live.staticflickr.com/5730/20691813450_ae943f597c_b.jpg",
-    "src": "https://live.staticflickr.com/5730/20691813450_ae943f597c_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20691813450",
     "title": "Belgian GP - Mercedes AMG Petronas - Nico Rosberg",
     "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
@@ -804,14 +651,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20284133024",
     "title": "Belgian GP - Mercedes AMG Petronas - Nico Rosberg",
     "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
-  "mercedes:138": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/9e/FIA_F1_Austria_2022_Nr._55_Sainz_%282%29_%28edited%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9e/FIA_F1_Austria_2022_Nr._55_Sainz_%282%29_%28edited%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=120440527",
-    "title": "FIA F1 Austria 2022 Nr. 55 Sainz (2) (edited)",
-    "label": "Red Bull Ring",
     "kind": "circuit"
   },
   "mclaren:197": {
@@ -854,22 +693,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Red Bull Ring",
     "kind": "circuit"
   },
-  "mercedes:104": {
-    "file": "https://live.staticflickr.com/7388/28112267585_02aab43aa0_b.jpg",
-    "src": "https://live.staticflickr.com/7388/28112267585_02aab43aa0_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/27898344@N04/28112267585",
-    "title": "Formula One 2016 Austrian GP (20)",
-    "label": "Red Bull Ring",
-    "kind": "circuit"
-  },
-  "mercedes:103": {
-    "file": "https://live.staticflickr.com/7457/28112190355_db81fced7e_b.jpg",
-    "src": "https://live.staticflickr.com/7457/28112190355_db81fced7e_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/27898344@N04/28112190355",
-    "title": "Formula One 2016 Austrian GP (24)",
-    "label": "Red Bull Ring",
-    "kind": "circuit"
-  },
   "red-bull:60": {
     "file": "https://live.staticflickr.com/7350/28034949481_5c146c156b_b.jpg",
     "src": "https://live.staticflickr.com/7350/28034949481_5c146c156b_b.jpg",
@@ -900,14 +723,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=49778937",
     "title": "Pole Position Graz (26945025831)",
     "label": "Red Bull Ring",
-    "kind": "circuit"
-  },
-  "mercedes:136": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/6/65/Circuit_Gilles-Villeneuve%2C_May_29%2C_2018_SkySat_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/65/Circuit_Gilles-Villeneuve%2C_May_29%2C_2018_SkySat_%28cropped%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76969732",
-    "title": "Circuit Gilles-Villeneuve, May 29, 2018 SkySat (cropped)",
-    "label": "Circuit Gilles Villeneuve",
     "kind": "circuit"
   },
   "mercedes:130": {
@@ -942,14 +757,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Circuit Gilles Villeneuve",
     "kind": "circuit"
   },
-  "mercedes:68": {
-    "file": "https://live.staticflickr.com/7128/7455555462_817175506b_b.jpg",
-    "src": "https://live.staticflickr.com/7128/7455555462_817175506b_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/37256969@N08/7455555462",
-    "title": "Schumacher, Kovalainen, Massa and Senna",
-    "label": "Circuit Gilles Villeneuve",
-    "kind": "circuit"
-  },
   "mercedes:51": {
     "file": "https://live.staticflickr.com/7257/7455573272_1088a2632c_b.jpg",
     "src": "https://live.staticflickr.com/7257/7455573272_1088a2632c_b.jpg",
@@ -971,14 +778,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/8153/7455547096_d8436016c1_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/37256969@N08/7455547096",
     "title": "Alonso v Hamilton",
-    "label": "Circuit Gilles Villeneuve",
-    "kind": "circuit"
-  },
-  "red-bull:37": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/0/05/Daniil_Kvyat_070615.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/05/Daniil_Kvyat_070615.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=40835513",
-    "title": "Daniil Kvyat 070615",
     "label": "Circuit Gilles Villeneuve",
     "kind": "circuit"
   },
@@ -1019,14 +818,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/8143/7455559846_71b8a7cee9_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/37256969@N08/7455559846",
     "title": "Button, Raikkonen, Kobayashi, Perez and Hulkenberg",
-    "label": "Circuit Gilles Villeneuve",
-    "kind": "circuit"
-  },
-  "williams:105": {
-    "file": "https://live.staticflickr.com/7267/7455541582_219f646c66_b.jpg",
-    "src": "https://live.staticflickr.com/7267/7455541582_219f646c66_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/37256969@N08/7455541582",
-    "title": "Lewis Hamilton leads Fernando Alonso",
     "label": "Circuit Gilles Villeneuve",
     "kind": "circuit"
   },
@@ -1102,14 +893,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
-  "mercedes:85": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/93/Takuma_Sato_BAR_006_Rear_Wing_Honda_RACING_Gallery_24-5-2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/93/Takuma_Sato_BAR_006_Rear_Wing_Honda_RACING_Gallery_24-5-2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=196798793",
-    "title": "Takuma Sato BAR 006 Rear Wing Honda RACING Gallery 24-5-2026",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
   "mercedes:74": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/79/Pierre_Gasly_Toro_Rosso_STR13_Honda_RACING_Gallery_24-5-2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/79/Pierre_Gasly_Toro_Rosso_STR13_Honda_RACING_Gallery_24-5-2026.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
@@ -1134,14 +917,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
-  "mercedes:25": {
-    "file": "https://live.staticflickr.com/5666/21877149122_3c7001403f_b.jpg",
-    "src": "https://live.staticflickr.com/5666/21877149122_3c7001403f_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/35103067@N00/21877149122",
-    "title": "No.3 / Daniel Ricciardo / Infiniti Red Bull Racing",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
   "red-bull:43": {
     "file": "https://live.staticflickr.com/8474/8090952491_c46223ba82_b.jpg",
     "src": "https://live.staticflickr.com/8474/8090952491_c46223ba82_b.jpg",
@@ -1158,14 +933,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
-  "mclaren:174": {
-    "file": "https://live.staticflickr.com/8327/8090956277_50ce2c3fc5_b.jpg",
-    "src": "https://live.staticflickr.com/8327/8090956277_50ce2c3fc5_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8090956277",
-    "title": "Home Favourite",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
   "red-bull:13": {
     "file": "https://live.staticflickr.com/8190/8093443787_044ec3dfc4_b.jpg",
     "src": "https://live.staticflickr.com/8190/8093443787_044ec3dfc4_b.jpg",
@@ -1174,27 +941,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
-  "red-bull:4": {
-    "file": "https://live.staticflickr.com/8472/8093337817_b414309628_b.jpg",
-    "src": "https://live.staticflickr.com/8472/8093337817_b414309628_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093337817",
-    "title": "Michael Schumacher",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
   "mclaren:148": {
     "file": "https://live.staticflickr.com/8468/8093201928_68231aa6f9_b.jpg",
     "src": "https://live.staticflickr.com/8468/8093201928_68231aa6f9_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093201928",
     "title": "Jenson Exits the Hairpin",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
-  "mclaren:123": {
-    "file": "https://live.staticflickr.com/8188/8093334391_dd569a7031_b.jpg",
-    "src": "https://live.staticflickr.com/8188/8093334391_dd569a7031_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093334391",
-    "title": "Suzuka 2012",
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
@@ -1214,30 +965,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
-  "benetton:26": {
-    "file": "https://live.staticflickr.com/8476/8093250997_5fddab167c_b.jpg",
-    "src": "https://live.staticflickr.com/8476/8093250997_5fddab167c_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093250997",
-    "title": "Kimi's Tyres",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
-  "williams:77": {
-    "file": "https://live.staticflickr.com/8195/8093340047_16e63b935b_b.jpg",
-    "src": "https://live.staticflickr.com/8195/8093340047_16e63b935b_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093340047",
-    "title": "Lewis Hamilton",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
-  "mclaren:103": {
-    "file": "https://live.staticflickr.com/8193/8093198130_77ebc3c853_b.jpg",
-    "src": "https://live.staticflickr.com/8193/8093198130_77ebc3c853_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093198130",
-    "title": "HRT through the 'Esses'",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
   "williams:61": {
     "file": "https://live.staticflickr.com/8328/8093204726_7a69757a23_b.jpg",
     "src": "https://live.staticflickr.com/8328/8093204726_7a69757a23_b.jpg",
@@ -1251,22 +978,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/8473/8093307742_5da2b2ec43_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8093307742",
     "title": "Charles Pic",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
-  "benetton:3": {
-    "file": "https://live.staticflickr.com/6026/5980583824_70911b2d80_b.jpg",
-    "src": "https://live.staticflickr.com/6026/5980583824_70911b2d80_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/39856806@N05/5980583824",
-    "title": "1989 Japanese GP",
-    "label": "Suzuka Circuit",
-    "kind": "circuit"
-  },
-  "benetton:2": {
-    "file": "https://live.staticflickr.com/689/21701103570_a00b1ed26d_b.jpg",
-    "src": "https://live.staticflickr.com/689/21701103570_a00b1ed26d_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/35103067@N00/21701103570",
-    "title": "No.44 / Lewis Hamilton / Mercedes AMG Petronas F1 Team",
     "label": "Suzuka Circuit",
     "kind": "circuit"
   },
@@ -1294,14 +1005,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Shanghai International Circuit",
     "kind": "circuit"
   },
-  "mercedes:90": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/d/d2/2018_Chinese_Grand_Prix_FP3_Fernando_Alonso_%2840970600574%29_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d2/2018_Chinese_Grand_Prix_FP3_Fernando_Alonso_%2840970600574%29_%28cropped%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=70692916",
-    "title": "2018 Chinese Grand Prix FP3 Fernando Alonso (40970600574) (cropped)",
-    "label": "Shanghai International Circuit",
-    "kind": "circuit"
-  },
   "mercedes:65": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/c/c6/2018_Chinese_Grand_Prix_FP3_Charles_Leclerc_%2839897914770%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/c6/2018_Chinese_Grand_Prix_FP3_Charles_Leclerc_%2839897914770%29.jpg",
@@ -1316,14 +1019,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76964957",
     "title": "Shanghai International Circuit, April 7, 2018 SkySat",
     "label": "Shanghai International Circuit",
-    "kind": "circuit"
-  },
-  "mercedes:132": {
-    "file": "https://live.staticflickr.com/2533/13125063244_449553bf41_b.jpg",
-    "src": "https://live.staticflickr.com/2533/13125063244_449553bf41_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/42197184@N08/13125063244",
-    "title": "2014 Australian F1 Grand Prix",
-    "label": "Albert Park Grand Prix Circuit",
     "kind": "circuit"
   },
   "mclaren:190": {
@@ -1410,14 +1105,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "file": "https://live.staticflickr.com/3737/13214518665_d6bee75444_b.jpg",
     "src": "https://live.staticflickr.com/3737/13214518665_d6bee75444_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/22876496@N02/13214518665",
-    "title": "RAAF Roulettes @ Australian F1 GP",
-    "label": "Albert Park Grand Prix Circuit",
-    "kind": "circuit"
-  },
-  "mclaren:108": {
-    "file": "https://live.staticflickr.com/2803/13214521995_3faaeab156_b.jpg",
-    "src": "https://live.staticflickr.com/2803/13214521995_3faaeab156_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/22876496@N02/13214521995",
     "title": "RAAF Roulettes @ Australian F1 GP",
     "label": "Albert Park Grand Prix Circuit",
     "kind": "circuit"
@@ -1574,14 +1261,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
-  "mercedes:70": {
-    "file": "https://live.staticflickr.com/3117/2619284282_16d03dbebe_b.jpg",
-    "src": "https://live.staticflickr.com/3117/2619284282_16d03dbebe_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/40234118@N00/2619284282",
-    "title": "F1 BMW Nick Heidfeld",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
   "mercedes:37": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Formule_Renault_-_GTRO_RACING_-_Ecole_de_pilotage_-_Circuit_Los_Arcos_Navarra_Spain_Espagne_-_Image_Picture_Photography_%2815498442020%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Formule_Renault_-_GTRO_RACING_-_Ecole_de_pilotage_-_Circuit_Los_Arcos_Navarra_Spain_Espagne_-_Image_Picture_Photography_%2815498442020%29.jpg",
@@ -1590,27 +1269,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
-  "mercedes:21": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/8/89/1962_Assegai_Silverstone_Classic_2019.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/1962_Assegai_Silverstone_Classic_2019.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=104944739",
-    "title": "1962 Assegai Silverstone Classic 2019",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
   "mercedes:12": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Formule_Renault_-_GTRO_RACING_-_Circuit_Los_Arcos_Navarra_Espagne_Spain_-_Image_Picture_Photography_%2815685088522%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Formule_Renault_-_GTRO_RACING_-_Circuit_Los_Arcos_Navarra_Espagne_Spain_-_Image_Picture_Photography_%2815685088522%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=37312669",
     "title": "Formule Renault - GTRO RACING - Circuit Los Arcos Navarra Espagne Spain - Image Picture Photography (15685088522)",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "red-bull:30": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Formule_Renault_-_GTRO_RACING_-_Circuit_Los_Arcos_Navarra_Espagne_Spain_-_Picture_Image_Photography_%2815659708526%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Formule_Renault_-_GTRO_RACING_-_Circuit_Los_Arcos_Navarra_Espagne_Spain_-_Picture_Image_Photography_%2815659708526%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=37312670",
-    "title": "Formule Renault - GTRO RACING - Circuit Los Arcos Navarra Espagne Spain - Picture Image Photography (15659708526)",
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
@@ -1662,14 +1325,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
-  "mclaren:76": {
-    "file": "https://live.staticflickr.com/4034/4717147785_fd06069835_b.jpg",
-    "src": "https://live.staticflickr.com/4034/4717147785_fd06069835_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/46367436@N04/4717147785",
-    "title": "Duel in the Vale",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
   "mclaren:63": {
     "file": "https://live.staticflickr.com/8288/7614742750_b27c06152a_b.jpg",
     "src": "https://live.staticflickr.com/8288/7614742750_b27c06152a_b.jpg",
@@ -1691,30 +1346,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/1282/1060686745_3f000dd3fb_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/95012874@N00/1060686745",
     "title": "Silverstone F1 British Grand Prix 2007 -193",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "renault:14": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/a/ad/AMR22_at_the_2022_British_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ad/AMR22_at_the_2022_British_Grand_Prix.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=120344442",
-    "title": "AMR22 at the 2022 British Grand Prix",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "mclaren:25": {
-    "file": "https://live.staticflickr.com/5001/5356034351_45df1f3d4e.jpg",
-    "src": "https://live.staticflickr.com/5001/5356034351_45df1f3d4e.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/29712408@N02/5356034351",
-    "title": "It's On",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "williams:1": {
-    "file": "https://live.staticflickr.com/8282/7614716494_54182c8a01_b.jpg",
-    "src": "https://live.staticflickr.com/8282/7614716494_54182c8a01_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/15111621@N05/7614716494",
-    "title": "Nico Rosberg",
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
@@ -1806,14 +1437,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Circuit de Barcelona-Catalunya",
     "kind": "circuit"
   },
-  "mercedes:92": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/4/42/Circuit_de_Barcelona-Catalunya%2C_April_19%2C_2018_SkySat.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/42/Circuit_de_Barcelona-Catalunya%2C_April_19%2C_2018_SkySat.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76968861",
-    "title": "Circuit de Barcelona-Catalunya, April 19, 2018 SkySat",
-    "label": "Circuit de Barcelona-Catalunya",
-    "kind": "circuit"
-  },
   "mclaren:192": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/8/87/World_Record_Formula1_21min.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/87/World_Record_Formula1_21min.jpg",
@@ -1846,14 +1469,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Bahrain International Circuit",
     "kind": "circuit"
   },
-  "mercedes:115": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Force_India_and_Red_Bull_Racing_%283479405863%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Force_India_and_Red_Bull_Racing_%283479405863%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=48048138",
-    "title": "Force India and Red Bull Racing (3479405863)",
-    "label": "Bahrain International Circuit",
-    "kind": "circuit"
-  },
   "mercedes:131": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/f/f0/1_singapore_f1_night_race_2012_city_skyline.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f0/1_singapore_f1_night_race_2012_city_skyline.jpg",
@@ -1875,22 +1490,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/6152/6205969541_829faeb7a3_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/36021014@N06/6205969541",
     "title": "Vettel Leads the Field",
-    "label": "Marina Bay Street Circuit",
-    "kind": "circuit"
-  },
-  "mercedes:83": {
-    "file": "https://live.staticflickr.com/762/21542977016_fa6778aa88_b.jpg",
-    "src": "https://live.staticflickr.com/762/21542977016_fa6778aa88_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/62028388@N07/21542977016",
-    "title": "2015 F1 Singapore Airlines Singapore Grand Prix",
-    "label": "Marina Bay Street Circuit",
-    "kind": "circuit"
-  },
-  "mercedes:73": {
-    "file": "https://live.staticflickr.com/6157/6195480176_c0f9a14603_b.jpg",
-    "src": "https://live.staticflickr.com/6157/6195480176_c0f9a14603_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/36021014@N06/6195480176",
-    "title": "Jarno Trulli",
     "label": "Marina Bay Street Circuit",
     "kind": "circuit"
   },
@@ -1958,30 +1557,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Yas Marina Circuit",
     "kind": "circuit"
   },
-  "red-bull:64": {
-    "file": "https://live.staticflickr.com/4127/5178359184_1cc442204d_b.jpg",
-    "src": "https://live.staticflickr.com/4127/5178359184_1cc442204d_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/28112399@N04/5178359184",
-    "title": "RedBull Racing - Mark Webber",
-    "label": "Yas Marina Circuit",
-    "kind": "circuit"
-  },
-  "mercedes:102": {
-    "file": "https://live.staticflickr.com/3796/10708179716_40ede3e58c_b.jpg",
-    "src": "https://live.staticflickr.com/3796/10708179716_40ede3e58c_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/11540081@N05/10708179716",
-    "title": "Think Before You Drive",
-    "label": "Yas Marina Circuit",
-    "kind": "circuit"
-  },
-  "mercedes:87": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/3/30/2020_17_ABU_Race.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/3/30/2020_17_ABU_Race.png",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=97526318",
-    "title": "2020 17 ABU Race",
-    "label": "Yas Marina Circuit",
-    "kind": "circuit"
-  },
   "mercedes:76": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/5/51/2015_Abu_Dhabi_Grand_Prix_-_Race_start_%2822882439484%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/5/51/2015_Abu_Dhabi_Grand_Prix_-_Race_start_%2822882439484%29.jpg",
@@ -2026,14 +1601,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "file": "https://live.staticflickr.com/8348/8191514202_38f750b69d_b.jpg",
     "src": "https://live.staticflickr.com/8348/8191514202_38f750b69d_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/40683329@N00/8191514202",
-    "title": "Formula Run",
-    "label": "Circuit of the Americas",
-    "kind": "circuit"
-  },
-  "mercedes:75": {
-    "file": "https://live.staticflickr.com/8344/8190430151_f340f8d34d_b.jpg",
-    "src": "https://live.staticflickr.com/8344/8190430151_f340f8d34d_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/40683329@N00/8190430151",
     "title": "Formula Run",
     "label": "Circuit of the Americas",
     "kind": "circuit"
@@ -2094,14 +1661,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Circuit Paul Ricard",
     "kind": "circuit"
   },
-  "mercedes:95": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/91/Circuit_Paul_Ricard%2C_April_22%2C_2018_SkySat.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/91/Circuit_Paul_Ricard%2C_April_22%2C_2018_SkySat.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=76971817",
-    "title": "Circuit Paul Ricard, April 22, 2018 SkySat",
-    "label": "Circuit Paul Ricard",
-    "kind": "circuit"
-  },
   "mercedes:79": {
     "file": "https://live.staticflickr.com/6129/5980558396_2fa80d52f4_b.jpg",
     "src": "https://live.staticflickr.com/6129/5980558396_2fa80d52f4_b.jpg",
@@ -2122,14 +1681,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "file": "https://live.staticflickr.com/1699/23649077974_2212bee568_b.jpg",
     "src": "https://live.staticflickr.com/1699/23649077974_2212bee568_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/41280730@N04/23649077974",
-    "title": "2011 Formula 1 Turkish Grand Prix",
-    "label": "Istanbul Park",
-    "kind": "circuit"
-  },
-  "mercedes:114": {
-    "file": "https://live.staticflickr.com/1493/23981694400_895c26ec6c_b.jpg",
-    "src": "https://live.staticflickr.com/1493/23981694400_895c26ec6c_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/41280730@N04/23981694400",
     "title": "2011 Formula 1 Turkish Grand Prix",
     "label": "Istanbul Park",
     "kind": "circuit"
@@ -2166,14 +1717,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Autódromo Internacional do Algarve",
     "kind": "circuit"
   },
-  "mercedes:112": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Algarve_Race_Resort_-_Aut%C3%B3dromo_Internacional_de_Portim%C3%A3o_-_Portugal_%F0%9F%87%B5%F0%9F%87%B9_%2853713130066%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Algarve_Race_Resort_-_Aut%C3%B3dromo_Internacional_de_Portim%C3%A3o_-_Portugal_%F0%9F%87%B5%F0%9F%87%B9_%2853713130066%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=148463367",
-    "title": "Algarve Race Resort - Autódromo Internacional de Portimão - Portugal 🇵🇹 (53713130066)",
-    "label": "Autódromo Internacional do Algarve",
-    "kind": "circuit"
-  },
   "mercedes:111": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/64/Mondial_de_l%27Automobile_2010%2C_Paris_-_France_%285058160881%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/64/Mondial_de_l%27Automobile_2010%2C_Paris_-_France_%285058160881%29.jpg",
@@ -2187,14 +1730,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/a/af/Porsche_911_GT3_R_Hybrid_997_%285226647073%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=112906227",
     "title": "Porsche 911 GT3 R Hybrid 997 (5226647073)",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "mclaren:172": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/6/62/1954_Maserati_250F_%2846400090765%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/62/1954_Maserati_250F_%2846400090765%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81848701",
-    "title": "1954 Maserati 250F (46400090765)",
     "label": "Nürburgring",
     "kind": "circuit"
   },
@@ -2222,14 +1757,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Nürburgring",
     "kind": "circuit"
   },
-  "mclaren:115": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Jackie_Oliver_1969_kl.JPG",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Jackie_Oliver_1969_kl.JPG",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8160876",
-    "title": "File:Jackie Oliver 1969 kl.JPG",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
   "williams:103": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Edgar_Barth_podium_Nurburgring_1957.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Edgar_Barth_podium_Nurburgring_1957.jpg",
@@ -2243,14 +1770,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/8/89/Er%C3%B6ffnungsrennen_GP-Kurs_N%C3%BCrburgring_1984-05-12.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=9043670",
     "title": "Eröffnungsrennen GP-Kurs Nürburgring 1984-05-12",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "benetton:24": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/2/28/Tony_Rudd_BRM_engineer_1967_N%C3%BCrburgring.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/2/28/Tony_Rudd_BRM_engineer_1967_N%C3%BCrburgring.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8160995",
-    "title": "File:Tony Rudd BRM engineer 1967 Nürburgring.jpg",
     "label": "Nürburgring",
     "kind": "circuit"
   },
@@ -2278,35 +1797,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Nürburgring",
     "kind": "circuit"
   },
-  "brabham:11": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Fangio_pit_stop_Nurburgring_1957.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Fangio_pit_stop_Nurburgring_1957.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=46548639",
-    "title": "Fangio pit stop Nurburgring 1957",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
   "brabham:9": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Peter_Revson_1973_N%C3%BCrburgring_a_%28cropped%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Peter_Revson_1973_N%C3%BCrburgring_a_%28cropped%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=154547249",
     "title": "Peter Revson 1973 Nürburgring a (cropped)",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "brabham:6": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/8/83/2020_11_EIF_Race.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/8/83/2020_11_EIF_Race.png",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95015189",
-    "title": "2020 11 EIF Race",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "lotus:24": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Er%C3%B6ffnungsrennen_GP-Kurs_N%C3%BCrburgring_1984-05-12_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Er%C3%B6ffnungsrennen_GP-Kurs_N%C3%BCrburgring_1984-05-12_%28cropped%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=168046871",
-    "title": "Eröffnungsrennen GP-Kurs Nürburgring 1984-05-12 (cropped)",
     "label": "Nürburgring",
     "kind": "circuit"
   },
@@ -2323,22 +1818,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/2935/14705206455_381c1df4dc_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/63520626@N02/14705206455",
     "title": "Red Bull Racing",
-    "label": "Hockenheimring",
-    "kind": "circuit"
-  },
-  "mercedes:80": {
-    "file": "https://live.staticflickr.com/5553/14701360805_64810bfe5f_b.jpg",
-    "src": "https://live.staticflickr.com/5553/14701360805_64810bfe5f_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/63520626@N02/14701360805",
-    "title": "German Grand Prix",
-    "label": "Hockenheimring",
-    "kind": "circuit"
-  },
-  "mercedes:56": {
-    "file": "https://live.staticflickr.com/2908/14514727218_1407e199af_b.jpg",
-    "src": "https://live.staticflickr.com/2908/14514727218_1407e199af_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/63520626@N02/14514727218",
-    "title": "Turn 1",
     "label": "Hockenheimring",
     "kind": "circuit"
   },
@@ -2374,35 +1853,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Hockenheimring",
     "kind": "circuit"
   },
-  "williams:106": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/b/b9/GC-TGP-2015-Race-lineup.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b9/GC-TGP-2015-Race-lineup.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=44754860",
-    "title": "GC-TGP-2015-Race-lineup",
-    "label": "Hockenheimring",
-    "kind": "circuit"
-  },
   "red-bull:42": {
     "file": "https://live.staticflickr.com/6011/5910821829_b142a7e59c_b.jpg",
     "src": "https://live.staticflickr.com/6011/5910821829_b142a7e59c_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/42438955@N05/5910821829",
     "title": "F1 Grand Prix in Korea (JPNS)",
-    "label": "Korean International Circuit",
-    "kind": "circuit"
-  },
-  "red-bull:33": {
-    "file": "https://live.staticflickr.com/6033/5910822853_c42fd5c283_b.jpg",
-    "src": "https://live.staticflickr.com/6033/5910822853_c42fd5c283_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/42438955@N05/5910822853",
-    "title": "F1 Grand Prix in Korea (ENG)",
-    "label": "Korean International Circuit",
-    "kind": "circuit"
-  },
-  "red-bull:25": {
-    "file": "https://live.staticflickr.com/6004/5910820017_df0ba614cf_b.jpg",
-    "src": "https://live.staticflickr.com/6004/5910820017_df0ba614cf_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/42438955@N05/5910820017",
-    "title": "F1 Grand Prix in Korea (CHNS)",
     "label": "Korean International Circuit",
     "kind": "circuit"
   },
@@ -2422,14 +1877,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Indianapolis Motor Speedway",
     "kind": "circuit"
   },
-  "mclaren:134": {
-    "file": "https://live.staticflickr.com/65535/53757172420_9608888e10.jpg",
-    "src": "https://live.staticflickr.com/65535/53757172420_9608888e10.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/57350999@N08/53757172420",
-    "title": "auto racing museum",
-    "label": "Indianapolis Motor Speedway",
-    "kind": "circuit"
-  },
   "mclaren:107": {
     "file": "https://live.staticflickr.com/7343/16356383009_dff412aeb2_b.jpg",
     "src": "https://live.staticflickr.com/7343/16356383009_dff412aeb2_b.jpg",
@@ -2443,30 +1890,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/8384/8468312848_90fc9d36d4_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/36021014@N06/8468312848",
     "title": "No Competition",
-    "label": "Circuito de Jerez",
-    "kind": "circuit"
-  },
-  "mclaren:80": {
-    "file": "https://live.staticflickr.com/2738/4359622861_984ac76454_b.jpg",
-    "src": "https://live.staticflickr.com/2738/4359622861_984ac76454_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/17884028@N00/4359622861",
-    "title": "Ferrari Felipe Massa Circuito de Jerez",
-    "label": "Circuito de Jerez",
-    "kind": "circuit"
-  },
-  "mclaren:68": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Ferrari_SF15-T_16356383009_a492429c47_o.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Ferrari_SF15-T_16356383009_a492429c47_o.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=38491414",
-    "title": "Ferrari SF15-T 16356383009 a492429c47 o",
-    "label": "Circuito de Jerez",
-    "kind": "circuit"
-  },
-  "williams:39": {
-    "file": "https://live.staticflickr.com/2771/4360365934_7fcb44f7a1_b.jpg",
-    "src": "https://live.staticflickr.com/2771/4360365934_7fcb44f7a1_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/17884028@N00/4360365934",
-    "title": "Ferrari Felipe Massa Circuito de Jerez",
     "label": "Circuito de Jerez",
     "kind": "circuit"
   },
@@ -2534,22 +1957,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Kyalami",
     "kind": "circuit"
   },
-  "brabham:32": {
-    "file": "https://live.staticflickr.com/65535/52859003784_97956bf1b3_b.jpg",
-    "src": "https://live.staticflickr.com/65535/52859003784_97956bf1b3_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52859003784",
-    "title": "619",
-    "label": "Kyalami",
-    "kind": "circuit"
-  },
-  "renault:8": {
-    "file": "https://live.staticflickr.com/65535/52859217445_0a6a0d7127_b.jpg",
-    "src": "https://live.staticflickr.com/65535/52859217445_0a6a0d7127_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52859217445",
-    "title": "618",
-    "label": "Kyalami",
-    "kind": "circuit"
-  },
   "renault:3": {
     "file": "https://live.staticflickr.com/65535/52858148397_705c9ddfef_b.jpg",
     "src": "https://live.staticflickr.com/65535/52858148397_705c9ddfef_b.jpg",
@@ -2566,14 +1973,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Kyalami",
     "kind": "circuit"
   },
-  "brabham:14": {
-    "file": "https://live.staticflickr.com/65535/52858902439_3286dd380e_b.jpg",
-    "src": "https://live.staticflickr.com/65535/52858902439_3286dd380e_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52858902439",
-    "title": "611",
-    "label": "Kyalami",
-    "kind": "circuit"
-  },
   "williams:27": {
     "file": "https://live.staticflickr.com/5504/11007401236_c0c28c66cd_b.jpg",
     "src": "https://live.staticflickr.com/5504/11007401236_c0c28c66cd_b.jpg",
@@ -2587,22 +1986,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ronnie_Peterson_March_711_Brands_Hatch_Victory_Race_1971_crop.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=115264320",
     "title": "Ronnie Peterson March 711 Brands Hatch Victory Race 1971 crop",
-    "label": "Brands Hatch",
-    "kind": "circuit"
-  },
-  "brabham:31": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Stefan_Johansson_1985_Brands_Hatch.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Stefan_Johansson_1985_Brands_Hatch.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=75791392",
-    "title": "Stefan Johansson 1985 Brands Hatch",
-    "label": "Brands Hatch",
-    "kind": "circuit"
-  },
-  "williams:9": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Ronnie_Peterson_1975_Race_of_Champions_head_on.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Ronnie_Peterson_1975_Race_of_Champions_head_on.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=66059622",
-    "title": "Ronnie Peterson 1975 Race of Champions head on",
     "label": "Brands Hatch",
     "kind": "circuit"
   },
@@ -2630,22 +2013,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Brands Hatch",
     "kind": "circuit"
   },
-  "brabham:4": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/93/Emerson_Fittipaldi_1975_Race_of_Champions.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/93/Emerson_Fittipaldi_1975_Race_of_Champions.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=66059901",
-    "title": "Emerson Fittipaldi 1975 Race of Champions",
-    "label": "Brands Hatch",
-    "kind": "circuit"
-  },
-  "lotus:18": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/d/da/Icxk%2C_Scheckter_and_Jarier_1975_Race_of_Champions.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/da/Icxk%2C_Scheckter_and_Jarier_1975_Race_of_Champions.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=66060425",
-    "title": "Icxk, Scheckter and Jarier 1975 Race of Champions",
-    "label": "Brands Hatch",
-    "kind": "circuit"
-  },
   "mclaren:34": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/7/78/Delahaye_135_Grand_Prix_-_1936.jpeg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/78/Delahaye_135_Grand_Prix_-_1936.jpeg",
@@ -2670,27 +2037,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Dijon-Prenois",
     "kind": "circuit"
   },
-  "renault:1": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Aston_Martin_Speed_2_litres_1937.jpeg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Aston_Martin_Speed_2_litres_1937.jpeg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=5575715",
-    "title": "File:Aston Martin Speed 2 litres 1937.jpeg",
-    "label": "Dijon-Prenois",
-    "kind": "circuit"
-  },
   "lotus:62": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/9/92/MG_C-Type.jpeg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/92/MG_C-Type.jpeg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=5337073",
     "title": "MG C-Type",
-    "label": "Dijon-Prenois",
-    "kind": "circuit"
-  },
-  "lotus:56": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Lister_Jaguar_Knobbly_-_Ecurie_Ecosse_-_GPAO_2011.jpeg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Lister_Jaguar_Knobbly_-_Ecurie_Ecosse_-_GPAO_2011.jpeg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=15676638",
-    "title": "File:Lister Jaguar Knobbly - Ecurie Ecosse - GPAO 2011.jpeg",
     "label": "Dijon-Prenois",
     "kind": "circuit"
   },
@@ -2700,14 +2051,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://www.flickr.com/photos/89093669@N00/2157252430",
     "title": "1984 United States Grand Prix, Fair Park, Dallas, Texas",
     "label": "Fair Park",
-    "kind": "circuit"
-  },
-  "mclaren:30": {
-    "file": "https://live.staticflickr.com/8519/8676282649_bc08d09717_b.jpg",
-    "src": "https://live.staticflickr.com/8519/8676282649_bc08d09717_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/63080087@N06/8676282649",
-    "title": "130421-Z-UF872-011",
-    "label": "Long Beach",
     "kind": "circuit"
   },
   "mclaren:26": {
@@ -2726,44 +2069,12 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Long Beach",
     "kind": "circuit"
   },
-  "brabham:21": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/6/69/Bobby_Rahal_%282021%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/69/Bobby_Rahal_%282021%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=110567963",
-    "title": "Bobby Rahal (2021)",
-    "label": "Long Beach",
-    "kind": "circuit"
-  },
-  "lotus:59": {
-    "file": "https://live.staticflickr.com/8406/8676310047_39e880ca66_b.jpg",
-    "src": "https://live.staticflickr.com/8406/8676310047_39e880ca66_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/63080087@N06/8676310047",
-    "title": "130421-Z-UF872-054",
-    "label": "Long Beach",
-    "kind": "circuit"
-  },
-  "mclaren:27": {
-    "file": "https://live.staticflickr.com/8628/16255370427_d54fbfa441_b.jpg",
-    "src": "https://live.staticflickr.com/8628/16255370427_d54fbfa441_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/9998127@N06/16255370427",
-    "title": "1/43 Ferrari 126C #28 Dieter Peroni 1.5l turbo V6 DSC_0884",
-    "label": "Zolder",
-    "kind": "circuit"
-  },
   "williams:14": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/3/31/1_43_Ferrari_126C_-28_Dieter_Peroni_1.5l_turbo_V6_DSC_0884_%2816255370427%29.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/3/31/1_43_Ferrari_126C_-28_Dieter_Peroni_1.5l_turbo_V6_DSC_0884_%2816255370427%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=70097213",
     "title": "1 43 Ferrari 126C -28 Dieter Peroni 1.5l turbo V6 DSC 0884 (16255370427)",
     "label": "Zolder",
-    "kind": "circuit"
-  },
-  "williams:11": {
-    "file": "https://live.staticflickr.com/662/31696478304_b7bd114951_b.jpg",
-    "src": "https://live.staticflickr.com/662/31696478304_b7bd114951_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/14265068@N00/31696478304",
-    "title": "1968 Lotus Ford R6",
-    "label": "Watkins Glen",
     "kind": "circuit"
   },
   "mclaren:23": {
@@ -2798,14 +2109,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Watkins Glen",
     "kind": "circuit"
   },
-  "lotus:42": {
-    "file": "https://live.staticflickr.com/25/42556998_a863c5362b.jpg",
-    "src": "https://live.staticflickr.com/25/42556998_a863c5362b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556998",
-    "title": "pic14",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
   "lotus:36": {
     "file": "https://live.staticflickr.com/30/42556988_c2d5dac1ba.jpg",
     "src": "https://live.staticflickr.com/30/42556988_c2d5dac1ba.jpg",
@@ -2830,14 +2133,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Watkins Glen",
     "kind": "circuit"
   },
-  "lotus:8": {
-    "file": "https://live.staticflickr.com/32/42556909_fdbbcc1453.jpg",
-    "src": "https://live.staticflickr.com/32/42556909_fdbbcc1453.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556909",
-    "title": "pic19",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
   "lotus:5": {
     "file": "https://live.staticflickr.com/28/42557044_c396bd927d.jpg",
     "src": "https://live.staticflickr.com/28/42557044_c396bd927d.jpg",
@@ -2851,14 +2146,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/7/75/Camion_Man_Antonio_Albacete2.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2873849",
     "title": "Camion Man Antonio Albacete2",
-    "label": "Jarama",
-    "kind": "circuit"
-  },
-  "lotus:60": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Motorhome_Antonio_Albacete.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Motorhome_Antonio_Albacete.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2873860",
-    "title": "Motorhome Antonio Albacete",
     "label": "Jarama",
     "kind": "circuit"
   },

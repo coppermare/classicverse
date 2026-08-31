@@ -6,6 +6,7 @@ import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
+import { F1_REJECTED_WIN_IMAGE_KEYS } from '../src/data/f1RejectedWinImageKeys';
 import { isF1CarImage } from '../src/data/f1WinImagePolicy';
 import type { F1WinImage, F1WinRecord } from '../src/types/f1';
 
@@ -36,6 +37,129 @@ const userAgent = 'ClassicverseF1Archive/1.0 (local archival tooling)';
 const preferredFiles: Record<string, string> = {
   'mclaren:55': 'File:McLaren MP4-3.jpg',
   'mclaren:147': "File:Montoya and Raikkonen in USGP Drivers' Parade.jpg",
+};
+
+const replacementPhotos: Record<string, F1WinImage> = {
+  'mclaren:20': {
+    file: 'File:James Hunt - McLaren M23 - 1976 Race of Champions, Brands Hatch.jpg',
+    src: '/f1-wins/context/mclaren-20.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:James_Hunt_-_McLaren_M23_-_1976_Race_of_Champions,_Brands_Hatch.jpg',
+    title: 'James Hunt - McLaren M23 - 1976 Race of Champions, Brands Hatch.jpg',
+    label: 'James Hunt driving the 1976 McLaren M23 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'mclaren:31': {
+    file: 'File:McLaren MP4-2.jpg',
+    src: '/f1-wins/context/mclaren-31.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:McLaren_MP4-2.jpg',
+    title: 'McLaren MP4-2.jpg',
+    label: "Alain Prost's 1984 McLaren MP4/2 Formula One car",
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'mclaren:43': {
+    file: 'File:ProstAlain McLarenMP4-2B 1985.jpg',
+    src: '/f1-wins/context/mclaren-43.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:ProstAlain_McLarenMP4-2B_1985.jpg',
+    title: 'ProstAlain McLarenMP4-2B 1985.jpg',
+    label: 'Alain Prost driving the 1985 McLaren MP4/2B Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'mclaren:56': {
+    file: 'File:Alain Prost (McLaren Honda), 1988.jpg',
+    src: '/f1-wins/context/mclaren-56.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Alain_Prost_(McLaren_Honda),_1988.jpg',
+    title: 'Alain Prost (McLaren Honda), 1988.jpg',
+    label: 'Alain Prost driving the 1988 McLaren MP4/4 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'mclaren:74': {
+    file: 'File:Alain Prost 1989 Belgian GP.jpg',
+    src: '/f1-wins/context/mclaren-74.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Alain_Prost_1989_Belgian_GP.jpg',
+    title: 'Alain Prost 1989 Belgian GP.jpg',
+    label: 'Alain Prost driving the 1989 McLaren MP4/5 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'mclaren:81': {
+    file: 'File:McLaren MP4-5B front-left1 Honda Collection Hall.jpg',
+    src: '/f1-wins/context/mclaren-81.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:McLaren_MP4-5B_front-left1_Honda_Collection_Hall.jpg',
+    title: 'McLaren MP4-5B front-left1 Honda Collection Hall.jpg',
+    label: 'Ayrton Senna\'s 1990 McLaren MP4/5B Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'williams:15': {
+    file: 'File:Williams FW07-C at Formula 1 Exhibition, London 01.jpg',
+    src: '/f1-wins/context/williams-15.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Williams_FW07-C_at_Formula_1_Exhibition,_London_01.jpg',
+    title: 'Williams FW07-C at Formula 1 Exhibition, London 01.jpg',
+    label: "Alan Jones' 1981 Williams FW07C that won the Las Vegas Grand Prix",
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'williams:23': {
+    file: 'File:Williams F1 FW11.jpg',
+    src: '/f1-wins/context/williams-23.webp',
+    sourceUrl: 'https://commons.wikimedia.org/w/index.php?curid=1704539',
+    title: 'Williams F1 FW11.jpg',
+    label: 'Nelson Piquet 1986 Williams FW11 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'williams:13': {
+    file: 'File:Williams FW07-C at Formula 1 Exhibition, London 01.jpg',
+    src: '/f1-wins/context/williams-13.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Williams_FW07-C_at_Formula_1_Exhibition,_London_01.jpg',
+    title: 'Williams FW07-C at Formula 1 Exhibition, London 01.jpg',
+    label: '1981 Williams FW07C Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'lotus:2': {
+    file: 'File:Lotus 18 at the Musée National de lAutomobile.jpg',
+    src: '/f1-wins/context/lotus-2.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Lotus_18_at_the_Mus%C3%A9e_National_de_lAutomobile.jpg',
+    title: 'Lotus 18 at the Musée National de lAutomobile.jpg',
+    label: 'Lotus 18 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'renault:9': {
+    file: 'File:1982 Renault RE30 formula 1.jpg',
+    src: '/f1-wins/context/renault-9.webp',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:1982_Renault_RE30_formula_1.jpg',
+    title: '1982 Renault RE30 formula 1.jpg',
+    label: "Alain Prost's 1982 Renault RE30B Formula One car",
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
+  'brabham:29': {
+    file: 'File:Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg',
+    src: '/f1-wins/context/brabham-29.webp',
+    sourceUrl: 'https://commons.wikimedia.org/w/index.php?curid=121028440',
+    title: 'Historic F1-Cars Spielberg 2022 Brabham BT52 (1).jpg',
+    label: '1983 Brabham BT52 Formula One car',
+    kind: 'race',
+    reuseBasis: 'Wikimedia Commons photograph; locally optimized WebP derivative',
+    verificationStatus: 'verified',
+  },
 };
 
 function cleanMetadata(value: string | undefined): string {
@@ -202,11 +326,18 @@ function loadExisting(): PhotoRecord[] {
     const parsed = Function(`return ${match[1]}`)() as Record<string, F1WinImage>;
     records = Object.entries(parsed).map(([key, image]) => ({ key, ...image }));
   }
+  const replacements = new Map(Object.entries(replacementPhotos));
+  records = records
+    .filter((record) => !F1_REJECTED_WIN_IMAGE_KEYS.has(record.key))
+    .map((record) => ({ key: record.key, ...(replacements.get(record.key) ?? record) }));
+  for (const [key, image] of replacements) {
+    if (!records.some((record) => record.key === key)) records.push({ key, ...image });
+  }
+
   const seen = new Set<string>();
   return records.filter((record) => {
-    const title = record.title || record.file;
-    if (seen.has(title)) return false;
-    seen.add(title);
+    if (seen.has(record.key)) return false;
+    seen.add(record.key);
     return true;
   });
 }
@@ -282,6 +413,7 @@ async function main(): Promise<void> {
   for (const team of F1_TEAMS.filter((candidate) => candidate.id !== 'ferrari')) {
     for (const win of F1_WINS_BY_TEAM[team.id] ?? []) {
       const key = `${team.id}:${win.number}`;
+      if (F1_REJECTED_WIN_IMAGE_KEYS.has(key)) continue;
       if (!existingKeys.has(key) && !failedKeys.has(key)) missing.push({ teamName: team.name, key, win });
     }
   }
