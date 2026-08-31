@@ -4,8 +4,8 @@
   { "id": "mercedes", "name": "Mercedes", "mark": "MER", "accent": "#00A19B", "logo": "/f1-logos/mercedes.svg", "constructorIds": ["mercedes"] },
   { "id": "red-bull", "name": "Red Bull", "mark": "RBR", "accent": "#223971", "logo": "/f1-logos/red-bull.svg", "constructorIds": ["red_bull"] },
   { "id": "williams", "name": "Williams", "mark": "WIL", "accent": "#00A3E0", "logo": "/f1-logos/williams.svg", "constructorIds": ["williams"] },
-  { "id": "lotus", "name": "Team Lotus", "mark": "LOT", "accent": "#244B27", "constructorIds": ["team_lotus", "lotus-climax", "lotus-ford", "lotus-brm"] },
-  { "id": "renault", "name": "Renault", "mark": "REN", "accent": "#F7D117", "constructorIds": ["renault"] },
-  { "id": "brabham", "name": "Brabham", "mark": "BRA", "accent": "#1D4F91", "constructorIds": ["brabham", "brabham-repco", "brabham-climax", "brabham-ford"] },
-  { "id": "benetton", "name": "Benetton", "mark": "BEN", "accent": "#2B7D43", "constructorIds": ["benetton"] }
+  { "id": "lotus", "name": "Team Lotus", "mark": "LOT", "accent": "#244B27", "logo": "/f1-logos/team-lotus.svg", "constructorIds": ["team_lotus", "lotus-climax", "lotus-ford", "lotus-brm"] },
+  { "id": "renault", "name": "Renault", "mark": "REN", "accent": "#F7D117", "logo": "/f1-logos/renault.svg", "constructorIds": ["renault"] },
+  { "id": "brabham", "name": "Brabham", "mark": "BRA", "accent": "#1D4F91", "logo": "/f1-logos/brabham.svg", "constructorIds": ["brabham", "brabham-repco", "brabham-climax", "brabham-ford"] },
+  { "id": "benetton", "name": "Benetton", "mark": "BEN", "accent": "#2B7D43", "logo": "/f1-logos/benetton.svg", "constructorIds": ["benetton"] }
 ]

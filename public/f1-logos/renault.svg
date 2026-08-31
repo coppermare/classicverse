@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">Renault Formula One</title>
+  <rect x="8" y="8" width="104" height="104" rx="9" fill="#f7d117"/>
+  <path d="M60 20 88 60 60 100 32 60Z M60 38 47 60l13 22 13-22Z" fill="#171717" fill-rule="evenodd"/>
+  <text x="60" y="109" text-anchor="middle" fill="#171717" font-family="Arial Black, Arial, sans-serif" font-size="11" letter-spacing="1">RENAULT</text>
+</svg>

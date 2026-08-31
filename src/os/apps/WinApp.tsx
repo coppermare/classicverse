@@ -21,17 +21,32 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
   }
 }
 
+function directFallbackSource(source: string): string {
+  const url = new URL(source);
+  if (url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/')) {
+    // Wikimedia creates an efficiently sized raster when width is specified.
+    // Use it only after Next's server-side optimizer has been throttled.
+    url.searchParams.set('width', '1280');
+  }
+  return url.toString();
+}
+
 /** One Grand Prix victory: the car that scored it, and the record behind it. */
 export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
   const [failedImage, setFailedImage] = useState<string>();
   const [loadedImage, setLoadedImage] = useState<string>();
+  const [imageAttempt, setImageAttempt] = useState<{ src: string; count: number }>({ src: '', count: 0 });
+  const [bypassedOptimizer, setBypassedOptimizer] = useState<string>();
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
   const primaryImage = img?.src ?? (win.teamImageVerificationStatus === 'verified' ? win.teamImage : undefined);
   const photoFailed = failedImage === primaryImage;
   const imageFailed = !primaryImage || photoFailed;
   const photoLoaded = loadedImage === primaryImage;
+  const retryCount = imageAttempt.src === primaryImage ? imageAttempt.count : 0;
+  const useDirectFallback = bypassedOptimizer === primaryImage;
+  const deliveredImage = primaryImage && useDirectFallback ? directFallbackSource(primaryImage) : primaryImage;
   const preserveWholeCar = primaryImage === '/f1-wins/context/renault-9.webp';
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
@@ -57,16 +72,35 @@ export default function WinApp({ node, os }: AppProps) {
           {/* Local F1 cars are 1280px WebP; remote circuit/first-party images
               are resized and cached by Next before delivery to this screen. */}
           <Image
-            key={primaryImage}
-            src={primaryImage}
+            key={`${deliveredImage}-${retryCount}`}
+            src={deliveredImage!}
             alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
             fill
             sizes="(max-width: 800px) 100vw, 800px"
             loading="eager"
             decoding="async"
             fetchPriority="high"
+            unoptimized={useDirectFallback}
             onLoad={() => setLoadedImage(primaryImage)}
-            onError={() => setFailedImage(primaryImage)}
+            onError={() => {
+              // Some archival hosts throttle Next's server-side image fetches
+              // while permitting a browser request. Preserve the correct,
+              // pre-sized source and bypass the proxy before retrying.
+              if (!useDirectFallback) {
+                setBypassedOptimizer(primaryImage);
+                return;
+              }
+              // A remote source can still have a short transient outage. Retry
+              // twice before showing the honest unavailable state.
+              if (retryCount < 2) {
+                window.setTimeout(
+                  () => setImageAttempt({ src: primaryImage, count: retryCount + 1 }),
+                  900 * (retryCount + 1),
+                );
+                return;
+              }
+              setFailedImage(primaryImage);
+            }}
             style={{
               objectFit: preserveWholeCar ? 'contain' : 'cover',
               background: preserveWholeCar ? '#fff' : undefined,

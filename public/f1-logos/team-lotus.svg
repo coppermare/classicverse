@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">Team Lotus</title>
+  <circle cx="60" cy="60" r="56" fill="#195331" stroke="#f6d943" stroke-width="7"/>
+  <path d="M23 49h74l-6 28H29z" fill="#f6d943"/>
+  <text x="60" y="45" text-anchor="middle" fill="#f6d943" font-family="Arial Black, Arial, sans-serif" font-size="15">ACBC</text>
+  <text x="60" y="69" text-anchor="middle" fill="#195331" font-family="Arial Black, Arial, sans-serif" font-size="19">LOTUS</text>
+  <text x="60" y="92" text-anchor="middle" fill="#f6d943" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2">TEAM</text>
+</svg>

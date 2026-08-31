@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 100" role="img" aria-labelledby="title">
+  <title id="title">Brabham</title>
+  <path d="M12 16h128l-18 31H30z" fill="#174c91"/>
+  <path d="M35 47h87l-16 19H19z" fill="#6aa7dc"/>
+  <text x="80" y="88" text-anchor="middle" fill="#174c91" font-family="Arial Black, Arial, sans-serif" font-size="28" font-style="italic" letter-spacing="-1">BRABHAM</text>
+</svg>

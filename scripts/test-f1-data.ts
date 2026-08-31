@@ -28,6 +28,8 @@ assert.deepEqual(Object.keys(F1_WINS_BY_TEAM), retainedTeamIds.slice(1), 'genera
 for (const team of F1_TEAMS) {
   const wins = winsFor(team.id);
   assert.equal(team.enabled, wins.length > 0, `${team.name}: enabled state must match its records`);
+  assert.ok(team.logo?.startsWith('/f1-logos/'), `${team.name}: retained constructor must have a local F1 logo`);
+  assert.ok(existsSync(`public${team.logo}`), `${team.name}: local F1 logo asset must exist`);
   assert.equal(
     team.tagline,
     wins.length === 1 ? '1 Grand Prix win' : `${wins.length} Grand Prix wins`,
