@@ -1,5 +1,6 @@
-// Source-linked, openly licensed web photographs for the F1 archive.
-// Exact-race photographs are preferred; distinct circuit-racing photographs are the fallback.
+// Source-linked web photographs researched for the F1 archive.
+// Only verified race-specific images are displayed. Circuit candidates remain
+// here for traceability but are quarantined by f1WinImagePolicy.ts.
 
 import type { F1WinImage } from '@/types/f1';
 

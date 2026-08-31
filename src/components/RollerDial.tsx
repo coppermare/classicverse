@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
+/** Drag distance for one detent at the wheel's finest pace. */
 const SLOT_WIDTH = 34;
+/** The fastest the wheel is ever geared. Below this a sweep is uncontrollable. */
+const MIN_SLOT_WIDTH = 6;
+/**
+ * How much of the list one full sweep of the wheel should cover, as a divisor —
+ * 8 means a sweep moves an eighth of the way through, so any list is about eight
+ * sweeps end to end however long it is.
+ */
+const SWEEPS_END_TO_END = 8;
 const RIDGES_PER_STEP = 0.54;
 
 function clamp(v: number, lo: number, hi: number) {
@@ -174,6 +183,17 @@ interface RollerDialProps {
   /** Prepend an "ALL" cell. Off for plain rollers e.g. channels, years. */
   showAll?: boolean;
   ariaLabel?: string;
+  /**
+   * How the wheel is geared.
+   *
+   * `fine` is one detent per 34px of drag, which is the right pace for a short
+   * list and for anything you tune rather than travel — the Radio wants to
+   * crawl the band a tenth of a MHz at a time.
+   *
+   * `list` gears the wheel to how much there is to get through, so a long
+   * gallery doesn't take dozens of sweeps to cross.
+   */
+  pace?: 'fine' | 'list';
 }
 
 /**
@@ -186,7 +206,7 @@ interface RollerDialProps {
  * still tracked logically, so grabbing the wheel always resumes from whatever
  * is currently selected rather than from a stale position.
  */
-export default function RollerDial({ options: rawOptions, selectedId, onSelect, embedded, showAll = true, ariaLabel = 'Selector' }: RollerDialProps) {
+export default function RollerDial({ options: rawOptions, selectedId, onSelect, embedded, showAll = true, ariaLabel = 'Selector', pace = 'fine' }: RollerDialProps) {
   const options = useMemo<RollerDialOption[]>(() => (
     showAll
       ? [{ id: null, mark: 'ALL', count: rawOptions.reduce((sum, opt) => sum + opt.count, 0) }, ...rawOptions]
@@ -243,6 +263,36 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
     return () => ro.disconnect();
   }, []);
 
+  /**
+   * Drag distance per detent.
+   *
+   * At the fixed 34px the wheel was geared for a handful of channels, and a
+   * gallery of 250 inherited it: a sweep of the whole drum moved six images, so
+   * crossing Ferrari meant about forty sweeps. The wheel kept up with the hand
+   * perfectly — it was just geared far too low for what it was driving.
+   *
+   * Measuring against the wheel's own width means the pace follows the list
+   * rather than a constant: eight sweeps end to end whether that list is a
+   * hundred cars or two hundred and fifty wins. Short lists never get faster
+   * than the fine pace, and nothing ever gets twitchier than MIN_SLOT_WIDTH.
+   */
+  const slotWidth = useMemo(() => {
+    if (pace !== 'list') return SLOT_WIDTH;
+    const width = pillSize.width || 200;
+    const perSweep = Math.max(1, options.length / SWEEPS_END_TO_END);
+    return clamp(width / perSweep, MIN_SLOT_WIDTH, SLOT_WIDTH);
+  }, [pace, pillSize.width, options.length]);
+
+  /**
+   * The drum turns with the hand, not with the selection.
+   *
+   * Scaling by the same factor keeps the ridges moving at a constant rate per
+   * pixel dragged, so gearing the wheel up makes the images fly without the
+   * drum itself spinning into a blur. It still stops at either end of the list,
+   * because it is driven by the clamped index.
+   */
+  const ridgesPerStep = RIDGES_PER_STEP * (slotWidth / SLOT_WIDTH);
+
   const selectIndex = useCallback((index: number) => {
     const option = options[clamp(index, 0, options.length - 1)];
     if (!option) return;
@@ -269,12 +319,12 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
     const d = dragRef.current;
     if (!d) return null;
     const dx = clientX - d.startX;
-    const rawIndex = clamp(d.startIndex - dx / SLOT_WIDTH, 0, options.length - 1);
-    const next = d.startRotation + (rawIndex - d.startIndex) * RIDGES_PER_STEP;
+    const rawIndex = clamp(d.startIndex - dx / slotWidth, 0, options.length - 1);
+    const next = d.startRotation + (rawIndex - d.startIndex) * ridgesPerStep;
     rotationRef.current = next;
     setRotation(next);
     return rawIndex;
-  }, [options.length]);
+  }, [options.length, slotWidth, ridgesPerStep]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     // A drag needs a button held. If a pointerup went missing — released
@@ -296,6 +346,51 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
       selectIndex(newIndex);
     }
   }, [applyDrag, selectIndex]);
+
+  /**
+   * Spin the drum with the scroll wheel as well as by dragging it.
+   *
+   * A drag can only ever be as long as the screen is wide. Once the pointer
+   * reaches the edge of the window `clientX - startX` stops growing, so the
+   * drum dead-stops part-way through and the only way on is to let go and grab
+   * it again — which in a long gallery happens well before the end of the list.
+   * Scrolling has no such ceiling, so the wheel can be spun as far as you like
+   * in one gesture.
+   *
+   * The scroll is measured in the same units as a drag, so one gesture covers
+   * the same ground whichever way the drum is driven.
+   *
+   * Bound natively rather than through React's `onWheel`: React listens for
+   * wheel events passively at the root, and a passive listener cannot stop the
+   * page scrolling underneath the knob.
+   */
+  useEffect(() => {
+    const el = pillRef.current;
+    if (!el) return;
+    let carry = 0;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      carry += delta;
+      const steps = Math.trunc(carry / slotWidth);
+      if (!steps) return;
+      carry -= steps * slotWidth;
+      const from = selectedIndexRef.current;
+      const next = clamp(from + steps, 0, options.length - 1);
+      if (next === from) return;
+      // Written straight away rather than waiting for the selection to come
+      // back down as a prop: wheel events arrive far faster than React
+      // re-renders, and reading a stale index would make every event after the
+      // first in a frame step from the same place.
+      selectedIndexRef.current = next;
+      rotationRef.current += (next - from) * ridgesPerStep;
+      setRotation(rotationRef.current);
+      playTick();
+      selectIndex(next);
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [slotWidth, ridgesPerStep, options.length, selectIndex]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     const rawIndex = applyDrag(e.clientX);

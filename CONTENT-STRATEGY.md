@@ -133,5 +133,5 @@ Before publishing or regenerating an archive:
 3. Sources and cutoff dates are recorded.
 4. Images have reachable attribution and licence data.
 5. Original prose has been checked against its sources.
-6. Generated F1 records use a unique editorial card until a source-linked win-image index has been curated. When photography is available, it must be tied to the winning race; a circuit photograph is the truthful fallback.
+6. Generated F1 records use a unique editorial card until a source-linked image of that exact win and winning team has been verified. Circuit-only photography and images showing another constructor remain research candidates, never display fallbacks.
 7. No placeholder is presented as a completed archive.

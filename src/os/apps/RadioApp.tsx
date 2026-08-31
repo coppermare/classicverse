@@ -269,15 +269,30 @@ export default function RadioApp({ os }: AppProps) {
     if (audioRef.current) audioRef.current.volume = g ? 1 : v;
   }, [os.volume, os.muted]);
 
-  // Hiss between stations: on when the set is powered and the needle is off any
-  // station, off the moment it locks.
+  /**
+   * Hiss whenever the set is on and nothing is actually coming out of it.
+   *
+   * The test used to be `!station`, but `station` only says the directory lists
+   * a broadcaster on this frequency — not that any audio is arriving. A quarter
+   * of the streams in the snapshot are off the air, so the commonest no-signal
+   * case of all was a station the set had locked onto that plays nothing: the
+   * dial read "No signal" in dead silence, which is the one thing a radio never
+   * does. A carrier that fails to resolve into sound leaves you with the noise
+   * floor, exactly as an empty frequency does.
+   *
+   * `buffering` counts for the same reason: until the stream resolves there is
+   * no signal yet, so it hisses and then breaks into the station the moment it
+   * locks. That also covers a mid-stream dropout, which is a real receiver
+   * losing the carrier for a moment and sounds like one.
+   */
   useEffect(() => {
     const g = graphRef.current;
     const sg = staticRef.current;
     if (!g || !sg) return;
-    const want = powered && !station ? 0.09 : 0;
+    const silent = !station || failed || buffering;
+    const want = powered && silent ? 0.09 : 0;
     sg.gain.setTargetAtTime(want, g.ctx.currentTime, 0.05);
-  }, [powered, station]);
+  }, [powered, station, failed, buffering]);
 
   // Magic eye, from the real signal — shut when there's no station to read.
   useEffect(() => {

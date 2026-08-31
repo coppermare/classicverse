@@ -17,6 +17,7 @@ The current channels are:
 3. Live internet radio.
 4. Live weather.
 5. Snake.
+6. A visitor-facing changelog of meaningful product milestones.
 
 The project remains a portfolio and editorial product. Commerce, accounts, valuations, inventory and community features remain out of scope.
 
@@ -67,7 +68,7 @@ Maintenance rules:
 1. Preserve chronological ordering and a stable per-team win number.
 2. Validate team counts against the source snapshot.
 3. Keep Ferrari's chassis-image attribution separate from results data.
-4. Curate a distinct, source-linked photograph tied to each winning race. When that is unavailable, use an unused circuit photograph; until that image index exists, use a labelled editorial card.
+4. Curate a distinct, source-linked photograph tied to each winning race and winning team. Circuit-only or cross-team imagery must stay quarantined; until an exact image is verified, use the labelled editorial card.
 5. Re-run the generator deliberately; never silently fetch changing results during a production page request.
 
 ### Radio

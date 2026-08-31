@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
+import { F1_CROSS_TEAM_IMAGE_KEYS, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
 import { MCLAREN_RECENT_WIN_IMAGES } from '../src/data/mclarenRecentWinImages';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '../src/data/mclarenHistoricWinImages';
 import { F1_DATA_CUTOFF, F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
@@ -88,4 +89,40 @@ for (const win of F1_WINS_BY_TEAM.mclaren) {
   );
 }
 
-console.log(`F1 archive validated: ${F1_TEAMS.length - 1} winning teams and ${imageSources.length} distinct sourced photos through ${F1_DATA_CUTOFF}.`);
+const displayedWinImages = F1_TEAMS.flatMap((team) => {
+  if (team.id === 'ferrari') return [];
+  const wins = winsFor(team.id);
+  return wins.flatMap((win) => {
+    const candidate = team.id === 'mclaren'
+      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
+    const verified = verifiedF1WinImage(team, win, candidate);
+    if (!verified) return [];
+    assert.equal(verified.kind, 'race', `${team.name} win ${win.number}: displayed image must be tied to the race`);
+    assert.ok(!F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`), `${team.name} win ${win.number}: cross-team image escaped quarantine`);
+    return [verified];
+  });
+});
+
+assert.equal(
+  new Set(displayedWinImages.map((image) => image.src)).size,
+  displayedWinImages.length,
+  'displayed win photographs must be unique',
+);
+for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
+  const [teamId, number] = key.split(':');
+  const team = F1_TEAMS.find((candidate) => candidate.id === teamId);
+  const win = winsFor(teamId).find((candidate) => candidate.number === Number(number));
+  const image = teamId === 'mclaren'
+    ? (MCLAREN_RECENT_WIN_IMAGES[Number(number)] ?? MCLAREN_HISTORIC_WIN_IMAGES[Number(number)])
+    : F1_WIN_IMAGES[key];
+  assert.ok(team && win && image, `quarantined image must still have a traceable source record: ${key}`);
+  assert.equal(verifiedF1WinImage(team, win, image), undefined, `cross-team image must remain quarantined: ${key}`);
+}
+
+const circuitCandidates = Object.values(F1_WIN_IMAGES).filter((image) => image.kind === 'circuit').length;
+
+console.log(
+  `F1 archive validated: ${F1_TEAMS.length - 1} winning teams, ${displayedWinImages.length} unique win-specific photos displayed, `
+  + `${circuitCandidates} circuit candidates and ${F1_CROSS_TEAM_IMAGE_KEYS.size} cross-team photos quarantined through ${F1_DATA_CUTOFF}.`,
+);

@@ -17,6 +17,7 @@ It currently combines:
 3. Live internet radio.
 4. Live weather.
 5. A complete Snake game.
+6. A visitor-facing changelog distilled from the project history.
 
 ## What Changed From The Original Plan
 
@@ -62,7 +63,7 @@ The old 116-year promise, "do not build" status and pre-implementation gates are
 
 ## Immediate Priorities
 
-1. Maintain the iconic F1 constructor snapshot and its documented source/2026-07-26 cutoff.
+1. Maintain the iconic F1 constructor snapshot and its documented source/2026-07-26 cutoff, while replacing quarantined circuit-only and cross-team image candidates with exact-win photography.
 2. Verify edge-to-edge fill-view behavior across desktop and narrow layouts.
 3. Stabilize Snake across resize, focus, timing and persistence edge cases.
 4. Add archive-data validation and browser smoke coverage.

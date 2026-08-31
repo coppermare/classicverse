@@ -889,9 +889,21 @@ body {
 .cv-tv-stage {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 32px 16px 64px;
-  min-height: calc(100vh - 52px); /* fill viewport below nav */
+  /* Centred, but `safe` so it degrades to top-aligned rather than centring an
+     item taller than the stage — which on a phone, where the set stacks and
+     runs past the viewport, would push its top edge above the scroll origin and
+     leave the screen unreachable. Browsers without `safe` keep plain `center`. */
+  align-items: center;
+  align-items: safe center;
+  /* Even top and bottom: uneven padding shifts the midpoint, so the set would
+     sit off-centre by half the difference. */
+  padding: 32px 16px;
+  /* Was `calc(100vh - 52px)`, holding a gap for a nav bar that no longer exists
+     — the same one the skip link still points past. `dvh` keeps the set centred
+     on mobile against the visible viewport rather than behind the browser's
+     own chrome. */
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--cv-bg);
 }
 
@@ -1248,8 +1260,7 @@ body {
   min-height: 38px;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  corner-shape: squircle;
+  border-radius: 50%;
   color: #d8d3cb;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
@@ -1650,6 +1661,159 @@ body {
 
   .cv-tv-fill-button:active {
     transform: none;
+  }
+}
+
+/* Changelog — a paper register inside the same chrome as the other system
+   applications. It is intentionally still: this is a frequently scanned list,
+   so immediate scrolling is more useful than decorative entry animation. */
+.cv-changelog {
+  position: absolute;
+  inset: 0;
+  padding-top: 44px;
+  overflow-y: auto;
+  color: #1c1a17;
+  background:
+    linear-gradient(90deg, transparent 0 17px, rgba(154, 42, 42, 0.16) 17px 18px, transparent 18px),
+    linear-gradient(180deg, #fdfbf5 0%, #f4efe2 100%);
+  font-family: var(--font-sans);
+}
+
+.cv-changelog-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1.3fr);
+  gap: 24px;
+  align-items: end;
+  padding: 18px 28px 16px 34px;
+  border-bottom: 1px solid #c8c1b4;
+  background: rgba(253, 251, 245, 0.96);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.cv-changelog-kicker,
+.cv-changelog-category {
+  margin: 0;
+  color: #8c2b2b;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cv-changelog-header h1 {
+  margin: 3px 0 0;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.cv-changelog-intro {
+  max-width: 440px;
+  margin: 0;
+  color: #625c52;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.cv-changelog-list {
+  margin: 0;
+  padding: 0 28px 28px 34px;
+  list-style: none;
+}
+
+.cv-changelog-entry {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 22px;
+  padding: 17px 0 18px;
+  border-bottom: 1px solid #d8d2c7;
+}
+
+.cv-changelog-date {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  color: #777066;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cv-changelog-date > span {
+  color: #b5aea2;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cv-changelog-entry article {
+  min-width: 0;
+}
+
+.cv-changelog-entry h2 {
+  margin: 3px 0 7px;
+  font-size: clamp(17px, 2.8vw, 22px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cv-changelog-entry article > p:last-child {
+  max-width: 680px;
+  margin: 0;
+  color: #4f4941;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 500px) {
+  .cv-changelog-header {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    padding: 15px 18px 13px 24px;
+  }
+
+  .cv-changelog-header h1 {
+    font-size: 25px;
+  }
+
+  .cv-changelog-intro {
+    font-size: 11px;
+  }
+
+  .cv-changelog-list {
+    padding: 0 18px 22px 24px;
+  }
+
+  .cv-changelog-entry {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 14px 0 15px;
+  }
+
+  .cv-changelog-date {
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .cv-changelog-date > span {
+    font-size: 16px;
+  }
+
+  .cv-changelog-entry h2 {
+    font-size: 18px;
+  }
+
+  .cv-changelog-entry article > p:last-child {
+    font-size: 11px;
+    line-height: 1.5;
   }
 }
 

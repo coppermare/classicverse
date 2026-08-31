@@ -3,6 +3,7 @@ import { F1_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
+import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { getWinImage } from '@/data/ferrariChassisImages';
@@ -14,6 +15,7 @@ import WinApp from './apps/WinApp';
 import RadioApp from './apps/RadioApp';
 import WeatherApp from './apps/WeatherApp';
 import SnakeApp from './apps/SnakeApp';
+import ChangelogApp from './apps/ChangelogApp';
 import type { AppNode, FolderNode, OSNode } from './types';
 
 /**
@@ -86,14 +88,15 @@ const carsFolder: FolderNode = {
 /* ── F1 Archive: team folders → one win each ── */
 
 function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
-  const sourceImage = team.id === 'ferrari'
+  const candidateImage = team.id === 'ferrari'
     ? undefined
     : team.id === 'mclaren'
-      // McLaren only receives its hand-verified, first-party race photography.
-      // The broad archive pool can contain a different constructor at the same
-      // circuit, which is worse than honestly leaving an older win unsourced.
       ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
       : F1_WIN_IMAGES[`${team.id}:${win.number}`];
+  // A missing photo is honest and has a designed editorial fallback. A circuit
+  // photo or a picture of another constructor is not evidence of this win, so
+  // the central policy quarantines it instead of letting it into the folder.
+  const sourceImage = verifiedF1WinImage(team, win, candidateImage);
   const record: F1Win = {
     ...win,
     teamId: team.id,
@@ -196,11 +199,22 @@ const snakeApp: AppNode = {
   keywords: 'game play arcade classic nokia retro snake pellet high score',
 };
 
+const changelogApp: AppNode = {
+  id: 'changelog',
+  kind: 'app',
+  name: 'Changelog',
+  subtitle: 'What changed',
+  icon: { kind: 'glyph', id: 'guide' },
+  component: ChangelogApp,
+  chrome: 'panel',
+  keywords: 'updates releases history milestones new archive f1 cars radio weather snake',
+};
+
 /** The root. Everything the set can show hangs off here. */
 export const DESKTOP: FolderNode = {
   id: 'root',
   kind: 'folder',
   name: 'Classicverse',
   layout: 'icons',
-  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp, snakeApp]),
+  children: lazy((): OSNode[] => [f1Folder, carsFolder, radioApp, weatherApp, snakeApp, changelogApp]),
 };

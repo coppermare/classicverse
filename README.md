@@ -10,11 +10,12 @@ Classicverse is an interactive archive of classic things presented as a working 
 
 ## What Is In The Set
 
-- **F1 Archive** — 1,149 chronological Grand Prix victories across 34 winning constructor identities, plus an explicit zero-win Aston Martin placeholder. Ferrari retains 250 curated records and licensed chassis imagery; 899 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Their image index accepts only distinct, source-linked real photographs (race first, then circuit); no generated-art fallback is used.
+- **F1 Archive** — 1,149 chronological Grand Prix victories across 34 winning constructor identities, plus an explicit zero-win Aston Martin placeholder. Ferrari retains 250 curated records and licensed chassis imagery; 899 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Only distinct, source-linked photographs tied to the exact win and winning team are displayed; uncertain, circuit-only and cross-team candidates fall back to a labelled editorial card.
 - **A century of cars** — one curated hero car for every year from 1885 through 1984, with original historical writing, verified facts, sources, selection reasoning, alternates, confidence and image attribution.
 - **Radio** — a live FM-style tuner backed by a generated snapshot of public internet radio stations.
 - **Weather** — searchable live forecasts with saved place and unit preferences.
 - **Snake** — a complete responsive game whose board fits the television screen, with score, best score, one contextual action and swipe input on touch devices.
+- **Changelog** — a visitor-facing history of the meaningful ways the archive and television have evolved.
 
 The system also provides global search, URL-addressable navigation, browser-style Back/Forward/Up/Home controls, keyboard navigation, a custom screen cursor and synthesised interface sounds.
 
@@ -36,6 +37,8 @@ npm run build
 ```
 
 `npm test` exercises the pure Snake rules and validates the generated F1 archive deterministically. The release checklist in [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md) covers interactive and content QA that is not yet automated.
+
+The F1 display gate currently admits 259 unique win-specific non-Ferrari photographs. It quarantines 318 circuit-only research candidates and 10 known cross-team photographs; records without a compliant image use the labelled editorial card rather than misrepresenting another race or constructor.
 
 Regenerate the non-Ferrari results snapshot deliberately with `npm run generate:f1`; the generated file records its [Jolpica F1](https://github.com/jolpica/jolpica-f1) source and 2026-07-26 cutoff date.
 

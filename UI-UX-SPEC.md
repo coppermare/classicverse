@@ -16,6 +16,8 @@ The television metaphor has three layers:
 2. **System** — toolbar, folders, global search, navigation history and cursor.
 3. **Channels** — archives and applications such as Cars, F1, Radio, Weather and Snake.
 
+The desktop also includes a Changelog system application: a scrollable, visitor-facing record of meaningful product milestones derived from repository history.
+
 ## 2. Opening And Power
 
 The set begins off. The power button is a real button with an explicit accessible name and pressed state. Turning it on plays the rare, explanatory CRT boot sequence; routine navigation after boot is immediate.
@@ -89,7 +91,7 @@ The car folder is a chronological gallery covering 1885–1984. A car detail vie
 
 ### Formula One
 
-The F1 root presents constructor folders. Enabled teams open to a chronological victory gallery. Every victory view identifies the team, Grand Prix, year, driver, circuit and its position in that constructor's archive. Ferrari's curated records also show chassis and engine details plus licensed chassis media where mapped. Generated records omit fields the source does not provide and use a distinct editorial archive card until a source-linked win-image index is curated.
+The F1 root presents constructor folders. Enabled teams open to a chronological victory gallery. Every victory view identifies the team, Grand Prix, year, driver, circuit and its position in that constructor's archive. Ferrari's curated records also show chassis and engine details plus licensed chassis media where mapped. Generated records omit fields the source does not provide and use a distinct editorial archive card until a unique photograph of that exact win and winning team is verified; circuit-only and cross-team candidates never appear as fallbacks.
 
 ## 7. Physical Controls
 
