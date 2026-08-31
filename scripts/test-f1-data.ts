@@ -108,8 +108,8 @@ assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.recordKey)).size
 const displayedEntries = F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.display);
 assert.equal(new Set(displayedEntries.map((entry) => entry.src)).size, displayedEntries.length, 'displayed contextual images must be unique');
 assert.equal('generatedArtwork' in F1_IMAGE_MANIFEST_SUMMARY, false, 'generated artwork must not be part of the F1 image summary');
-assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 298, 'photo coverage must match the localized source set');
-assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 715, 'unavailable coverage must be reported honestly');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 1013, 'every retained win must have a verified local photograph');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 0, 'all retained wins must have a verified photograph');
 
 for (const { team, win } of enabledWins) {
   const key = `${team.id}:${win.number}`;

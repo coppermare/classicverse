@@ -1,6 +1,7 @@
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
+import { F1_WIN_PHOTOS } from '@/data/f1WinPhotos.generated';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
@@ -55,6 +56,8 @@ function normalized(value: string): string {
 }
 
 function candidateFor(team: F1Team, win: F1WinRecord): F1WinImage | undefined {
+  const primaryPhoto = F1_WIN_PHOTOS[`${team.id}:${win.number}`];
+  if (primaryPhoto) return primaryPhoto;
   if (team.id === 'mclaren') {
     return MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number];
   }

@@ -5,18 +5,7 @@ import type { F1Team, F1WinImage, F1WinRecord } from '@/types/f1';
  * frame. They remain in the research index so they can be replaced deliberately,
  * but they must never appear inside the winning team's folder.
  */
-export const F1_CROSS_TEAM_IMAGE_KEYS = new Set<string>([
-  'mclaren:2',
-  'mclaren:10',
-  'mclaren:11',
-  'mclaren:12',
-  'mclaren:13',
-  'mclaren:57',
-  'mclaren:59',
-  'mclaren:95',
-  'mclaren:114',
-  'mclaren:180',
-]);
+export const F1_CROSS_TEAM_IMAGE_KEYS = new Set<string>();
 
 function normalized(value: string): string {
   return value

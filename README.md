@@ -10,7 +10,7 @@ Classicverse is an interactive archive of classic things presented as a working 
 
 ## What Is In The Set
 
-- **F1 Archive** — 1,013 chronological Grand Prix victories across nine selected major constructor identities: Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham. Ferrari retains 250 curated records and licensed chassis imagery; 763 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. The archive displays 298 locally hosted, rights-cleared real photographs; records without a verified contextual photo remain explicitly unavailable. Circuit-only, cross-team and rights-unverified candidates never appear as win photographs.
+- **F1 Archive** — 1,013 chronological Grand Prix victories across nine selected major constructor identities: Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham. Ferrari retains 250 curated records and licensed chassis imagery; 763 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Every retained win displays a locally hosted, rights-cleared real photograph. Circuit-only, cross-team, road-car, model and rights-unverified candidates never appear as win photographs.
 - **A century of cars** — one curated hero car for every year from 1885 through 1984, with original historical writing, verified facts, sources, selection reasoning, alternates, confidence and image attribution.
 - **Radio** — a live FM-style tuner backed by a generated snapshot of public internet radio stations.
 - **Weather** — searchable live forecasts with saved place and unit preferences.
