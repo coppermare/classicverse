@@ -1121,6 +1121,13 @@ body {
   background: linear-gradient(104deg, transparent 42%, rgba(255, 244, 205, 0.16) 50%, transparent 58%);
   animation: cv-f1-image-skeleton-sweep 1.2s ease-in-out infinite;
 }
+.cv-f1-thumbnail-skeleton {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(112deg, transparent 18%, rgba(235, 224, 189, 0.14) 48%, transparent 74%),
+    radial-gradient(ellipse at 50% 35%, #4b4333 0%, #242019 50%, #100f0c 100%);
+}
 @keyframes cv-f1-image-skeleton-sweep {
   from { transform: translateX(-32%); }
   to { transform: translateX(32%); }

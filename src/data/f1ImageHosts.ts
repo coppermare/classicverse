@@ -10,7 +10,6 @@ export const F1_REMOTE_IMAGE_HOSTS = [
   'coolhuntermx.com',
   'd3u3wx15oqvhcs.cloudfront.net',
   'en.apa.az',
-  'for91days.com',
   'hips.hearstapps.com',
   'img.vavel.com',
   'img1.advisor.travel',

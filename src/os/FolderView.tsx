@@ -1,10 +1,23 @@
 'use client';
 
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import { isFolder, type FolderNode, type OSNode } from './types';
 import PixelArt from './PixelArt';
 import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
 import * as sfx from './sound';
+import { F1_REMOTE_IMAGE_HOSTS } from '@/data/f1ImageHosts';
+
+const F1_REMOTE_IMAGE_HOST_SET = new Set<string>(F1_REMOTE_IMAGE_HOSTS);
+
+function isOptimizedF1Photo(src: string): boolean {
+  if (src.startsWith('/f1-wins/')) return true;
+  try {
+    return F1_REMOTE_IMAGE_HOST_SET.has(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Renders any folder's contents. It knows nothing about cars or Ferrari — it
@@ -94,6 +107,9 @@ const GalleryTile = memo(function GalleryTile({
   onSelect: (id: string) => void; onOpen: (node: OSNode) => void;
 }) {
   const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
+  const [loadedPhoto, setLoadedPhoto] = useState<string>();
+  const optimizedF1Photo = photo ? isOptimizedF1Photo(photo) : false;
+  const photoLoaded = loadedPhoto === photo;
   return (
     <button
       data-id={node.id}
@@ -112,9 +128,26 @@ const GalleryTile = memo(function GalleryTile({
       }}
     >
       {photo ? (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={photo} alt="" loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        optimizedF1Photo ? (
+          <>
+            {!photoLoaded && <span className="cv-f1-thumbnail-skeleton" aria-hidden="true" />}
+            <Image
+              key={photo}
+              src={photo}
+              alt=""
+              fill
+              sizes="(max-width: 800px) 33vw, 250px"
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setLoadedPhoto(photo)}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: photoLoaded ? 1 : 0, transition: 'opacity 160ms ease-out' }}
+            />
+          </>
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={photo} alt="" loading="lazy" decoding="async"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        )
       ) : (
         <span style={{
           width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',

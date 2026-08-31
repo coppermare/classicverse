@@ -33,6 +33,7 @@ const circuitsWithVerifiedPrimaryCoverage = new Set([
   'Riverside International Raceway',
   'Le Mans',
   'Autódromo Internacional Nelson Piquet',
+  'Phoenix street circuit',
 ]);
 const circuitAliases: Record<string, string> = {
   Interlagos: 'Autódromo José Carlos Pace',
@@ -80,7 +81,7 @@ const manualCircuitFiles: Record<string, { file: string; title: string; src?: st
   'Las Vegas Strip Street Circuit': { file: '2024 Las Vegas Grand Prix at the Sphere - Friday, November 22, Orbi.jpg', title: 'Photograph of the Las Vegas Strip Street Circuit' },
   'Prince George Circuit': { file: 'el-race-track-3.jpg', src: 'https://wetanddustyroads.com/wp-content/uploads/2023/07/el-race-track-3.jpg?w=672', sourceUrl: 'https://wetanddustyroads.com/2023/07/17/race-track-east-london-south-africa/', title: 'Photograph of the Prince George Circuit' },
   'Rouen-Les-Essarts': { file: '96-rouen6.jpg', src: 'https://8w.forix.com/rouen/96-rouen6.jpg', sourceUrl: 'https://8w.forix.com/rouen-94-98.html', title: 'Photograph of the empty former Rouen-Les-Essarts circuit pit lane' },
-  'Valencia Street Circuit': { file: '06-Abandoned-Forumula-1-Race-Track-DSC00225.jpg', src: 'https://for91days.com/wp-content/uploads/2022/01/06-Abandoned-Forumula-1-Race-Track-DSC00225-1536x1024.jpg', sourceUrl: 'https://for91days.com/the-abandoned-formula-1-race-track-in-valencia-urbex/', title: 'Photograph of the empty former Valencia Street Circuit track' },
+  'Valencia Street Circuit': { file: 'Circuito F1 Valencia, 2018.jpg', title: 'Photograph of the empty former Valencia Street Circuit track' },
   'Jeddah Corniche Circuit': { file: 'Jeddah Corniche Circuit Turn.jpg', src: 'https://res.cloudinary.com/prod-f2f3/image/upload/v1743680870/FA/Global/articles/2025/03_March/Jeddah_Test_Preview_Main.jpg', sourceUrl: 'https://www.f1academy.com/Latest/1ZvydLJR3JL9balPDOhQQz/preview-f1-academy-gets-back-on-track-in-season-testing-in-jeddah', title: 'Photograph of the Jeddah Corniche Circuit' },
   'Autodromo Enzo e Dino Ferrari': { file: 'Imola_Circuit_-_Variante_Bassa_-_Summer_1973.jpg', title: 'Imola Circuit, Variante Bassa, Summer 1973' },
 };

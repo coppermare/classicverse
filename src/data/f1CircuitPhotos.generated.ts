@@ -103,17 +103,6 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "mediaType": "photograph",
     "verificationStatus": "verified"
   },
-  "Interlagos": {
-    "file": "File:Autodromo Jose Carlos Pace main straight.jpg",
-    "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
-    "title": "Photograph of the Autódromo José Carlos Pace circuit main straight",
-    "label": "Interlagos",
-    "kind": "circuit",
-    "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
-    "mediaType": "photograph",
-    "verificationStatus": "verified"
-  },
   "Nivelles-Baulers": {
     "file": "File:Nivelles_Baulers_5.jpg",
     "src": "https://img1.advisor.travel/555x465px-Nivelles_Baulers_5.jpg",
@@ -621,13 +610,13 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "verificationStatus": "verified"
   },
   "Valencia Street Circuit": {
-    "file": "File:06-Abandoned-Forumula-1-Race-Track-DSC00225.jpg",
-    "src": "https://for91days.com/wp-content/uploads/2022/01/06-Abandoned-Forumula-1-Race-Track-DSC00225-1536x1024.jpg",
-    "sourceUrl": "https://for91days.com/the-abandoned-formula-1-race-track-in-valencia-urbex/",
+    "file": "File:Circuito F1 Valencia, 2018.jpg",
+    "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Circuito%20F1%20Valencia%2C%202018.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Circuito%20F1%20Valencia%2C%202018.jpg",
     "title": "Photograph of the empty former Valencia Street Circuit track",
     "label": "Valencia Street Circuit",
     "kind": "circuit",
-    "reuseBasis": "Contextual circuit photograph; the original publisher page is recorded for source attribution",
+    "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
     "mediaType": "photograph",
     "verificationStatus": "verified"
   },
@@ -694,6 +683,17 @@ export const F1_CIRCUIT_PHOTOS: Record<string, F1WinImage> = {
     "label": "Okayama International Circuit",
     "kind": "circuit",
     "reuseBasis": "Contextual circuit photograph; the original publisher page is recorded for source attribution",
+    "mediaType": "photograph",
+    "verificationStatus": "verified"
+  },
+  "Interlagos": {
+    "file": "File:Autodromo Jose Carlos Pace main straight.jpg",
+    "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Autodromo%20Jose%20Carlos%20Pace%20main%20straight.jpg",
+    "title": "Photograph of the Autódromo José Carlos Pace circuit main straight",
+    "label": "Interlagos",
+    "kind": "circuit",
+    "reuseBasis": "Wikimedia Commons circuit photograph; source and attribution are recorded on the Commons page",
     "mediaType": "photograph",
     "verificationStatus": "verified"
   }
