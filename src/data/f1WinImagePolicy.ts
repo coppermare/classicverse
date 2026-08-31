@@ -96,16 +96,22 @@ export function verifiedF1CircuitImage(
   if (image.mediaType !== 'photograph') return undefined;
   if (!hasLawfulF1ImageBasis(image)) return undefined;
 
-  const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));
+  const sourceText = normalized([image.title, image.label, image.file, image.src].join(' '));
   const forbiddenTerms = [
     'map', 'diagram', 'schematic', 'layout', 'illustration', 'render', 'poster', 'graphic',
-    'car', 'driver', 'podium', 'garage', 'model', 'toy', 'truck', 'road', 'road car', 'roadcar',
+    'aerial', 'aereo', 'aeria', 'satellite', 'skysat', 'luftaufnahme', 'drone', 'from above',
+    'bird eye', 'air view', 'overhead',
+    'car', 'driver', 'podium', 'garage', 'model', 'toy', 'truck', 'road car', 'roadcar',
     'vehicle', 'automobile', 'motorcycle', 'toyota', 'supra', 'automatic', 'corvette', 'porsche',
+    'motogp', 'world endurance', 'wec', 'indycar', 'nascar', 'formula e', 'championship',
+    'cobra', 'caterham', 'yamaha', 'vinales', 'historic formula', 'test session',
+    'showcar', 'parked', 'speedfest', '24h', 'moto', 'guzzi', 'lexus', 'super gt',
+    'cooper', 'brawn', 'button', 'wurz',
     'museum', 'monument', 'statue', 'sculpture', 'helmet', 'wing', 'engine', 'steering', 'cockpit',
   ];
   const sourceWords = sourceText.split(' ');
   if (forbiddenTerms.some((term) => term.includes(' ') ? sourceText.includes(term) : sourceWords.includes(term))) return undefined;
-  if (!['circuit', 'track', 'raceway', 'speedway', 'autodrome', 'autodromo', 'aerial', 'satellite', 'skysat'].some((term) => sourceText.includes(term))) return undefined;
+  if (!['circuit', 'track', 'raceway', 'speedway', 'autodrome', 'autodromo'].some((term) => sourceText.includes(term))) return undefined;
   const circuitText = normalized(win.circuit);
   const sourceTokens = new Set(sourceText.split(' '));
   const circuitTokens = circuitText.split(' ').filter((token) => token.length > 3);

@@ -102,9 +102,14 @@ for (const [circuit, image] of Object.entries(F1_CIRCUIT_PHOTOS)) {
   assert.equal(hasLawfulF1ImageBasis(image), true, `${circuit}: fallback needs cleared local rights metadata`);
   const visualMetadata = [image.file, image.title, image.src].join(' ').toLowerCase();
   assert.equal(
-    /(?:^|[ _-])(map|diagram|schematic|layout|illustration|render|poster|graphic)(?:$|[ ._?&-])/i.test(visualMetadata),
+    /(?:^|[ _-])(map|diagram|schematic|layout|illustration|render|poster|graphic|aerial|aereo|aeria|satellite|skysat|luftaufnahme|drone|overhead)(?:$|[ ._?&-])/i.test(visualMetadata),
     false,
-    `${circuit}: map/graphic/illustration media cannot be a fallback photograph`,
+    `${circuit}: maps, graphics, illustrations, and overhead imagery cannot be fallback photographs`,
+  );
+  assert.equal(
+    /(?:world endurance|\bwec\b|motogp|indycar|nascar|formula e|historic formula|test session|caterham|cobra|yamaha|vinales|showcar|speedfest|\b24h\b|moto guzzi|lexus|super gt|cooper|brawn|button|wurz)/i.test(visualMetadata),
+    false,
+    `${circuit}: another racing series cannot supply a fallback photograph`,
   );
   const circuitWin = enabledWins.find(({ team, win }) => team.id !== 'ferrari' && win.circuit === circuit)?.win;
   assert.ok(circuitWin, `${circuit}: fallback must correspond to a retained non-Ferrari circuit`);
@@ -130,13 +135,21 @@ assert.equal('generatedArtwork' in F1_IMAGE_MANIFEST_SUMMARY, false, 'generated 
 assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 1013, 'every retained win must have a verified car or circuit image');
 assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 0, 'all retained wins must have a verified car or circuit image');
 
-const retainedCircuits = new Set(enabledWins.filter(({ team }) => team.id !== 'ferrari').map(({ win }) => win.circuit));
+const retainedCircuits = new Set(
+  F1_WIN_IMAGE_MANIFEST
+    .filter((entry) => entry.imageRole === 'circuit')
+    .map((entry) => {
+      const [teamId, winNumber] = entry.recordKey.split(':');
+      return winsFor(teamId).find((win) => win.number === Number(winNumber))?.circuit;
+    })
+    .filter((circuit): circuit is string => Boolean(circuit)),
+);
 assert.deepEqual(
   [...retainedCircuits].filter((circuit) => !F1_CIRCUIT_PHOTOS[circuit]),
   [],
-  'every retained circuit must have a verified fallback candidate',
+  'every displayed circuit fallback must have a verified source candidate',
 );
-assert.equal(Object.keys(F1_CIRCUIT_PHOTOS).length, retainedCircuits.size, 'every retained circuit must have exactly one photographic fallback record');
+assert.equal(Object.keys(F1_CIRCUIT_PHOTOS).length, retainedCircuits.size, 'the archive must not retain unused circuit fallback records');
 
 assert.equal(
   isF1CarImage({
