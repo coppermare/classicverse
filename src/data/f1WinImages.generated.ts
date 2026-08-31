@@ -1,6 +1,7 @@
 // Source-linked web photographs researched for the F1 archive.
-// Only verified race-specific images are displayed. Circuit candidates remain
-// here for traceability but are quarantined by f1WinImagePolicy.ts.
+// Only rights-cleared, context-verified race images are displayed. Circuit,
+// cross-team and rights-unverified candidates remain here for traceability but
+// are quarantined by f1WinImagePolicy.ts and replaced by record artwork.
 
 import type { F1WinImage } from '@/types/f1';
 

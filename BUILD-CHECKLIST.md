@@ -66,7 +66,7 @@
 - [ ] Grand Prix, circuit, driver, chassis and engine render correctly.
 - [ ] Previous/next controls stay inside the current constructor.
 - [ ] Ferrari records retain correct chassis images and attribution where available.
-- [ ] Every victory has a unique, source-linked photograph tied to that exact win and winning team. Circuit-only and cross-team imagery never appears in a constructor folder; the editorial card remains until a compliant image is verified.
+- [ ] Every victory has a unique contextual image and manifest entry. Verified source photographs carry a same-event, same-season or team-era role; generated artwork is explicitly labelled as artwork. Circuit-only, cross-team and rights-unverified imagery never appears as a race photograph.
 - [ ] Source and cutoff documentation match the generation script.
 
 ## Radio

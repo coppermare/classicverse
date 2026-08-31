@@ -7,13 +7,29 @@ import type { AppProps } from '../types';
 import { RetroButton, TitleBar, Bevel, INK, RADIUS, WELL } from '../ui';
 import * as sfx from '../sound';
 
+function imageRoleLabel(role: F1Win['teamImageRole']): string {
+  switch (role) {
+    case 'exact-win': return 'Exact win photograph';
+    case 'same-event': return 'Same-event context photograph';
+    case 'same-season': return 'Same-season context photograph';
+    case 'team-era': return 'Team/era context photograph';
+    case 'editorial-artwork': return 'Editorial archive artwork';
+    default: return 'Contextual image';
+  }
+}
+
 /** One Grand Prix victory: the car that scored it, and the record behind it. */
 export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
-  const [broken, setBroken] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const [fallbackFailed, setFallbackFailed] = useState(false);
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
-  const imageSrc = img?.src ?? win.teamImage;
+  const primaryImage = img?.src ?? win.teamImage;
+  const fallbackImage = win.teamImageFallback;
+  const showingFallback = photoFailed && Boolean(fallbackImage) && fallbackImage !== primaryImage;
+  const imageSrc = showingFallback ? fallbackImage : primaryImage;
+  const imageFailed = !imageSrc || (showingFallback ? fallbackFailed : photoFailed);
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
   const facts: [string, string][] = [
@@ -31,12 +47,12 @@ export default function WinApp({ node, os }: AppProps) {
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-      {imageSrc && !broken ? (
+      {imageSrc && !imageFailed ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
           src={imageSrc}
           alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
-          onError={() => setBroken(true)}
+          onError={() => showingFallback ? setFallbackFailed(true) : setPhotoFailed(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       ) : (
@@ -117,6 +133,9 @@ export default function WinApp({ node, os }: AppProps) {
                   </div>
                 ))}
               </dl>
+              <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
+                Image role: <strong>{imageRoleLabel(win.teamImageRole)}</strong>
+              </p>
               {img && (
                 <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
                   {img.note ? <>{img.note}<br /></> : null}
@@ -131,10 +150,17 @@ export default function WinApp({ node, os }: AppProps) {
                   <a href={win.source_url} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Race source</a>
                 </p>
               )}
-              {!img && win.teamImageSourceUrl && (
+              {!img && win.teamImageVerificationStatus === 'verified' && win.teamImageSourceUrl && (
                 <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
-                  {win.teamImageKind === 'circuit' ? 'Circuit photograph' : 'Race photograph'}: {win.teamImageLabel ?? win.teamName} -{' '}
+                  {win.teamImageLabel ?? 'Context photograph'}
+                  {win.teamImageCreator ? ` - ${win.teamImageCreator}` : ''}
+                  {win.teamImageReuseBasis ? ` - ${win.teamImageReuseBasis}` : ''} -{' '}
                   <a href={win.teamImageSourceUrl} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
+                </p>
+              )}
+              {!img && win.teamImageVerificationStatus === 'generated' && (
+                <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
+                  Editorial archive artwork — generated from this record&apos;s team, driver, season and Grand Prix. It is contextual artwork, not a race photograph.
                 </p>
               )}
             </div>

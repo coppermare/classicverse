@@ -2,10 +2,7 @@ import { CARS } from '@/data/cars';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
-import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
-import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
-import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
-import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
+import { resolveF1WinImage } from '@/data/f1WinImageManifest';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { toThumb, THUMB_TILE } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
@@ -88,15 +85,11 @@ const carsFolder: FolderNode = {
 /* ── F1 Archive: team folders → one win each ── */
 
 function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
-  const candidateImage = team.id === 'ferrari'
-    ? undefined
-    : team.id === 'mclaren'
-      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
-  // A missing photo is honest and has a designed editorial fallback. A circuit
-  // photo or a picture of another constructor is not evidence of this win, so
-  // the central policy quarantines it instead of letting it into the folder.
-  const sourceImage = verifiedF1WinImage(team, win, candidateImage);
+  // The resolver admits only rights-cleared, team/driver-contextual photos.
+  // Every other record receives unique, deterministic artwork that names the
+  // actual team, driver, season and race instead of borrowing a misleading
+  // circuit or cross-team photograph.
+  const resolvedImage = resolveF1WinImage(team, win);
   const record: F1Win = {
     ...win,
     teamId: team.id,
@@ -104,15 +97,18 @@ function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode 
     teamMark: team.mark,
     teamAccent: team.accent,
     teamWinCount,
-    ...(sourceImage ? {
-      teamImage: sourceImage.src,
-      teamImageLabel: sourceImage.label,
-      teamImageSourceUrl: sourceImage.sourceUrl,
-      teamImageKind: sourceImage.kind,
-    } : {}),
+    teamImage: resolvedImage.src,
+    teamImageLabel: resolvedImage.label,
+    ...(resolvedImage.sourceUrl ? { teamImageSourceUrl: resolvedImage.sourceUrl } : {}),
+    teamImageKind: resolvedImage.kind,
+    teamImageRole: resolvedImage.role,
+    teamImageReuseBasis: resolvedImage.reuseBasis,
+    ...(resolvedImage.creator ? { teamImageCreator: resolvedImage.creator } : {}),
+    teamImageVerificationStatus: resolvedImage.verificationStatus,
+    teamImageFallback: resolvedImage.fallbackSrc,
   };
   const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
-  const thumbnail = img?.src ?? sourceImage?.src;
+  const thumbnail = img?.src ?? resolvedImage.src;
   return {
     id: String(win.number),
     kind: 'app',

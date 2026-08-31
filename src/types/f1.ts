@@ -13,7 +13,21 @@ export interface F1WinImage {
   title: string;
   label: string;
   kind: 'team' | 'race' | 'circuit';
+  /** Optional rights metadata for future non-Commons sources. */
+  reuseBasis?: string;
+  creator?: string;
+  verificationStatus?: 'verified' | 'quarantined';
 }
+
+/** The honest relationship between a displayed image and the victory record. */
+export type F1ImageRole =
+  | 'exact-win'
+  | 'same-event'
+  | 'same-season'
+  | 'team-era'
+  | 'editorial-artwork';
+
+export type F1ImageVerificationStatus = 'verified' | 'generated';
 
 export interface F1Team {
   id: string;        // 'ferrari', 'red-bull', 'mercedes', ...
@@ -72,5 +86,11 @@ export interface F1Win extends F1WinRecord {
   teamImage?: string;
   teamImageLabel?: string;
   teamImageSourceUrl?: string;
-  teamImageKind?: F1WinImage['kind'];
+  teamImageKind?: F1WinImage['kind'] | 'artwork';
+  teamImageRole?: F1ImageRole;
+  teamImageReuseBasis?: string;
+  teamImageCreator?: string;
+  teamImageVerificationStatus?: F1ImageVerificationStatus;
+  /** Deterministic record artwork used if a remote contextual photo fails. */
+  teamImageFallback?: string;
 }

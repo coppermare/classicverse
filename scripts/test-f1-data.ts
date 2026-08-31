@@ -2,10 +2,15 @@ import assert from 'node:assert/strict';
 import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
-import { F1_CROSS_TEAM_IMAGE_KEYS, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
+import { F1_CROSS_TEAM_IMAGE_KEYS, hasLawfulF1ImageBasis, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
 import { MCLAREN_RECENT_WIN_IMAGES } from '../src/data/mclarenRecentWinImages';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '../src/data/mclarenHistoricWinImages';
 import { F1_DATA_CUTOFF, F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
+import {
+  F1_IMAGE_MANIFEST_SUMMARY,
+  F1_WIN_IMAGE_MANIFEST,
+  resolveF1WinImage,
+} from '../src/data/f1WinImageManifest';
 
 const winsFor = (teamId: string) => teamId === 'ferrari'
   ? FERRARI_WINS
@@ -77,6 +82,9 @@ for (const [key, image] of Object.entries(F1_WIN_IMAGES)) {
   assert.ok(image.src.startsWith('https://'), `${key}: photo must be a web image`);
   assert.ok(image.sourceUrl.startsWith('https://'), `${key}: photo needs a source page`);
   assert.ok(image.title, `${key}: photo needs its source title`);
+  if (image.kind === 'race' && hasLawfulF1ImageBasis(image)) {
+    assert.equal(image.sourceUrl.startsWith('https://commons.wikimedia.org/'), true, `${key}: cleared photo needs a Commons file page`);
+  }
 }
 for (const [number, image] of Object.entries(MCLAREN_RECENT_WIN_IMAGES)) {
   assert.ok(F1_WINS_BY_TEAM.mclaren.some((win) => win.number === Number(number)), `McLaren image has no matching win: ${number}`);
@@ -89,26 +97,30 @@ for (const win of F1_WINS_BY_TEAM.mclaren) {
   );
 }
 
-const displayedWinImages = F1_TEAMS.flatMap((team) => {
-  if (team.id === 'ferrari') return [];
-  const wins = winsFor(team.id);
-  return wins.flatMap((win) => {
-    const candidate = team.id === 'mclaren'
-      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
-    const verified = verifiedF1WinImage(team, win, candidate);
-    if (!verified) return [];
-    assert.equal(verified.kind, 'race', `${team.name} win ${win.number}: displayed image must be tied to the race`);
-    assert.ok(!F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`), `${team.name} win ${win.number}: cross-team image escaped quarantine`);
-    return [verified];
-  });
-});
+const enabledWins = F1_TEAMS.flatMap((team) => winsFor(team.id).map((win) => ({ team, win })));
+assert.equal(F1_WIN_IMAGE_MANIFEST.length, enabledWins.length, 'every enabled win must have a manifest entry');
+assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.recordKey)).size, enabledWins.length, 'manifest record keys must be unique');
+assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.src)).size, enabledWins.length, 'displayed contextual images must be unique');
 
-assert.equal(
-  new Set(displayedWinImages.map((image) => image.src)).size,
-  displayedWinImages.length,
-  'displayed win photographs must be unique',
-);
+for (const { team, win } of enabledWins) {
+  const key = `${team.id}:${win.number}`;
+  const resolved = resolveF1WinImage(team, win);
+  const entry = F1_WIN_IMAGE_MANIFEST.find((candidate) => candidate.recordKey === key);
+  assert.ok(entry, `${key}: resolved image needs a manifest entry`);
+  assert.ok(resolved.src, `${key}: every win needs a display image`);
+  assert.ok(resolved.fallbackSrc, `${key}: every win needs a deterministic fallback`);
+  assert.equal(entry?.display, true, `${key}: manifest image must be marked for display`);
+  assert.ok(entry?.subject.team === team.name, `${key}: manifest image subject must name the winning team`);
+  assert.ok(entry?.subject.driver === win.driver, `${key}: manifest image subject must name the winning driver`);
+  assert.equal(entry?.subject.season, win.year, `${key}: manifest image subject must name the winning season`);
+  assert.ok(entry?.imageRole, `${key}: displayed image needs an honest role label`);
+  assert.ok(entry?.reuseBasis, `${key}: displayed image needs a reuse basis`);
+  assert.ok(entry?.verificationStatus === 'verified' || entry?.verificationStatus === 'generated', `${key}: invalid verification status`);
+  if (entry?.verificationStatus === 'generated') {
+    assert.equal(entry.imageRole, 'editorial-artwork', `${key}: generated image must be labelled editorial artwork`);
+    assert.equal(entry.sourcePage, null, `${key}: generated artwork must not invent a source page`);
+  }
+}
 for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
   const [teamId, number] = key.split(':');
   const team = F1_TEAMS.find((candidate) => candidate.id === teamId);
@@ -123,6 +135,7 @@ for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
 const circuitCandidates = Object.values(F1_WIN_IMAGES).filter((image) => image.kind === 'circuit').length;
 
 console.log(
-  `F1 archive validated: ${F1_TEAMS.length - 1} winning teams, ${displayedWinImages.length} unique win-specific photos displayed, `
+  `F1 archive validated: ${F1_TEAMS.length - 1} winning teams, ${F1_WIN_IMAGE_MANIFEST.length} unique contextual images displayed `
+  + `(${F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos} verified photos + ${F1_IMAGE_MANIFEST_SUMMARY.generatedArtwork} editorial artworks), `
   + `${circuitCandidates} circuit candidates and ${F1_CROSS_TEAM_IMAGE_KEYS.size} cross-team photos quarantined through ${F1_DATA_CUTOFF}.`,
 );

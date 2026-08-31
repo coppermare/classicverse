@@ -68,7 +68,7 @@ Maintenance rules:
 1. Preserve chronological ordering and a stable per-team win number.
 2. Validate team counts against the source snapshot.
 3. Keep Ferrari's chassis-image attribution separate from results data.
-4. Curate a distinct, source-linked photograph tied to each winning race and winning team. Circuit-only or cross-team imagery must stay quarantined; until an exact image is verified, use the labelled editorial card.
+4. Curate a distinct contextual image for each victory. The display resolver admits only a rights-cleared photograph whose metadata connects it to the winning team, driver, season or event; circuit-only, cross-team and rights-unverified candidates stay quarantined. Every gap uses unique generated artwork with an explicit non-photographic label.
 5. Re-run the generator deliberately; never silently fetch changing results during a production page request.
 
 ### Radio

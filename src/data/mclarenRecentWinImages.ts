@@ -1,8 +1,8 @@
 import type { F1WinImage } from '@/types/f1';
 
 /**
- * Hand-selected first-party McLaren race photography for the recent wins.
- * Each source page is the matching Grand Prix page on McLaren Racing.
+ * Hand-selected McLaren research candidates for the recent wins.
+ * They remain quarantined until explicit reuse terms are recorded in metadata.
  */
 export const MCLAREN_RECENT_WIN_IMAGES: Record<number, F1WinImage> = {
   184: { file: 'mclaren-184', src: 'https://images.ctfassets.net/gy95mqeyjg28/73bM6Jk9ZzUqIbNHFROufd/b08d66cabaaef4b5e10462b3e23ce08e/3R8A5455.jpg', sourceUrl: 'https://www.mclaren.com/racing/formula-1/2024/miami-grand-prix/', title: 'Miami Grand Prix 2024', label: '2024 Miami Grand Prix', kind: 'race' },

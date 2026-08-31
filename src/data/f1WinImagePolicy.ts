@@ -28,12 +28,33 @@ function normalized(value: string): string {
 }
 
 /**
- * Return a photograph only when it is safe to present as that exact win.
+ * A direct image URL is not a reuse licence. At present the only external
+ * image source admitted by the archive gate is Wikimedia Commons, whose file
+ * page is retained as the attribution/reuse record. Other candidates need an
+ * explicit rights field and a verified status before they can be displayed.
+ */
+export function hasLawfulF1ImageBasis(image: F1WinImage): boolean {
+  try {
+    const imageUrl = new URL(image.src);
+    const sourceUrl = new URL(image.sourceUrl);
+    const isCommonsFile = imageUrl.hostname === 'upload.wikimedia.org'
+      && sourceUrl.hostname === 'commons.wikimedia.org';
+    const hasExplicitRights = Boolean(image.reuseBasis)
+      && image.verificationStatus === 'verified';
+    return isCommonsFile || hasExplicitRights;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Return a photograph only when it is safe to present alongside that win
+ * record as contextual imagery.
  *
  * Circuit-only photography is useful research material, but it is not evidence
  * of a particular victory and can easily put another constructor in the wrong
  * folder. Race images also need a textual link to the winner or constructor;
- * anything uncertain falls back to the labelled editorial card.
+ * anything uncertain falls back to the labelled editorial artwork.
  */
 export function verifiedF1WinImage(
   team: Pick<F1Team, 'id' | 'name'>,
@@ -41,6 +62,7 @@ export function verifiedF1WinImage(
   image: F1WinImage | undefined,
 ): F1WinImage | undefined {
   if (!image || image.kind !== 'race') return undefined;
+  if (!hasLawfulF1ImageBasis(image)) return undefined;
   if (F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`)) return undefined;
 
   const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));

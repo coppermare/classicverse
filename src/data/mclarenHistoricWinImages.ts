@@ -1,6 +1,11 @@
 import type { F1WinImage } from '@/types/f1';
 
-/** Source-linked race photographs for McLaren's pre-2024 Grand Prix victories. */
+/** Research candidates for McLaren's pre-2024 Grand Prix victories.
+ *
+ * These are deliberately not treated as display-ready: several come from
+ * editorial agencies or pages without a documented reuse licence. The central
+ * resolver keeps them quarantined until a rights-cleared replacement is added.
+ */
 const ROWS: readonly [number, string, string, string, string][] = [
   [
     1,
