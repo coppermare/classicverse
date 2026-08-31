@@ -2,11 +2,12 @@ import { FERRARI_WINS } from '@/data/ferrariWins';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
 import { F1_WIN_PHOTOS } from '@/data/f1WinPhotos.generated';
+import { F1_CIRCUIT_PHOTOS } from '@/data/f1CircuitPhotos.generated';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_TEAMS } from '@/data/f1Teams';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
-import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
+import { verifiedF1CircuitImage, verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import type {
   F1ImageRole,
   F1ImageVerificationStatus,
@@ -30,7 +31,7 @@ export interface F1WinImageManifestEntry {
   reuseBasis: string;
   creator?: string;
   verificationStatus: F1ImageVerificationStatus;
-  /** True only when a real photograph is selected for primary display. */
+  /** True only when a real car or associated circuit image is selected. */
   display: boolean;
   note?: string;
 }
@@ -64,6 +65,10 @@ function candidateFor(team: F1Team, win: F1WinRecord): F1WinImage | undefined {
   return F1_WIN_IMAGES[`${team.id}:${win.number}`];
 }
 
+function circuitCandidateFor(win: F1WinRecord): F1WinImage | undefined {
+  return F1_CIRCUIT_PHOTOS[win.circuit];
+}
+
 function roleFor(team: F1Team, win: F1WinRecord, image: F1WinImage): F1ImageRole {
   const context = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));
   const year = String(win.year);
@@ -89,26 +94,43 @@ function unavailableFor(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
   };
 }
 
-/** Resolve one safe primary photograph, or an honest unavailable state. */
+function resolveCircuitFallback(team: F1Team, win: F1WinRecord): ResolvedF1WinImage | undefined {
+  const verified = verifiedF1CircuitImage(win, circuitCandidateFor(win));
+  if (!verified) return undefined;
+  return {
+    src: verified.src,
+    label: `Circuit fallback image — ${verified.label}`,
+    sourceUrl: verified.sourceUrl,
+    kind: 'circuit',
+    role: 'circuit',
+    reuseBasis: verified.reuseBasis ?? 'Wikimedia Commons circuit image; licence and attribution are recorded on the source page',
+    creator: verified.creator,
+    verificationStatus: 'verified',
+  };
+}
+
+/** Resolve one safe primary car image, circuit fallback, or an honest unavailable state. */
 export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
   if (team.id === 'ferrari') {
     const image = getWinImage(win as FerrariWin);
-    if (!image || !image.src.startsWith('/f1-wins/')) return unavailableFor(team, win);
-    return {
-      src: image.src,
-      label: image.note ? `Car-context photograph — ${image.note}` : 'Car-context photograph',
-      sourceUrl: image.attribution_url,
-      kind: 'race',
-      role: image.note?.toLowerCase().includes('win') ? 'same-event' : 'team-era',
-      reuseBasis: image.license,
-      creator: image.creator,
-      verificationStatus: 'verified',
-    };
+    if (image?.src.startsWith('/f1-wins/')) {
+      return {
+        src: image.src,
+        label: image.note ? `Car-context photograph — ${image.note}` : 'Car-context photograph',
+        sourceUrl: image.attribution_url,
+        kind: 'race',
+        role: image.note?.toLowerCase().includes('win') ? 'same-event' : 'team-era',
+        reuseBasis: image.license,
+        creator: image.creator,
+        verificationStatus: 'verified',
+      };
+    }
+    return resolveCircuitFallback(team, win) ?? unavailableFor(team, win);
   }
 
   const candidate = candidateFor(team, win);
   const verified = verifiedF1WinImage(team, win, candidate);
-  if (!verified) return unavailableFor(team, win);
+  if (!verified) return resolveCircuitFallback(team, win) ?? unavailableFor(team, win);
 
   return {
     src: verified.src,

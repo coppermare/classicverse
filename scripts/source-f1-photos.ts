@@ -6,6 +6,7 @@ import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
+import { isF1CarImage } from '../src/data/f1WinImagePolicy';
 import type { F1WinImage, F1WinRecord } from '../src/types/f1';
 
 type PhotoRecord = F1WinImage & { key: string };
@@ -30,6 +31,7 @@ const failedPath = join(tmpdir(), 'classicverse-f1-photo-gaps.json');
 const maxWidth = 1280;
 const batchSize = Number(process.argv.find((arg) => arg.startsWith('--limit='))?.split('=')[1] ?? 40);
 const retryGaps = process.argv.includes('--retry-gaps');
+const carOnly = process.argv.includes('--car-only');
 const userAgent = 'ClassicverseF1Archive/1.0 (local archival tooling)';
 const preferredFiles: Record<string, string> = {
   'mclaren:55': 'File:McLaren MP4-3.jpg',
@@ -102,6 +104,11 @@ function isPhotoCandidate(page: CommonsPage, teamName: string, win: F1WinRecord,
     && !/\bmp\d/.test(coreText)
     && !hasDriver;
   if (isMcLarenRoadCar) return false;
+  if (carOnly && !isF1CarImage({
+    title: page.title.replace(/^File:/, ''),
+    label: cleanMetadata(info.extmetadata?.ImageDescription?.value) || page.title,
+    file: page.title,
+  })) return false;
   return (hasDriver || hasTeam) && (hasYear || hasF1);
 }
 
@@ -263,7 +270,7 @@ async function findPhoto(key: string, teamName: string, win: F1WinRecord, usedTi
 }
 
 async function main(): Promise<void> {
-  const records = loadExisting();
+  const records = loadExisting().filter((record) => !carOnly || isF1CarImage(record));
   const existingKeys = new Set(records.map((record) => record.key));
   const usedTitles = new Set(records.flatMap((record) => [record.title, record.file]));
   const failedKeys = new Set<string>(
@@ -277,7 +284,7 @@ async function main(): Promise<void> {
     }
   }
   const batch = missing.slice(0, batchSize);
-  console.log(`F1 photo sourcing: ${records.length} already localized, ${missing.length} gaps, sourcing ${batch.length}.`);
+  console.log(`F1 photo sourcing: ${records.length} already localized${carOnly ? ' car photos' : ''}, ${missing.length} gaps, sourcing ${batch.length}.`);
   let sourced = 0;
   for (const item of batch) {
     try {

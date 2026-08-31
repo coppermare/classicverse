@@ -24,7 +24,8 @@ export type F1ImageRole =
   | 'exact-win'
   | 'same-event'
   | 'same-season'
-  | 'team-era';
+  | 'team-era'
+  | 'circuit';
 
 export type F1ImageVerificationStatus = 'verified' | 'unavailable';
 

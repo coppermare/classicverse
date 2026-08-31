@@ -13,6 +13,7 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
     case 'same-event': return 'Same-event context photograph';
     case 'same-season': return 'Same-season context photograph';
     case 'team-era': return 'Team/era context photograph';
+    case 'circuit': return 'Associated circuit fallback image';
     case undefined: return 'Source photograph unavailable';
     default: return 'Contextual image';
   }
@@ -56,7 +57,7 @@ export default function WinApp({ node, os }: AppProps) {
           position: 'absolute', inset: 0, background: '#1a1612',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
         }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#b8b1a6', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Source photo unavailable</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#b8b1a6', letterSpacing: '0.12em', textTransform: 'uppercase' }}>F1 car or circuit image unavailable</span>
           <span style={{ fontSize: 14, color: '#8a8278' }}>{carLabel} · {win.grand_prix} · {win.year}</span>
         </div>
       )}

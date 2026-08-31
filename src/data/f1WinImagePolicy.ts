@@ -7,6 +7,22 @@ import type { F1Team, F1WinImage, F1WinRecord } from '@/types/f1';
  */
 export const F1_CROSS_TEAM_IMAGE_KEYS = new Set<string>();
 
+const NON_CAR_IMAGE_TERMS = [
+  'helmet', 'trophy', 'championship cup', 'podium', 'parade', 'paddock', 'pit', 'garage',
+  'truck', 'safety car', 'engine', 'wing', 'steering', 'cockpit', 'model', 'toy',
+  'museum room', 'drivers championship', 'grid', 'line up', 'duo', 'crash', 'celebration',
+  'frontview', 'rearview', 'road car', 'roadcar', 'supercar', 'gtr',
+];
+
+const F1_CAR_MODEL_PATTERN = /\b(?:car|racing car|chassis|mp\d+[a-z]?|mcl\d+[a-z]?|fw\d+[a-z]?|rb\d+[a-z]?|w\d+[a-z]?|bt\d+[a-z]?|re\d+[a-z]?|rs\d+[a-z]?|b\d{2,3}|lotus\s+\d+|f1\s+car|formula one car|formula 1 car)\b/i;
+
+/** True when the source metadata identifies a full Formula 1 car, not a person, part, trophy or other vehicle. */
+export function isF1CarImage(image: Pick<F1WinImage, 'title' | 'label' | 'file'>): boolean {
+  const sourceText = normalized([image.title, image.label, image.file].join(' '));
+  if (NON_CAR_IMAGE_TERMS.some((term) => sourceText.includes(term))) return false;
+  return F1_CAR_MODEL_PATTERN.test(sourceText);
+}
+
 function normalized(value: string): string {
   return value
     .normalize('NFKD')
@@ -53,6 +69,7 @@ export function verifiedF1WinImage(
   if (!image || image.kind !== 'race') return undefined;
   if (!hasLawfulF1ImageBasis(image)) return undefined;
   if (F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`)) return undefined;
+  if (!isF1CarImage(image)) return undefined;
 
   const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));
   const driverSurname = normalized(win.driver).split(' ').at(-1) ?? '';
@@ -63,4 +80,27 @@ export function verifiedF1WinImage(
   const namesWinner = driverSurname.length > 1 && sourceText.includes(driverSurname);
   const namesTeam = teamTerms.some((term) => sourceText.includes(term));
   return namesWinner || namesTeam ? image : undefined;
+}
+
+/** Return an associated circuit photograph, but never a race/team image. */
+export function verifiedF1CircuitImage(
+  win: F1WinRecord,
+  image: F1WinImage | undefined,
+): F1WinImage | undefined {
+  if (!image || image.kind !== 'circuit') return undefined;
+  if (!hasLawfulF1ImageBasis(image)) return undefined;
+
+  const sourceText = normalized([image.title, image.label, image.src, image.sourceUrl].join(' '));
+  const forbiddenTerms = [
+    'car', 'driver', 'podium', 'garage', 'model', 'toy', 'truck', 'road', 'road car', 'roadcar',
+    'vehicle', 'automobile', 'motorcycle', 'toyota', 'supra', 'automatic', 'corvette', 'porsche',
+    'museum', 'monument', 'statue', 'sculpture', 'helmet', 'wing', 'engine', 'steering', 'cockpit',
+  ];
+  const sourceWords = sourceText.split(' ');
+  if (forbiddenTerms.some((term) => term.includes(' ') ? sourceText.includes(term) : sourceWords.includes(term))) return undefined;
+  if (!['circuit', 'track', 'speedway', 'autodrome', 'autodromo', 'aerial', 'satellite', 'skysat'].some((term) => sourceText.includes(term))) return undefined;
+  const circuitText = normalized(win.circuit);
+  const sourceTokens = new Set(sourceText.split(' '));
+  const circuitTokens = circuitText.split(' ').filter((token) => token.length > 3);
+  return circuitTokens.some((token) => sourceTokens.has(token)) ? image : undefined;
 }

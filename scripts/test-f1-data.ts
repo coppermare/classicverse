@@ -3,7 +3,9 @@ import { existsSync } from 'node:fs';
 import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
-import { F1_CROSS_TEAM_IMAGE_KEYS, hasLawfulF1ImageBasis, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
+import { F1_CIRCUIT_PHOTOS } from '../src/data/f1CircuitPhotos.generated';
+import { F1_CROSS_TEAM_IMAGE_KEYS, hasLawfulF1ImageBasis, isF1CarImage, verifiedF1CircuitImage, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
+import { F1_WIN_PHOTOS } from '../src/data/f1WinPhotos.generated';
 import { MCLAREN_RECENT_WIN_IMAGES } from '../src/data/mclarenRecentWinImages';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '../src/data/mclarenHistoricWinImages';
 import { F1_DATA_CUTOFF, F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
@@ -71,6 +73,7 @@ assert.deepEqual(
   'McLaren historic wins must have a race photo for every record',
 );
 
+const enabledWins = F1_TEAMS.flatMap((team) => winsFor(team.id).map((win) => ({ team, win })));
 const imageSources = [
   ...Object.entries(F1_WIN_IMAGES).filter(([key]) => !key.startsWith('mclaren:')).map(([, image]) => image),
   ...Object.values(MCLAREN_HISTORIC_WIN_IMAGES),
@@ -91,6 +94,15 @@ for (const [key, image] of Object.entries(F1_WIN_IMAGES)) {
     assert.equal(image.sourceUrl.startsWith('https://commons.wikimedia.org/'), true, `${key}: cleared photo needs a Commons file page`);
   }
 }
+for (const [circuit, image] of Object.entries(F1_CIRCUIT_PHOTOS)) {
+  assert.equal(image.kind, 'circuit', `${circuit}: fallback must be a circuit image`);
+  assert.ok(image.src.startsWith('https://'), `${circuit}: fallback must be a real source image`);
+  assert.ok(image.sourceUrl.startsWith('https://commons.wikimedia.org/'), `${circuit}: fallback needs a Commons source page`);
+  assert.equal(hasLawfulF1ImageBasis(image), true, `${circuit}: fallback needs cleared local rights metadata`);
+  const circuitWin = enabledWins.find(({ team, win }) => team.id !== 'ferrari' && win.circuit === circuit)?.win;
+  assert.ok(circuitWin, `${circuit}: fallback must correspond to a retained non-Ferrari circuit`);
+  assert.equal(verifiedF1CircuitImage(circuitWin, image)?.src, image.src, `${circuit}: fallback must pass the circuit-only image policy`);
+}
 for (const [number, image] of Object.entries(MCLAREN_RECENT_WIN_IMAGES)) {
   assert.ok(F1_WINS_BY_TEAM.mclaren.some((win) => win.number === Number(number)), `McLaren image has no matching win: ${number}`);
   assert.ok(image.sourceUrl.startsWith('https://www.mclaren.com/') || image.sourceUrl.startsWith('https://www.formula1.com/'), `${number}: McLaren recent image needs a first-party source`);
@@ -102,21 +114,28 @@ for (const win of F1_WINS_BY_TEAM.mclaren) {
   );
 }
 
-const enabledWins = F1_TEAMS.flatMap((team) => winsFor(team.id).map((win) => ({ team, win })));
 assert.equal(F1_WIN_IMAGE_MANIFEST.length, enabledWins.length, 'every enabled win must have a manifest entry');
 assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.recordKey)).size, enabledWins.length, 'manifest record keys must be unique');
 const displayedEntries = F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.display);
-assert.equal(new Set(displayedEntries.map((entry) => entry.src)).size, displayedEntries.length, 'displayed contextual images must be unique');
+const displayedCarEntries = displayedEntries.filter((entry) => entry.imageRole !== 'circuit');
+assert.equal(new Set(displayedCarEntries.map((entry) => entry.src)).size, displayedCarEntries.length, 'displayed car photographs must be unique');
 assert.equal('generatedArtwork' in F1_IMAGE_MANIFEST_SUMMARY, false, 'generated artwork must not be part of the F1 image summary');
-assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 1013, 'every retained win must have a verified local photograph');
-assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 0, 'all retained wins must have a verified photograph');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 1013, 'every retained win must have a verified car or circuit image');
+assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 0, 'all retained wins must have a verified car or circuit image');
+
+const retainedCircuits = new Set(enabledWins.filter(({ team }) => team.id !== 'ferrari').map(({ win }) => win.circuit));
+assert.deepEqual(
+  [...retainedCircuits].filter((circuit) => !F1_CIRCUIT_PHOTOS[circuit]),
+  [],
+  'every retained circuit must have a verified fallback candidate',
+);
 
 for (const { team, win } of enabledWins) {
   const key = `${team.id}:${win.number}`;
   const resolved = resolveF1WinImage(team, win);
   const entry = F1_WIN_IMAGE_MANIFEST.find((candidate) => candidate.recordKey === key);
   assert.ok(entry, `${key}: resolved image needs a manifest entry`);
-  assert.equal(entry?.display, resolved.verificationStatus === 'verified', `${key}: only verified photos may be marked for display`);
+  assert.equal(entry?.display, resolved.verificationStatus === 'verified', `${key}: only verified images may be marked for display`);
   assert.ok(entry?.subject.team === team.name, `${key}: manifest image subject must name the winning team`);
   assert.ok(entry?.subject.driver === win.driver, `${key}: manifest image subject must name the winning driver`);
   assert.equal(entry?.subject.season, win.year, `${key}: manifest image subject must name the winning season`);
@@ -124,9 +143,21 @@ for (const { team, win } of enabledWins) {
   assert.ok(entry?.reuseBasis, `${key}: displayed image needs a reuse basis`);
   assert.ok(entry?.verificationStatus === 'verified' || entry?.verificationStatus === 'unavailable', `${key}: invalid verification status`);
   if (entry?.verificationStatus === 'verified') {
-    assert.ok(entry.src?.startsWith('/f1-wins/'), `${key}: displayed photo must be local`);
-    assert.ok(entry.src?.endsWith('.webp'), `${key}: displayed photo must be WebP`);
+    assert.ok(entry.src?.startsWith('/f1-wins/') || entry.src?.startsWith('https://'), `${key}: displayed image must be local or source-linked`);
+    if (entry.imageRole !== 'circuit') {
+      assert.ok(entry.src?.startsWith('/f1-wins/'), `${key}: displayed car photo must be local`);
+      assert.ok(entry.src?.endsWith('.webp'), `${key}: local display photo must be WebP`);
+    }
     assert.notEqual(entry.imageRole, 'unavailable', `${key}: displayed photo needs a context role`);
+    if (entry.imageRole === 'circuit') {
+      assert.equal(resolved.kind, 'circuit', `${key}: circuit fallback must resolve as a circuit image`);
+      assert.equal(F1_CIRCUIT_PHOTOS[win.circuit]?.src, entry.src, `${key}: circuit fallback must match the associated circuit`);
+      assert.equal(verifiedF1CircuitImage(win, F1_CIRCUIT_PHOTOS[win.circuit])?.src, entry.src, `${key}: circuit fallback must pass the circuit policy`);
+    } else if (key.startsWith('ferrari:')) {
+      assert.ok(entry.src?.startsWith('/f1-wins/win_'), `${key}: Ferrari display photo must be a car photograph asset`);
+    } else {
+      assert.ok(F1_WIN_PHOTOS[key] && isF1CarImage(F1_WIN_PHOTOS[key]), `${key}: displayed photo must identify a full Formula 1 car`);
+    }
   } else {
     assert.equal(entry?.src, null, `${key}: unavailable record must not have an image source`);
     assert.equal(entry?.display, false, `${key}: unavailable record must not be displayed as a photo`);
