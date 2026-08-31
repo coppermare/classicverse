@@ -8,10 +8,10 @@
  * Endpoint: https://api.jolpi.ca/ergast/f1/results/1.json
  *
  * The API models some historic constructor/engine combinations separately.
- * f1TeamConfig.json deliberately groups those aliases under the familiar team
- * identity (for example McLaren-Ford under McLaren and the works Team Lotus
- * combinations under Team Lotus). Lotus F1 remains separate because it was the
- * later Enstone constructor, not Colin Chapman's Team Lotus.
+ * f1TeamConfig.json deliberately groups retained aliases under the familiar
+ * team identity (for example McLaren-Ford under McLaren and the works Team
+ * Lotus combinations under Team Lotus). The config is also the explicit scope
+ * boundary for the user-visible archive.
  *
  * Indianapolis-only chassis winners (Kurtis Kraft, Watson and Epperly) are not
  * included: their wins were Indianapolis 500 entries while that event counted

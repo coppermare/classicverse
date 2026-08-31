@@ -5,13 +5,10 @@ import { F1_WINS_BY_TEAM } from './f1Wins.generated';
 import { F1_TEAM_IMAGES } from './f1TeamImages';
 
 /**
- * The archive includes every non-Indianapolis-only F1 race-winning constructor,
- * grouped under its familiar works-team identity. Counts are
- * derived from the generated Jolpica dataset, except Ferrari, whose richer
- * hand-curated records and licensed photographs remain canonical.
- *
- * Aston Martin is retained as an explicit current-team placeholder. It stays
- * disabled until the constructor records a World Championship Grand Prix win.
+ * The visible archive is intentionally limited to the selected major
+ * constructor identities. Counts are derived from the generated Jolpica
+ * dataset, except Ferrari, whose richer hand-curated records and licensed
+ * photographs remain canonical.
  */
 export const F1_TEAMS: F1Team[] = teamConfig.map((team) => {
   const winCount = team.id === 'ferrari'

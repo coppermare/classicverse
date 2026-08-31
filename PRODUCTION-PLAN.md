@@ -59,7 +59,7 @@ Maintenance rules:
 
 ### Formula One
 
-The implemented archive contains 1,149 victories: 250 curated Ferrari records and 899 generated records across 33 other winning constructor identities. Its generated snapshot uses Jolpica F1 through the 2026 Hungarian Grand Prix on 2026-07-26. An Aston Martin folder is retained but disabled because it has no World Championship Grand Prix win at that cutoff.
+The implemented archive contains 1,013 victories across nine selected major constructor folders: 250 curated Ferrari records and 763 generated records across eight other winning constructor identities. Its generated snapshot uses Jolpica F1 through the 2026 Hungarian Grand Prix on 2026-07-26. Smaller and short-history constructor folders are intentionally outside the visible archive scope.
 
 Constructor victory records must come from a documented results source and be generated or normalized through a repeatable script. Every output records its source and cutoff date. Team aliases must be explicit because constructor names change across eras and datasets. Indianapolis-only chassis winners are excluded because those entries were Indianapolis 500 constructors rather than Formula One teams, even though that race once counted toward the World Drivers' Championship.
 

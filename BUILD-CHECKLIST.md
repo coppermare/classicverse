@@ -17,9 +17,9 @@
 - [ ] README channels and controls match the desktop registry.
 - [ ] Car range is consistently described as 1885–1984.
 - [ ] F1 team roster, win totals, source and cutoff match the generated data.
-- [ ] The expected snapshot contains 899 generated non-Ferrari wins plus 250 curated Ferrari wins.
+- [ ] The expected snapshot contains 763 generated non-Ferrari wins plus 250 curated Ferrari wins across the nine selected major constructor folders.
 - [ ] No enabled folder is described as coming soon.
-- [ ] No disabled/zero-record folder is described as complete.
+- [ ] Only Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham appear in the F1 folder roster.
 - [ ] New shortcuts and cabinet controls appear in README and UI specification.
 
 ## Cabinet

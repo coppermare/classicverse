@@ -10,7 +10,7 @@ Classicverse is an interactive archive of classic things presented as a working 
 
 ## What Is In The Set
 
-- **F1 Archive** — 1,149 chronological Grand Prix victories across 34 winning constructor identities, plus an explicit zero-win Aston Martin placeholder. Ferrari retains 250 curated records and licensed chassis imagery; 899 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Every victory has a unique contextual image: a rights-cleared source photograph where the team/driver/event relationship is verified, otherwise a labelled, deterministic editorial artwork card. Circuit-only, cross-team and rights-unverified candidates never appear as if they were race photographs.
+- **F1 Archive** — 1,013 chronological Grand Prix victories across nine selected major constructor identities: Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham. Ferrari retains 250 curated records and licensed chassis imagery; 763 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Every victory has a unique contextual image: a rights-cleared source photograph where the team/driver/event relationship is verified, otherwise a labelled, deterministic editorial artwork card. Circuit-only, cross-team and rights-unverified candidates never appear as if they were race photographs.
 - **A century of cars** — one curated hero car for every year from 1885 through 1984, with original historical writing, verified facts, sources, selection reasoning, alternates, confidence and image attribution.
 - **Radio** — a live FM-style tuner backed by a generated snapshot of public internet radio stations.
 - **Weather** — searchable live forecasts with saved place and unit preferences.
@@ -38,7 +38,7 @@ npm run build
 
 `npm test` exercises the pure Snake rules and validates the generated F1 archive deterministically. The release checklist in [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md) covers interactive and content QA that is not yet automated.
 
-The F1 image manifest covers all 1,149 victories with unique contextual images. It preserves rights-cleared Commons race-context photographs where the record and source metadata agree, and supplies unique generated editorial artwork for every remaining record. Circuit-only, cross-team and rights-unverified candidates stay quarantined in the research indexes. Each displayed image carries a role label, subject metadata, source page or generated-artwork basis, and verification status.
+The F1 image manifest covers all 1,013 retained victories with unique contextual images. It preserves rights-cleared Commons race-context photographs where the record and source metadata agree, and supplies unique generated editorial artwork for every remaining record. Circuit-only, cross-team and rights-unverified candidates stay quarantined in the research indexes. Each displayed image carries a role label, subject metadata, source page or generated-artwork basis, and verification status.
 
 Regenerate the non-Ferrari results snapshot deliberately with `npm run generate:f1`; the generated file records its [Jolpica F1](https://github.com/jolpica/jolpica-f1) source and 2026-07-26 cutoff date.
 

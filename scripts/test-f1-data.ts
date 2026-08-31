@@ -15,8 +15,11 @@ import {
 const winsFor = (teamId: string) => teamId === 'ferrari'
   ? FERRARI_WINS
   : (F1_WINS_BY_TEAM[teamId] ?? []);
+const retainedTeamIds = ['ferrari', 'mclaren', 'mercedes', 'red-bull', 'williams', 'lotus', 'renault', 'brabham', 'benetton'];
 
 assert.equal(new Set(F1_TEAMS.map((team) => team.id)).size, F1_TEAMS.length, 'team ids must be unique');
+assert.deepEqual(F1_TEAMS.map((team) => team.id), retainedTeamIds, 'F1 visible roster must remain the selected major constructors');
+assert.deepEqual(Object.keys(F1_WINS_BY_TEAM), retainedTeamIds.slice(1), 'generated F1 data must contain only retained non-Ferrari teams');
 
 for (const team of F1_TEAMS) {
   const wins = winsFor(team.id);
@@ -54,9 +57,6 @@ for (const team of F1_TEAMS) {
   const raceKeys = wins.map((win) => `${win.year}:${win.grand_prix}`);
   assert.equal(new Set(raceKeys).size, raceKeys.length, `${team.name}: duplicate race wins`);
 }
-
-const astonMartin = F1_TEAMS.find((team) => team.id === 'aston-martin');
-assert.ok(astonMartin && !astonMartin.enabled, 'Aston Martin must remain a zero-win placeholder');
 
 assert.deepEqual(
   Object.keys(MCLAREN_RECENT_WIN_IMAGES).map(Number).sort((a, b) => a - b),
@@ -135,7 +135,7 @@ for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
 const circuitCandidates = Object.values(F1_WIN_IMAGES).filter((image) => image.kind === 'circuit').length;
 
 console.log(
-  `F1 archive validated: ${F1_TEAMS.length - 1} winning teams, ${F1_WIN_IMAGE_MANIFEST.length} unique contextual images displayed `
+  `F1 archive validated: ${F1_TEAMS.length} retained winning teams, ${F1_WIN_IMAGE_MANIFEST.length} unique contextual images displayed `
   + `(${F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos} verified photos + ${F1_IMAGE_MANIFEST_SUMMARY.generatedArtwork} editorial artworks), `
   + `${circuitCandidates} circuit candidates and ${F1_CROSS_TEAM_IMAGE_KEYS.size} cross-team photos quarantined through ${F1_DATA_CUTOFF}.`,
 );

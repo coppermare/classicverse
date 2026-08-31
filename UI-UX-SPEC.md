@@ -62,7 +62,7 @@ Folder behavior:
 
 - Icon folders use pointer hover or arrow keys to select and Enter/click to open.
 - Gallery folders use rendered tile positions for vertical keyboard movement rather than assuming a fixed column count.
-- Disabled folders are visibly unavailable, explain why they cannot open and refuse to open. The current Aston Martin placeholder is labelled “No Grand Prix wins yet.”
+- The F1 folder roster is limited to the nine selected major constructors; smaller and short-history constructors are not user-visible destinations.
 
 Application behavior:
 

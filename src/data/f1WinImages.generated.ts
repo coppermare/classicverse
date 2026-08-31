@@ -246,14 +246,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "2009 Abu Dhabi Grand Prix",
     "kind": "race"
   },
-  "brawn:5": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Jenson_Button_2009_Monaco.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Jenson_Button_2009_Monaco.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=6996933",
-    "title": "Jenson Button 2009 Monaco",
-    "label": "2009 Monaco Grand Prix",
-    "kind": "race"
-  },
   "red-bull:3": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/db/Mark_Webber_2009_Germany.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/db/Mark_Webber_2009_Germany.jpg",
@@ -262,36 +254,12 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "2009 German Grand Prix",
     "kind": "race"
   },
-  "brawn:3": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Jenson_Button_2009_Bahrain.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Jenson_Button_2009_Bahrain.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=6746343",
-    "title": "Jenson Button 2009 Bahrain",
-    "label": "2009 Bahrain Grand Prix",
-    "kind": "race"
-  },
   "red-bull:2": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Vettel_2009_British_GP_1.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Vettel_2009_British_GP_1.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=7090761",
     "title": "Vettel 2009 British GP 1",
     "label": "2009 British Grand Prix",
-    "kind": "race"
-  },
-  "brawn:2": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/99/Button_2009_Malaysian_GP_1.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/99/Button_2009_Malaysian_GP_1.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=6495713",
-    "title": "Button 2009 Malaysian GP 1",
-    "label": "2009 Malaysian Grand Prix",
-    "kind": "race"
-  },
-  "brawn:1": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/96/Button_2009_Australian_GP_1.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/Button_2009_Australian_GP_1.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=6379308",
-    "title": "Button 2009 Australian GP 1",
-    "label": "2009 Australian Grand Prix",
     "kind": "race"
   },
   "mclaren:159": {
@@ -526,22 +494,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "1978 Dutch Grand Prix",
     "kind": "race"
   },
-  "tyrrell:21": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/1/12/Monaco_1978_-_Patrick_Depailler.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/1/12/Monaco_1978_-_Patrick_Depailler.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=98942293",
-    "title": "Monaco 1978 - Patrick Depailler",
-    "label": "1978 Monaco Grand Prix",
-    "kind": "race"
-  },
-  "wolf:2": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Monaco_1977_-_Jody_Scheckter.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Monaco_1977_-_Jody_Scheckter.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=98941578",
-    "title": "Monaco 1977 - Jody Scheckter",
-    "label": "1977 Monaco Grand Prix",
-    "kind": "race"
-  },
   "mclaren:19": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/2/2c/James_Hunt_-_Dutch_GP_1976_crop_mod.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/2/2c/James_Hunt_-_Dutch_GP_1976_crop_mod.jpg",
@@ -550,52 +502,12 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "1976 Dutch Grand Prix",
     "kind": "race"
   },
-  "hesketh:1": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Hunt_and_Lauda_at_1975_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Hunt_and_Lauda_at_1975_Dutch_Grand_Prix.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23268362",
-    "title": "Hunt and Lauda at 1975 Dutch Grand Prix",
-    "label": "1975 Dutch Grand Prix",
-    "kind": "race"
-  },
-  "tyrrell:18": {
-    "file": "https://live.staticflickr.com/1709/25139852779_2196674f55_b.jpg",
-    "src": "https://live.staticflickr.com/1709/25139852779_2196674f55_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/62983535@N06/25139852779",
-    "title": "Jody Scheckter - Tyrrell 007 heads towards Hawthorn Bend at the 1974 British Grand Prix, Scheckter was the eventual winner.",
-    "label": "1974 British Grand Prix",
-    "kind": "race"
-  },
-  "tyrrell:15": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Peterson%2C_Stewart%2C_Pace_and_Cevert_at_1973_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Peterson%2C_Stewart%2C_Pace_and_Cevert_at_1973_Dutch_Grand_Prix.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23303177",
-    "title": "Peterson, Stewart, Pace and Cevert at 1973 Dutch Grand Prix",
-    "label": "1973 Dutch Grand Prix",
-    "kind": "race"
-  },
   "lotus:46": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/6/66/Emerson_Fittipaldi_1972_Austrian_GP.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/66/Emerson_Fittipaldi_1972_Austrian_GP.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=1175086",
     "title": "Emerson Fittipaldi 1972 Austrian GP",
     "label": "1972 Austrian Grand Prix",
-    "kind": "race"
-  },
-  "matra:6": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/4/42/Stewart_celebrating_at_1969_Dutch_Grand_Prix_%282%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/42/Stewart_celebrating_at_1969_Dutch_Grand_Prix_%282%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23265005",
-    "title": "Stewart celebrating at 1969 Dutch Grand Prix (2)",
-    "label": "1969 Dutch Grand Prix",
-    "kind": "race"
-  },
-  "matra:1": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/2/20/Stewart_and_Rindt_at_1968_Dutch_Grand_Prix.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/2/20/Stewart_and_Rindt_at_1968_Dutch_Grand_Prix.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=23256301",
-    "title": "Stewart and Rindt at 1968 Dutch Grand Prix",
-    "label": "1968 Dutch Grand Prix",
     "kind": "race"
   },
   "lotus:26": {
@@ -683,14 +595,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Antonio_Giovinazzi_during_Hungarian_Formula_1_GP.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=81130639",
     "title": "Antonio Giovinazzi during Hungarian Formula 1 GP",
-    "label": "Hungaroring",
-    "kind": "circuit"
-  },
-  "alpine:1": {
-    "file": "https://live.staticflickr.com/161/333369932_d2a2a9d117_b.jpg",
-    "src": "https://live.staticflickr.com/161/333369932_d2a2a9d117_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/39797037@N00/333369932",
-    "title": "Jenson Button",
     "label": "Hungaroring",
     "kind": "circuit"
   },
@@ -883,14 +787,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/749/20857163652_7b2b0689e3_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20857163652",
     "title": "Belgian GP - Infiniti Red Bull Racing - Daniil Kvyat",
-    "label": "Circuit de Spa-Francorchamps",
-    "kind": "circuit"
-  },
-  "jordan:1": {
-    "file": "https://live.staticflickr.com/5730/20691910718_ae143ffd4d_b.jpg",
-    "src": "https://live.staticflickr.com/5730/20691910718_ae143ffd4d_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/130355842@N08/20691910718",
-    "title": "Belgian GP - Scuderia Ferrari - Sebastian Vettel",
     "label": "Circuit de Spa-Francorchamps",
     "kind": "circuit"
   },
@@ -1099,14 +995,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/0/01/Daniel_Ricciardo_b.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=40834665",
     "title": "Daniel Ricciardo b",
-    "label": "Circuit Gilles Villeneuve",
-    "kind": "circuit"
-  },
-  "bmw-sauber:1": {
-    "file": "https://live.staticflickr.com/8147/7455550322_b342e501dd_b.jpg",
-    "src": "https://live.staticflickr.com/8147/7455550322_b342e501dd_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/37256969@N08/7455550322",
-    "title": "Hamilton, Alonso and Vettel",
     "label": "Circuit Gilles Villeneuve",
     "kind": "circuit"
   },
@@ -1474,14 +1362,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "file": "https://live.staticflickr.com/3699/13124975613_6d5548b3c9_b.jpg",
     "src": "https://live.staticflickr.com/3699/13124975613_6d5548b3c9_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/42197184@N08/13124975613",
-    "title": "2014 Australian F1 Grand Prix",
-    "label": "Albert Park Grand Prix Circuit",
-    "kind": "circuit"
-  },
-  "lotus-f1:2": {
-    "file": "https://live.staticflickr.com/7432/13125071443_9df562993e_b.jpg",
-    "src": "https://live.staticflickr.com/7432/13125071443_9df562993e_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/42197184@N08/13125071443",
     "title": "2014 Australian F1 Grand Prix",
     "label": "Albert Park Grand Prix Circuit",
     "kind": "circuit"
@@ -1859,22 +1739,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/8351/8400308328_04643d143d_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/19107136@N02/8400308328",
     "title": "The British Grand Prix at Silverstone",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "tyrrell:4": {
-    "file": "https://live.staticflickr.com/1117/1061604538_33f0eb382a_b.jpg",
-    "src": "https://live.staticflickr.com/1117/1061604538_33f0eb382a_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/95012874@N00/1061604538",
-    "title": "Silverstone F1 British Grand Prix 2007 -73",
-    "label": "Silverstone Circuit",
-    "kind": "circuit"
-  },
-  "matra:8": {
-    "file": "https://live.staticflickr.com/7246/7614621028_6b0778e57f_b.jpg",
-    "src": "https://live.staticflickr.com/7246/7614621028_6b0778e57f_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/15111621@N05/7614621028",
-    "title": "Pastor Maldonado",
     "label": "Silverstone Circuit",
     "kind": "circuit"
   },
@@ -2358,14 +2222,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Nürburgring",
     "kind": "circuit"
   },
-  "stewart:1": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Peter_Arundell_1968_kl.JPG",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Peter_Arundell_1968_kl.JPG",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=8160926",
-    "title": "File:Peter Arundell 1968 kl.JPG",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
   "mclaren:115": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Jackie_Oliver_1969_kl.JPG",
     "src": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Jackie_Oliver_1969_kl.JPG",
@@ -2422,35 +2278,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Nürburgring",
     "kind": "circuit"
   },
-  "tyrrell:16": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Collins_Fangio_and_Hawthorn_celebrate_Nurburgring_1957.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Collins_Fangio_and_Hawthorn_celebrate_Nurburgring_1957.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=46561506",
-    "title": "Collins Fangio and Hawthorn celebrate Nurburgring 1957",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "tyrrell:5": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/1/10/Race10GER.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/1/10/Race10GER.png",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=15899079",
-    "title": "Race10GER",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
   "brabham:11": {
     "file": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Fangio_pit_stop_Nurburgring_1957.jpg",
     "src": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Fangio_pit_stop_Nurburgring_1957.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=46548639",
     "title": "Fangio pit stop Nurburgring 1957",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "matra:2": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/5/5e/2013-09-GER-Race.png",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/5/5e/2013-09-GER-Race.png",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=27117128",
-    "title": "2013-09-GER-Race",
     "label": "Nürburgring",
     "kind": "circuit"
   },
@@ -2475,14 +2307,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Er%C3%B6ffnungsrennen_GP-Kurs_N%C3%BCrburgring_1984-05-12_%28cropped%29.jpg",
     "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=168046871",
     "title": "Eröffnungsrennen GP-Kurs Nürburgring 1984-05-12 (cropped)",
-    "label": "Nürburgring",
-    "kind": "circuit"
-  },
-  "brm:3": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/91/GT_Masters_Porsche_911_GT3_R_Farnbacher_%28cropped%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/91/GT_Masters_Porsche_911_GT3_R_Farnbacher_%28cropped%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=113209311",
-    "title": "GT Masters Porsche 911 GT3 R Farnbacher (cropped)",
     "label": "Nürburgring",
     "kind": "circuit"
   },
@@ -2742,27 +2566,11 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Kyalami",
     "kind": "circuit"
   },
-  "tyrrell:19": {
-    "file": "https://live.staticflickr.com/65535/52859165223_917b186072_b.jpg",
-    "src": "https://live.staticflickr.com/65535/52859165223_917b186072_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52859165223",
-    "title": "461",
-    "label": "Kyalami",
-    "kind": "circuit"
-  },
   "brabham:14": {
     "file": "https://live.staticflickr.com/65535/52858902439_3286dd380e_b.jpg",
     "src": "https://live.staticflickr.com/65535/52858902439_3286dd380e_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52858902439",
     "title": "611",
-    "label": "Kyalami",
-    "kind": "circuit"
-  },
-  "tyrrell:12": {
-    "file": "https://live.staticflickr.com/65535/52858147042_3735934096_b.jpg",
-    "src": "https://live.staticflickr.com/65535/52858147042_3735934096_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/195929337@N03/52858147042",
-    "title": "466",
     "label": "Kyalami",
     "kind": "circuit"
   },
@@ -2950,14 +2758,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Zolder",
     "kind": "circuit"
   },
-  "tyrrell:22": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/9/96/2024_Las_Vegas_Grand_Prix_at_the_Sphere_-_Saturday%2C_November_23%2C_Max_Verstappen.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/9/96/2024_Las_Vegas_Grand_Prix_at_the_Sphere_-_Saturday%2C_November_23%2C_Max_Verstappen.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=171933143",
-    "title": "2024 Las Vegas Grand Prix at the Sphere - Saturday, November 23, Max Verstappen",
-    "label": "Las Vegas Street Circuit",
-    "kind": "circuit"
-  },
   "williams:11": {
     "file": "https://live.staticflickr.com/662/31696478304_b7bd114951_b.jpg",
     "src": "https://live.staticflickr.com/662/31696478304_b7bd114951_b.jpg",
@@ -2998,22 +2798,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Watkins Glen",
     "kind": "circuit"
   },
-  "tyrrell:11": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/4/49/1968_Lotus_Ford_R6_%2831696478304%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/4/49/1968_Lotus_Ford_R6_%2831696478304%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=95572614",
-    "title": "1968 Lotus Ford R6 (31696478304)",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
-  "tyrrell:7": {
-    "file": "https://live.staticflickr.com/30/42557063_fa29281518.jpg",
-    "src": "https://live.staticflickr.com/30/42557063_fa29281518.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42557063",
-    "title": "pic09",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
   "lotus:42": {
     "file": "https://live.staticflickr.com/25/42556998_a863c5362b.jpg",
     "src": "https://live.staticflickr.com/25/42556998_a863c5362b.jpg",
@@ -3027,14 +2811,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "src": "https://live.staticflickr.com/30/42556988_c2d5dac1ba.jpg",
     "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556988",
     "title": "pic15",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
-  "matra:3": {
-    "file": "https://live.staticflickr.com/33/42556935_634fcac5b7.jpg",
-    "src": "https://live.staticflickr.com/33/42556935_634fcac5b7.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556935",
-    "title": "pic18",
     "label": "Watkins Glen",
     "kind": "circuit"
   },
@@ -3054,30 +2830,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Watkins Glen",
     "kind": "circuit"
   },
-  "brm:12": {
-    "file": "https://live.staticflickr.com/25/42556380_affa79f925.jpg",
-    "src": "https://live.staticflickr.com/25/42556380_affa79f925.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556380",
-    "title": "pic50",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
-  "brm:9": {
-    "file": "https://live.staticflickr.com/25/42557028_8908728d6f.jpg",
-    "src": "https://live.staticflickr.com/25/42557028_8908728d6f.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42557028",
-    "title": "pic12",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
-  "brm:7": {
-    "file": "https://live.staticflickr.com/26/42556972_7055d9ef7f.jpg",
-    "src": "https://live.staticflickr.com/26/42556972_7055d9ef7f.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42556972",
-    "title": "pic16",
-    "label": "Watkins Glen",
-    "kind": "circuit"
-  },
   "lotus:8": {
     "file": "https://live.staticflickr.com/32/42556909_fdbbcc1453.jpg",
     "src": "https://live.staticflickr.com/32/42556909_fdbbcc1453.jpg",
@@ -3092,14 +2844,6 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "sourceUrl": "https://www.flickr.com/photos/98664900@N00/42557044",
     "title": "pic11",
     "label": "Watkins Glen",
-    "kind": "circuit"
-  },
-  "ligier:4": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Camion_Man_Antonio_Albacete.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Camion_Man_Antonio_Albacete.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=2873750",
-    "title": "Camion Man Antonio Albacete",
-    "label": "Jarama",
     "kind": "circuit"
   },
   "lotus:67": {
@@ -3158,36 +2902,12 @@ export const F1_WIN_IMAGES: Record<string, F1WinImage> = {
     "label": "Aintree",
     "kind": "circuit"
   },
-  "cooper:4": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Motorcycle_racing%2C_Oulton_Park%2C_early_1960s_-_geograph.org.uk_-_1461407.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Motorcycle_racing%2C_Oulton_Park%2C_early_1960s_-_geograph.org.uk_-_1461407.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=14212566",
-    "title": "Motorcycle racing, Oulton Park, early 1960s - geograph.org.uk - 1461407",
-    "label": "Aintree",
-    "kind": "circuit"
-  },
-  "vanwall:1": {
-    "file": "https://live.staticflickr.com/1286/993860930_d4dbc7f28e_b.jpg",
-    "src": "https://live.staticflickr.com/1286/993860930_d4dbc7f28e_b.jpg",
-    "sourceUrl": "https://www.flickr.com/photos/24592131@N00/993860930",
-    "title": "Maserati works team 1957",
-    "label": "Aintree",
-    "kind": "circuit"
-  },
   "mercedes:8": {
     "file": "https://live.staticflickr.com/1033/993860992_d22f932bb7_b.jpg",
     "src": "https://live.staticflickr.com/1033/993860992_d22f932bb7_b.jpg",
     "sourceUrl": "https://www.flickr.com/photos/24592131@N00/993860992",
     "title": "Vanwall",
     "label": "Aintree",
-    "kind": "circuit"
-  },
-  "vanwall:2": {
-    "file": "https://upload.wikimedia.org/wikipedia/commons/0/0e/1952_OSCA_MT4_MM_Spyder_%2829792709867%29.jpg",
-    "src": "https://upload.wikimedia.org/wikipedia/commons/0/0e/1952_OSCA_MT4_MM_Spyder_%2829792709867%29.jpg",
-    "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=72839201",
-    "title": "File:1952 OSCA MT4 MM Spyder (29792709867).jpg",
-    "label": "Pescara Circuit",
     "kind": "circuit"
   }
 };
