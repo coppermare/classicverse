@@ -19,6 +19,25 @@ function isOptimizedF1Photo(src: string): boolean {
   }
 }
 
+function isWikimediaSpecialFilePath(src: string): boolean {
+  try {
+    const url = new URL(src);
+    return url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/');
+  } catch {
+    return false;
+  }
+}
+
+function directPreviewSource(src: string): string {
+  const url = new URL(src);
+  if (url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/')) {
+    // A 640px derivative is sharp at this 4:3 grid size, including high-DPI
+    // displays, without waiting for a server-side image proxy.
+    url.searchParams.set('width', '640');
+  }
+  return url.toString();
+}
+
 /**
  * Renders any folder's contents. It knows nothing about cars or Ferrari — it
  * reads the nodes, so a new module gets a working screen for free.
@@ -108,8 +127,11 @@ const GalleryTile = memo(function GalleryTile({
 }) {
   const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
   const [loadedPhoto, setLoadedPhoto] = useState<string>();
+  const [bypassedOptimizer, setBypassedOptimizer] = useState<string>();
   const optimizedF1Photo = photo ? isOptimizedF1Photo(photo) : false;
   const photoLoaded = loadedPhoto === photo;
+  const useDirectPreview = photo !== null && (isWikimediaSpecialFilePath(photo) || bypassedOptimizer === photo);
+  const deliveredPhoto = photo && useDirectPreview ? directPreviewSource(photo!) : photo;
   return (
     <button
       data-id={node.id}
@@ -132,14 +154,20 @@ const GalleryTile = memo(function GalleryTile({
           <>
             {!photoLoaded && <span className="cv-f1-thumbnail-skeleton" aria-hidden="true" />}
             <Image
-              key={photo}
-              src={photo}
+              key={deliveredPhoto}
+              src={deliveredPhoto!}
               alt=""
               fill
               sizes="(max-width: 800px) 33vw, 250px"
               loading="lazy"
               decoding="async"
+              unoptimized={useDirectPreview}
               onLoad={() => setLoadedPhoto(photo)}
+              onError={() => {
+                // Preserve a real preview if an archival host rejects the
+                // optimizer request; Wikimedia receives a small derivative.
+                if (!useDirectPreview) setBypassedOptimizer(photo);
+              }}
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: photoLoaded ? 1 : 0, transition: 'opacity 160ms ease-out' }}
             />
           </>
