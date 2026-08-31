@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import type { F1Win, FerrariWin } from '@/types/f1';
 import type { AppProps } from '../types';
@@ -24,13 +25,17 @@ function imageRoleLabel(role: F1Win['teamImageRole']): string {
 export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
-  const [photoFailed, setPhotoFailed] = useState(false);
+  const [failedImage, setFailedImage] = useState<string>();
+  const [loadedImage, setLoadedImage] = useState<string>();
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
   const primaryImage = img?.src ?? (win.teamImageVerificationStatus === 'verified' ? win.teamImage : undefined);
+  const photoFailed = failedImage === primaryImage;
   const imageFailed = !primaryImage || photoFailed;
+  const photoLoaded = loadedImage === primaryImage;
   const preserveWholeCar = primaryImage === '/f1-wins/context/renault-9.webp';
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
+
   const facts: [string, string][] = [
     ['Team', win.teamName],
     ['Grand Prix', win.grand_prix],
@@ -45,19 +50,31 @@ export default function WinApp({ node, os }: AppProps) {
   ];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-busy={Boolean(primaryImage && !photoLoaded && !photoFailed)}>
       {primaryImage && !imageFailed ? (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          src={primaryImage}
-          alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
-          onError={() => setPhotoFailed(true)}
-          style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: preserveWholeCar ? 'contain' : 'cover',
-            background: preserveWholeCar ? '#fff' : undefined,
-          }}
-        />
+        <>
+          {!photoLoaded && <div className="cv-f1-image-skeleton" aria-hidden="true" />}
+          {/* Local F1 cars are 1280px WebP; remote circuit/first-party images
+              are resized and cached by Next before delivery to this screen. */}
+          <Image
+            key={primaryImage}
+            src={primaryImage}
+            alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
+            fill
+            sizes="(max-width: 800px) 100vw, 800px"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            onLoad={() => setLoadedImage(primaryImage)}
+            onError={() => setFailedImage(primaryImage)}
+            style={{
+              objectFit: preserveWholeCar ? 'contain' : 'cover',
+              background: preserveWholeCar ? '#fff' : undefined,
+              opacity: photoLoaded ? 1 : 0,
+              transition: 'opacity 180ms ease-out',
+            }}
+          />
+        </>
       ) : (
         <div style={{
           position: 'absolute', inset: 0, background: '#1a1612',

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
@@ -7,6 +7,7 @@ import { F1_CIRCUIT_PHOTOS } from '../src/data/f1CircuitPhotos.generated';
 import { hasLawfulF1ImageBasis, isF1CarImage, verifiedF1CircuitImage } from '../src/data/f1WinImagePolicy';
 import { F1_WIN_PHOTOS } from '../src/data/f1WinPhotos.generated';
 import { F1_REJECTED_WIN_IMAGE_KEYS } from '../src/data/f1RejectedWinImageKeys';
+import { F1_REMOTE_IMAGE_HOSTS } from '../src/data/f1ImageHosts';
 import { MCLAREN_RECENT_WIN_IMAGES } from '../src/data/mclarenRecentWinImages';
 import { F1_DATA_CUTOFF, F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
 import {
@@ -124,6 +125,13 @@ assert.equal(F1_WIN_IMAGE_MANIFEST.length, enabledWins.length, 'every enabled wi
 assert.equal(new Set(F1_WIN_IMAGE_MANIFEST.map((entry) => entry.recordKey)).size, enabledWins.length, 'manifest record keys must be unique');
 const displayedEntries = F1_WIN_IMAGE_MANIFEST.filter((entry) => entry.display);
 const displayedCarEntries = displayedEntries.filter((entry) => entry.imageRole !== 'circuit');
+const localDisplayAssets = displayedEntries
+  .map((entry) => entry.src)
+  .filter((src): src is string => Boolean(src?.startsWith('/f1-wins/')));
+const remoteDisplayHosts = displayedEntries
+  .map((entry) => entry.src)
+  .filter((src): src is string => Boolean(src?.startsWith('https://')))
+  .map((src) => new URL(src).hostname);
 assert.deepEqual(
   Object.keys(F1_WIN_PHOTOS).sort(),
   displayedCarEntries.filter((entry) => !entry.recordKey.startsWith('ferrari:')).map((entry) => entry.recordKey).sort(),
@@ -140,6 +148,21 @@ assert.equal(
   'McLaren win 20 must use the 1976 James Hunt M23 rather than a modern McLaren photograph',
 );
 assert.equal(new Set(displayedCarEntries.map((entry) => entry.src)).size, displayedCarEntries.length, 'displayed car photographs must be unique');
+assert.equal(new Set(localDisplayAssets).size, localDisplayAssets.length, 'local F1 display photographs must be unique');
+for (const src of localDisplayAssets) {
+  assert.ok(src.endsWith('.webp'), `${src}: local display photo must use the WebP web format`);
+  const filePath = `public${src}`;
+  assert.ok(existsSync(filePath), `${src}: optimized display photo must exist`);
+  assert.ok(
+    statSync(filePath).size <= 700 * 1024,
+    `${src}: local display photo must remain below the 700 KiB delivery ceiling`,
+  );
+}
+assert.deepEqual(
+  [...new Set(remoteDisplayHosts)].sort(),
+  [...new Set(F1_REMOTE_IMAGE_HOSTS)].filter((host) => remoteDisplayHosts.includes(host)).sort(),
+  'every remote F1 display image host must be explicitly approved for optimization',
+);
 assert.equal('generatedArtwork' in F1_IMAGE_MANIFEST_SUMMARY, false, 'generated artwork must not be part of the F1 image summary');
 assert.equal(F1_IMAGE_MANIFEST_SUMMARY.verifiedPhotos, 1013, 'every retained win must have a verified car or circuit image');
 assert.equal(F1_IMAGE_MANIFEST_SUMMARY.unavailable, 0, 'all retained wins must have a verified car or circuit image');

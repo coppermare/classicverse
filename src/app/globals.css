@@ -1094,6 +1094,41 @@ body {
 .cv-tv-screen.on  { background: #14140e; }
 .cv-tv-screen.off { background: #060604; }
 
+/* F1 photographs are intentionally held behind this CRT-toned skeleton until
+   decoding completes.  The actual screen always has a fixed size, so this
+   prevents both a flash of empty black and layout movement between victories. */
+.cv-f1-image-skeleton {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(112deg, transparent 20%, rgba(235, 224, 189, 0.12) 46%, transparent 72%),
+    radial-gradient(ellipse at 50% 32%, #4b4333 0%, #242019 43%, #100f0c 100%);
+}
+.cv-f1-image-skeleton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.03)) 7% 72% / 15% 13% no-repeat,
+    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.03)) 25% 76% / 39% 4% no-repeat,
+    linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.02)) 25% 83% / 27% 3% no-repeat;
+}
+.cv-f1-image-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: -10% -65%;
+  background: linear-gradient(104deg, transparent 42%, rgba(255, 244, 205, 0.16) 50%, transparent 58%);
+  animation: cv-f1-image-skeleton-sweep 1.2s ease-in-out infinite;
+}
+@keyframes cv-f1-image-skeleton-sweep {
+  from { transform: translateX(-32%); }
+  to { transform: translateX(32%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-f1-image-skeleton::after { animation: none; }
+}
+
 /* Hide system cursor inside the screen — pixel cursor handles it.
    Only while the set is lit; with the screen off nothing draws a pointer, so
    the real one has to stay. */
