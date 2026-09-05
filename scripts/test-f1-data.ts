@@ -1,18 +1,34 @@
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { F1_ARCHIVE_TEAMS, F1_TEAMS } from '../src/data/f1Teams';
 import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
-import { F1_BROKEN_IMAGE_KEYS, F1_CROSS_TEAM_IMAGE_KEYS, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
+import { F1_CIRCUIT_PHOTOS } from '../src/data/f1CircuitPhotos.generated';
+import { F1_WIN_PHOTOS } from '../src/data/f1WinPhotos.generated';
+import { F1_REJECTED_WIN_IMAGE_KEYS } from '../src/data/f1RejectedWinImageKeys';
+import { hasLawfulF1ImageBasis, isF1CarImage, verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
 import { MCLAREN_RECENT_WIN_IMAGES } from '../src/data/mclarenRecentWinImages';
 import { MCLAREN_HISTORIC_WIN_IMAGES } from '../src/data/mclarenHistoricWinImages';
 import { F1_DATA_CUTOFF, F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
 import { getWinImage } from '../src/data/ferrariChassisImages';
-import { F1_WIN_PHOTO_POOLS, getF1WinRepresentativePhoto } from '../src/data/f1WinRepresentativePhotos';
+import { getF1WinRepresentativePhoto } from '../src/data/f1WinRepresentativePhotos';
 import { toThumb } from '../src/lib/wikimedia';
 
 const winsFor = (teamId: string) => teamId === 'ferrari'
   ? FERRARI_WINS
   : (F1_WINS_BY_TEAM[teamId] ?? []);
+
+function assertPhotoSource(src: string, label: string): void {
+  if (src.startsWith('https://')) return;
+
+  assert.match(src, /^\/f1-wins\/(?:context\/[a-z0-9-]+|win_\d{3})\.webp$/, `${label}: invalid local photo path`);
+  const assetPath = join(process.cwd(), 'public', src.slice(1));
+  assert.ok(existsSync(assetPath), `${label}: local photo is missing`);
+  const signature = readFileSync(assetPath).subarray(0, 12);
+  assert.equal(signature.subarray(0, 4).toString('ascii'), 'RIFF', `${label}: local photo is not a WebP file`);
+  assert.equal(signature.subarray(8, 12).toString('ascii'), 'WEBP', `${label}: local photo is not a WebP file`);
+}
 
 assert.equal(
   toThumb('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Example.jpg/1280px-Example.jpg', 330),
@@ -81,16 +97,10 @@ assert.deepEqual(
   'McLaren historic wins must have a race photo for every record',
 );
 
-const imageSources = [
-  ...Object.entries(F1_WIN_IMAGES).filter(([key]) => !key.startsWith('mclaren:')).map(([, image]) => image),
-  ...Object.values(MCLAREN_HISTORIC_WIN_IMAGES),
-  ...Object.values(MCLAREN_RECENT_WIN_IMAGES),
-].map((image) => image.src);
-assert.equal(new Set(imageSources).size, imageSources.length, 'archive photographs must never repeat');
 for (const [key, image] of Object.entries(F1_WIN_IMAGES)) {
   const [teamId, number] = key.split(':');
   assert.ok(winsFor(teamId).some((win) => win.number === Number(number)), `image has no matching win: ${key}`);
-  assert.ok(image.src.startsWith('https://'), `${key}: photo must be a web image`);
+  assertPhotoSource(image.src, key);
   assert.ok(image.sourceUrl.startsWith('https://'), `${key}: photo needs a source page`);
   assert.ok(image.title, `${key}: photo needs its source title`);
 }
@@ -105,37 +115,39 @@ for (const win of F1_WINS_BY_TEAM.mclaren) {
   );
 }
 
-const displayedWinImages = F1_ARCHIVE_TEAMS.flatMap((team) => {
-  if (team.id === 'ferrari') return [];
-  const wins = winsFor(team.id);
-  return wins.flatMap((win) => {
-    const candidate = team.id === 'mclaren'
-      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
-    const verified = verifiedF1WinImage(team, win, candidate);
-    if (!verified) return [];
-    assert.equal(verified.kind, 'race', `${team.name} win ${win.number}: displayed image must be tied to the race`);
-    assert.ok(!F1_CROSS_TEAM_IMAGE_KEYS.has(`${team.id}:${win.number}`), `${team.name} win ${win.number}: cross-team image escaped quarantine`);
-    return [verified];
-  });
-});
+for (const key of F1_REJECTED_WIN_IMAGE_KEYS) {
+  assert.equal(F1_WIN_PHOTOS[key], undefined, `${key}: audited mismatch remains in the canonical catalog`);
+}
+
+for (const [key, image] of Object.entries(F1_WIN_PHOTOS)) {
+  assertPhotoSource(image.src, key);
+  assert.ok(hasLawfulF1ImageBasis(image), `${key}: photo needs a lawful reuse basis`);
+  assert.ok(isF1CarImage(image), `${key}: photo must show a Formula 1 car`);
+  assert.ok(statSync(join(process.cwd(), 'public', image.src.slice(1))).size <= 700 * 1024, `${key}: photo exceeds 700 KiB`);
+}
+
+for (const [circuit, image] of Object.entries(F1_CIRCUIT_PHOTOS)) {
+  assert.equal(image.mediaType, 'photograph', `${circuit}: fallback must be a photograph`);
+  assert.ok(hasLawfulF1ImageBasis(image), `${circuit}: fallback needs a lawful reuse basis`);
+}
 
 const archiveWinsWithImages = F1_ARCHIVE_TEAMS.flatMap((team) => winsFor(team.id).map((win) => {
+  const key = `${team.id}:${win.number}`;
   if (team.id === 'ferrari') {
     const image = getWinImage(win as (typeof FERRARI_WINS)[number]);
-    assert.ok(image?.src, `${team.name} win ${win.number}: no display image`);
+    assert.ok(image?.src, `${key}: no display image`);
+    assertPhotoSource(image.src, key);
     return image.src;
   }
 
   const candidate = team.id === 'mclaren'
-    ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-    : F1_WIN_IMAGES[`${team.id}:${win.number}`];
-  const image = verifiedF1WinImage(team, win, candidate)
-    ?? getF1WinRepresentativePhoto(team.id, win.number, true)
-    ?? team.archiveImage;
-  assert.ok(image?.src, `${team.name} win ${win.number}: no real photograph`);
-  assert.ok(image.src.startsWith('https://'), `${team.name} win ${win.number}: graphics and data URLs are forbidden`);
-  assert.ok(image.sourceUrl.startsWith('https://'), `${team.name} win ${win.number}: photograph needs a source page`);
+    ? (F1_WIN_PHOTOS[key] ?? MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+    : (F1_WIN_PHOTOS[key] ?? F1_WIN_IMAGES[key]);
+  const exactImage = verifiedF1WinImage(team, win, candidate);
+  const image = exactImage ?? getF1WinRepresentativePhoto(team.id, win.number, true);
+  assert.ok(image?.src, `${key}: no real photograph`);
+  assertPhotoSource(image.src, key);
+  assert.ok(image.sourceUrl.startsWith('https://'), `${key}: photograph needs a source page`);
   return image.src;
 }));
 
@@ -150,47 +162,9 @@ assert.equal(
   'every displayed constructor win must have a distinct visual',
 );
 
-for (const [teamId, pool] of Object.entries(F1_WIN_PHOTO_POOLS)) {
-  assert.ok(pool.length > 0, `${teamId}: representative photo pool is empty`);
-  assert.equal(new Set(pool.map((image) => image.src)).size, pool.length, `${teamId}: repeated representative photo`);
-  for (const image of pool) {
-    assert.ok(/^https:\/\/(?:upload|thumb)\.wikimedia\.org\//.test(image.src), `${teamId}: representative must be a Commons image`);
-    assert.ok(/\.jpe?g(?:\/|$)/i.test(image.src), `${teamId}: representative must be a JPEG photograph`);
-    assert.ok(image.sourceUrl.startsWith('https://commons.wikimedia.org/wiki/File:'), `${teamId}: representative needs a Commons file page`);
-  }
-}
-
-assert.equal(
-  new Set(displayedWinImages.map((image) => image.src)).size,
-  displayedWinImages.length,
-  'displayed win photographs must be unique',
-);
-for (const key of F1_CROSS_TEAM_IMAGE_KEYS) {
-  const [teamId, number] = key.split(':');
-  const team = F1_TEAMS.find((candidate) => candidate.id === teamId);
-  const win = winsFor(teamId).find((candidate) => candidate.number === Number(number));
-  const image = teamId === 'mclaren'
-    ? (MCLAREN_RECENT_WIN_IMAGES[Number(number)] ?? MCLAREN_HISTORIC_WIN_IMAGES[Number(number)])
-    : F1_WIN_IMAGES[key];
-  assert.ok(team && win && image, `quarantined image must still have a traceable source record: ${key}`);
-  assert.equal(verifiedF1WinImage(team, win, image), undefined, `cross-team image must remain quarantined: ${key}`);
-}
-for (const key of F1_BROKEN_IMAGE_KEYS) {
-  const [teamId, number] = key.split(':');
-  const team = F1_TEAMS.find((candidate) => candidate.id === teamId);
-  const win = winsFor(teamId).find((candidate) => candidate.number === Number(number));
-  const image = teamId === 'mclaren'
-    ? (MCLAREN_RECENT_WIN_IMAGES[Number(number)] ?? MCLAREN_HISTORIC_WIN_IMAGES[Number(number)])
-    : F1_WIN_IMAGES[key];
-  assert.ok(team && win && image, `broken image must retain its traceable source record: ${key}`);
-  assert.equal(verifiedF1WinImage(team, win, image), undefined, `broken image escaped quarantine: ${key}`);
-}
-
 const circuitCandidates = Object.values(F1_WIN_IMAGES).filter((image) => image.kind === 'circuit').length;
-const representativePhotoCount = archiveWinsWithImages.length - FERRARI_WINS.length - displayedWinImages.length;
 
 console.log(
-  `F1 archive validated: ${archiveWinsWithImages.length} distinct win visuals across ${F1_ARCHIVE_TEAMS.length} archive teams `
-  + `(${FERRARI_WINS.length + displayedWinImages.length} exact/chassis photographs, ${representativePhotoCount} distinct constructor photographs); `
-  + `${circuitCandidates} circuit candidates, ${F1_CROSS_TEAM_IMAGE_KEYS.size} cross-team photos and ${F1_BROKEN_IMAGE_KEYS.size} deleted files quarantined through ${F1_DATA_CUTOFF}.`,
+  `F1 archive validated: ${archiveWinsWithImages.length} distinct sourced photographs across ${F1_ARCHIVE_TEAMS.length} archive teams; `
+  + `${circuitCandidates} research circuit candidates and ${F1_REJECTED_WIN_IMAGE_KEYS.size} audited mismatches removed through ${F1_DATA_CUTOFF}.`,
 );

@@ -3,6 +3,7 @@ import { F1_ARCHIVE_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
 import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
+import { F1_WIN_PHOTOS } from '@/data/f1WinPhotos.generated';
 import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import { getF1WinRepresentativePhoto } from '@/data/f1WinRepresentativePhotos';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
@@ -89,14 +90,12 @@ const carsFolder: FolderNode = {
 /* ── F1 Archive: team folders → one win each ── */
 
 function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
+  const imageKey = `${team.id}:${win.number}`;
   const candidateImage = team.id === 'ferrari'
     ? undefined
     : team.id === 'mclaren'
-      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
-  // A circuit photo or a picture of another constructor is not evidence of this
-  // win, so the central policy quarantines it. A distinct, source-linked photo
-  // of the correct constructor fills records without an exact race photograph.
+      ? (F1_WIN_PHOTOS[imageKey] ?? MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+      : (F1_WIN_PHOTOS[imageKey] ?? F1_WIN_IMAGES[imageKey]);
   const sourceImage = verifiedF1WinImage(team, win, candidateImage);
   const representativeImage = getF1WinRepresentativePhoto(team.id, win.number, !sourceImage);
   const displayImage = sourceImage ?? representativeImage ?? team.archiveImage;
@@ -116,14 +115,12 @@ function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode 
       teamImageSourceUrl: displayImage.sourceUrl,
       teamImageKind: sourceImage?.kind ?? 'constructor',
     } : {}),
-    ...(errorFallback
-        ? {
-            teamFallbackImage: errorFallback.src,
-            teamFallbackImageLabel: errorFallback.label,
-            teamFallbackImageSourceUrl: errorFallback.sourceUrl,
-            teamFallbackImageKind: 'constructor',
-          }
-        : {}),
+    ...(errorFallback ? {
+      teamFallbackImage: errorFallback.src,
+      teamFallbackImageLabel: errorFallback.label,
+      teamFallbackImageSourceUrl: errorFallback.sourceUrl,
+      teamFallbackImageKind: 'constructor' as const,
+    } : {}),
   };
   const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
   const thumbnail = img?.src ?? (record.teamImage ? toThumb(record.teamImage, THUMB_TILE) : undefined);

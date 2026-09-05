@@ -3,6 +3,7 @@ import { FERRARI_WINS } from '../src/data/ferrariWins';
 import { getWinImage } from '../src/data/ferrariChassisImages';
 import { F1_ARCHIVE_TEAMS } from '../src/data/f1Teams';
 import { F1_WIN_IMAGES } from '../src/data/f1WinImages.generated';
+import { F1_WIN_PHOTOS } from '../src/data/f1WinPhotos.generated';
 import { verifiedF1WinImage } from '../src/data/f1WinImagePolicy';
 import { getF1WinRepresentativePhoto } from '../src/data/f1WinRepresentativePhotos';
 import { F1_WINS_BY_TEAM } from '../src/data/f1Wins.generated';
@@ -26,9 +27,10 @@ function displayedF1Media(): MediaReference[] {
       return { context: `${team.name} win ${win.number}`, url: getWinImage(win as FerrariWin)?.src ?? '' };
     }
 
+    const key = `${team.id}:${win.number}`;
     const candidate = team.id === 'mclaren'
-      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
-      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
+      ? (F1_WIN_PHOTOS[key] ?? MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+      : (F1_WIN_PHOTOS[key] ?? F1_WIN_IMAGES[key]);
     const source = verifiedF1WinImage(team, win, candidate);
     const image = source
       ?? getF1WinRepresentativePhoto(team.id, win.number, true)

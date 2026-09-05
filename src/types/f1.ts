@@ -13,9 +13,23 @@ export interface F1WinImage {
   title: string;
   label: string;
   kind: 'team' | 'race' | 'circuit';
+  reuseBasis?: string;
+  creator?: string;
+  mediaType?: 'photograph';
+  verificationStatus?: 'verified' | 'quarantined';
 }
 
 export type F1DisplayImageKind = F1WinImage['kind'] | 'constructor';
+
+export type F1ImageRole =
+  | 'exact-win'
+  | 'same-event'
+  | 'same-season'
+  | 'same-chassis'
+  | 'team-era'
+  | 'circuit';
+
+export type F1ImageVerificationStatus = 'verified' | 'unavailable';
 
 export interface F1Team {
   id: string;        // 'ferrari', 'red-bull', 'mercedes', ...
@@ -79,4 +93,8 @@ export interface F1Win extends F1WinRecord {
   teamFallbackImageLabel?: string;
   teamFallbackImageSourceUrl?: string;
   teamFallbackImageKind?: F1DisplayImageKind;
+  teamImageRole?: F1ImageRole;
+  teamImageReuseBasis?: string;
+  teamImageCreator?: string;
+  teamImageVerificationStatus?: F1ImageVerificationStatus;
 }
