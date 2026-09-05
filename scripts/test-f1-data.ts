@@ -42,12 +42,14 @@ assert.deepEqual(
   ['ferrari', 'mclaren', 'mercedes', 'red-bull', 'williams', 'lotus', 'renault'],
   'visitor-facing archive must contain only the selected constructors',
 );
+for (const team of F1_ARCHIVE_TEAMS) {
+  assert.ok(team.logo?.startsWith('/f1-logos/'), `${team.name}: displayed constructor must have a local F1 logo`);
+  assert.ok(existsSync(`public${team.logo}`), `${team.name}: local F1 logo asset must exist`);
+}
 
 for (const team of F1_TEAMS) {
   const wins = winsFor(team.id);
   assert.equal(team.enabled, wins.length > 0, `${team.name}: enabled state must match its records`);
-  assert.ok(team.logo?.startsWith('/f1-logos/'), `${team.name}: retained constructor must have a local F1 logo`);
-  assert.ok(existsSync(`public${team.logo}`), `${team.name}: local F1 logo asset must exist`);
   assert.equal(
     team.tagline,
     wins.length === 1 ? '1 Grand Prix win' : `${wins.length} Grand Prix wins`,
