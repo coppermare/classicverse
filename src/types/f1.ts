@@ -13,24 +13,9 @@ export interface F1WinImage {
   title: string;
   label: string;
   kind: 'team' | 'race' | 'circuit';
-  /** Optional rights metadata for future non-Commons sources. */
-  reuseBasis?: string;
-  creator?: string;
-  /** Explicit media classification; circuit records must be photographs. */
-  mediaType?: 'photograph';
-  verificationStatus?: 'verified' | 'quarantined';
 }
 
-/** The honest relationship between a displayed image and the victory record. */
-export type F1ImageRole =
-  | 'exact-win'
-  | 'same-event'
-  | 'same-season'
-  | 'same-chassis'
-  | 'team-era'
-  | 'circuit';
-
-export type F1ImageVerificationStatus = 'verified' | 'unavailable';
+export type F1DisplayImageKind = F1WinImage['kind'] | 'constructor';
 
 export interface F1Team {
   id: string;        // 'ferrari', 'red-bull', 'mercedes', ...
@@ -89,9 +74,9 @@ export interface F1Win extends F1WinRecord {
   teamImage?: string;
   teamImageLabel?: string;
   teamImageSourceUrl?: string;
-  teamImageKind?: F1WinImage['kind'];
-  teamImageRole?: F1ImageRole;
-  teamImageReuseBasis?: string;
-  teamImageCreator?: string;
-  teamImageVerificationStatus?: F1ImageVerificationStatus;
+  teamImageKind?: F1DisplayImageKind;
+  teamFallbackImage?: string;
+  teamFallbackImageLabel?: string;
+  teamFallbackImageSourceUrl?: string;
+  teamFallbackImageKind?: F1DisplayImageKind;
 }

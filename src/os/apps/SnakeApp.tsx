@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type TouchEvent } from 'react
 import type { AppProps } from '../types';
 import { RetroButton } from '../ui';
 import * as sfx from '../sound';
+import { isInteractiveTarget } from '../keyboard';
 import {
   COLS, ROWS,
   createGame, fitBoard, queueTurn, tick,
@@ -295,13 +296,7 @@ export default function SnakeApp({}: AppProps) {
      bubble, so the set's own Back still walks out of the game. */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const target = e.target;
-      if (
-        target instanceof HTMLInputElement
-        || target instanceof HTMLTextAreaElement
-        || target instanceof HTMLSelectElement
-        || (target instanceof HTMLElement && target.isContentEditable)
-      ) return;
+      if (e.defaultPrevented || isInteractiveTarget(e.target)) return;
       let handled = true;
       switch (e.key) {
         case ' ': case 'Enter': toggle(); break;

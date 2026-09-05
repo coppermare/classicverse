@@ -1,43 +1,11 @@
 'use client';
 
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
 import { isFolder, type FolderNode, type OSNode } from './types';
 import PixelArt from './PixelArt';
-import F1ImagePlaceholder from './F1ImagePlaceholder';
 import { emblemFor, folderGrid, labelEmblem, FOLDER_W, FOLDER_H } from './icons';
 import * as sfx from './sound';
-import { F1_REMOTE_IMAGE_HOSTS } from '@/data/f1ImageHosts';
-
-const F1_REMOTE_IMAGE_HOST_SET = new Set<string>(F1_REMOTE_IMAGE_HOSTS);
-
-function isOptimizedF1Photo(src: string): boolean {
-  if (src.startsWith('/f1-wins/')) return true;
-  try {
-    return F1_REMOTE_IMAGE_HOST_SET.has(new URL(src).hostname);
-  } catch {
-    return false;
-  }
-}
-
-function isWikimediaSpecialFilePath(src: string): boolean {
-  try {
-    const url = new URL(src);
-    return url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/');
-  } catch {
-    return false;
-  }
-}
-
-function directPreviewSource(src: string): string {
-  const url = new URL(src);
-  if (url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/')) {
-    // A 640px derivative is sharp at this 4:3 grid size, including high-DPI
-    // displays, without waiting for a server-side image proxy.
-    url.searchParams.set('width', '640');
-  }
-  return url.toString();
-}
+import { isInteractiveTarget } from './keyboard';
 
 /**
  * Renders any folder's contents. It knows nothing about cars or Ferrari — it
@@ -121,18 +89,17 @@ function NodeArt({ node }: { node: OSNode }) {
  * for the two tiles that actually changed.
  */
 const GalleryTile = memo(function GalleryTile({
-  node, active, onSelect, onOpen,
+  node, active, showPhoto, onSelect, onOpen,
 }: {
-  node: OSNode; active: boolean;
+  node: OSNode; active: boolean; showPhoto: boolean;
   onSelect: (id: string) => void; onOpen: (node: OSNode) => void;
 }) {
-  const photo = node.icon?.kind === 'photo' ? node.icon.src : null;
-  const [loadedPhoto, setLoadedPhoto] = useState<string>();
-  const [bypassedOptimizer, setBypassedOptimizer] = useState<string>();
-  const optimizedF1Photo = photo ? isOptimizedF1Photo(photo) : false;
-  const photoLoaded = loadedPhoto === photo;
-  const useDirectPreview = photo !== null && (isWikimediaSpecialFilePath(photo) || bypassedOptimizer === photo);
-  const deliveredPhoto = photo && useDirectPreview ? directPreviewSource(photo!) : photo;
+  const primaryPhoto = node.icon?.kind === 'photo' ? node.icon.src : null;
+  const fallbackPhoto = node.icon?.kind === 'photo' ? node.icon.fallbackSrc : undefined;
+  const [failedPhotos, setFailedPhotos] = useState<{ node: OSNode; sources: Set<string> } | null>(null);
+  const failedSources = failedPhotos?.node === node ? failedPhotos.sources : new Set<string>();
+  const photo = [primaryPhoto, fallbackPhoto]
+    .find((src): src is string => Boolean(src && !failedSources.has(src)));
   return (
     <button
       data-id={node.id}
@@ -150,33 +117,15 @@ const GalleryTile = memo(function GalleryTile({
           : 'inset 0 0 0 1px rgba(255,255,255,0.10)',
       }}
     >
-      {photo ? (
-        optimizedF1Photo ? (
-          <>
-            {!photoLoaded && <F1ImagePlaceholder thumbnail />}
-            <Image
-              key={deliveredPhoto}
-              src={deliveredPhoto!}
-              alt=""
-              fill
-              sizes="(max-width: 800px) 33vw, 250px"
-              loading="lazy"
-              decoding="async"
-              unoptimized={useDirectPreview}
-              onLoad={() => setLoadedPhoto(photo)}
-              onError={() => {
-                // Preserve a real preview if an archival host rejects the
-                // optimizer request; Wikimedia receives a small derivative.
-                if (!useDirectPreview) setBypassedOptimizer(photo);
-              }}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: photoLoaded ? 1 : 0, transition: 'opacity 160ms ease-out' }}
-            />
-          </>
-        ) : (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={photo} alt="" loading="lazy" decoding="async"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        )
+      {photo && showPhoto ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={photo} alt="" loading="lazy" decoding="async"
+          onError={() => setFailedPhotos((failed) => {
+            const sources = failed?.node === node ? new Set(failed.sources) : new Set<string>();
+            sources.add(photo);
+            return { node, sources };
+          })}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       ) : (
         <span style={{
           width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -242,6 +191,34 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
   // every time anything re-rendered, hovering a tile included.
   const children = useMemo(() => folder.children(), [folder]);
   const gridRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [visiblePhotos, setVisiblePhotos] = useState<{ folder: FolderNode; ids: Set<string> } | null>(null);
+  const canObserve = typeof IntersectionObserver !== 'undefined';
+
+  // Native lazy loading postpones downloads but keeps every visited image in
+  // the DOM. Long F1 galleries can retain hundreds of decoded photographs.
+  // Keep the tiles for layout/keyboard navigation, and mount photographs only
+  // within the scrollport plus one nearby row. A single observer owns the grid.
+  useEffect(() => {
+    const root = galleryRef.current;
+    const grid = gridRef.current;
+    if (!root || !grid || !canObserve) return;
+    let active = true;
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver((entries) => {
+      if (!active) return;
+      let changed = false;
+      for (const entry of entries) {
+        const id = (entry.target as HTMLButtonElement).dataset.id;
+        if (!id) continue;
+        if (entry.isIntersecting && !visible.has(id)) { visible.add(id); changed = true; }
+        else if (!entry.isIntersecting && visible.delete(id)) changed = true;
+      }
+      if (changed) setVisiblePhotos({ folder, ids: new Set(visible) });
+    }, { root, rootMargin: '240px 0px' });
+    grid.querySelectorAll('button[data-id]').forEach((tile) => observer.observe(tile));
+    return () => { active = false; observer.disconnect(); };
+  }, [folder, children, canObserve]);
 
   // Found by id rather than held on a ref: a ref would have to be threaded
   // through the tile, and the tiles are memoised precisely so that they don't
@@ -269,14 +246,15 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const grid = gridRef.current;
       if (!grid) return;
+      if (e.defaultPrevented || (isInteractiveTarget(e.target)
+        && !(e.target instanceof Element && e.target.closest('button[data-id]') && grid.contains(e.target)))) return;
 
       const tiles = [...grid.querySelectorAll<HTMLButtonElement>('button[data-id]')];
       if (!tiles.length) return;
-      const at = Math.max(0, tiles.findIndex((t) => t.dataset.id === selectedId));
+      const focused = e.target instanceof Element ? e.target.closest('button[data-id]') : null;
+      const at = Math.max(0, tiles.findIndex((t) => focused ? t === focused : t.dataset.id === selectedId));
 
       let next = at;
       if (e.key === 'Home') next = 0;
@@ -305,6 +283,7 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
       e.preventDefault();
       const id = tiles[next]?.dataset.id;
       if (id && id !== selectedId) { onSelect(id); sfx.tick(); }
+      if (e.target instanceof Node && grid.contains(e.target)) tiles[next]?.focus();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -328,7 +307,7 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
 
   if (gallery) {
     return (
-      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', background: '#14110d', paddingTop: 44 }}>
+      <div ref={galleryRef} style={{ position: 'absolute', inset: 0, overflowY: 'auto', background: '#14110d', paddingTop: 44 }}>
         {/* Gutters, so the tiles read as separate photographs rather than one
             butted-together sheet — and so the selection ring has room to sit. */}
         <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7, padding: '7px 8px 10px' }}>
@@ -337,6 +316,7 @@ export default function FolderView({ folder, selectedId, onSelect, onOpen }: Pro
               key={node.id}
               node={node}
               active={node.id === selectedId}
+              showPhoto={!canObserve || (visiblePhotos?.folder === folder && visiblePhotos.ids.has(node.id))}
               onSelect={onSelect}
               onOpen={onOpen}
             />

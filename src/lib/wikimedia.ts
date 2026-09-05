@@ -21,10 +21,30 @@ export const THUMB_DETAIL = 960;
 export const THUMB_TILE = 330;
 
 export function toThumb(src: string, width = THUMB_DETAIL): string {
-  const m = src.match(
-    /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/commons)\/([0-9a-f])\/([0-9a-f]{2})\/(.+)$/,
-  );
-  if (!m) return src; // already a thumb, a local file, or a non-Commons URL — leave as is
-  const [, base, h1, h2, file] = m;
-  return `${base}/thumb/${h1}/${h2}/${file}/${width}px-${file}`;
+  let url: URL;
+  try {
+    url = new URL(src);
+  } catch {
+    return src;
+  }
+  if (!['upload.wikimedia.org', 'thumb.wikimedia.org'].includes(url.hostname)) return src;
+
+  const parts = url.pathname.split('/');
+  const commons = parts.indexOf('commons');
+  if (commons < 0) return src;
+
+  if (parts[commons + 1] === 'thumb') {
+    const file = parts.at(-2);
+    if (!file) return src;
+    parts[parts.length - 1] = `${width}px-${file}`;
+    url.pathname = parts.join('/');
+    return url.toString();
+  }
+
+  const [h1, h2, file] = parts.slice(commons + 1);
+  if (!h1 || !h2 || !file || parts.length !== commons + 4) return src;
+  parts.splice(commons + 1, 0, 'thumb');
+  parts.push(`${width}px-${file}`);
+  url.pathname = parts.join('/');
+  return url.toString();
 }

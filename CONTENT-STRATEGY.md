@@ -133,5 +133,5 @@ Before publishing or regenerating an archive:
 3. Sources and cutoff dates are recorded.
 4. Images have reachable attribution and licence data.
 5. Original prose has been checked against its sources.
-6. Every F1 record uses either a verified contextual image or unique editorial artwork. The role label must say whether a source image is same-event, same-season or team-era context; artwork must never be presented as a race photograph. Circuit-only, cross-team and rights-unverified photography remains research material only.
+6. Every displayed F1 record uses a distinct, source-linked photograph. Prefer a verified image of the exact win and winning team; otherwise use a labelled photograph of the correct constructor. Circuit-only photography, cross-team images and generated graphics remain research candidates, never display fallbacks.
 7. No placeholder is presented as a completed archive.

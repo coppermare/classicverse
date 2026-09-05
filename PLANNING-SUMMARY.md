@@ -1,6 +1,6 @@
 # Classicverse Product Summary
 
-**Updated:** 2026-08-16
+**Updated:** 2026-09-05
 
 **Status:** Working portfolio product under active development
 
@@ -12,7 +12,7 @@ Classicverse is a collection of historical archives and live applications presen
 
 It currently combines:
 
-1. A Formula One archive with 1,013 constructor victories across nine selected major team identities, current through 2026-07-26.
+1. A visitor-facing Formula One archive with 951 victories across seven selected constructors, backed by a larger research snapshot current through 2026-07-26.
 2. An exact century of iconic cars, 1885–1984.
 3. Live internet radio.
 4. Live weather.
@@ -39,7 +39,7 @@ The old 116-year promise, "do not build" status and pre-implementation gates are
 2. **Constructor-specific F1 records:** A win belongs to the statistically recognized constructor identity represented by its team folder; aliases require documented mappings.
 3. **No hidden ownership claims:** Historical sources, Wikimedia media, logos and radio streams retain attribution or ownership context.
 4. **No account system:** Preferences such as station, weather place, units and Snake best score stay in local storage.
-5. **URL location is authoritative:** `?p=` makes destinations deep-linkable and keeps toolbar/browser history aligned.
+5. **URL location is authoritative:** Real pathnames make destinations deep-linkable and keep toolbar/browser history aligned; legacy `?p=` links migrate automatically.
 6. **Fill view changes presentation, not application state:** Expanding or restoring the cabinet must not remount the TV or reset a channel.
 7. **The TV metaphor serves usability:** Physical delight is welcome; inaccessible controls, misleading fallbacks or slow routine actions are not.
 
@@ -59,15 +59,15 @@ The old 116-year promise, "do not build" status and pre-implementation gates are
 2. Remote car images and public radio streams can disappear.
 3. Large archive data currently contributes to client payload size.
 4. The manual visual QA surface is broader than the automated test suite.
-5. Some older application files may be implemented but unreachable; each should be registered intentionally or removed.
+5. Remote photographs and live services need periodic reachability checks and graceful runtime fallbacks.
 
 ## Immediate Priorities
 
-1. Maintain the selected nine-team F1 constructor snapshot and its documented source/2026-07-26 cutoff, while replacing quarantined circuit-only and cross-team image candidates with exact-win photography.
+1. Maintain the selected F1 archive and its documented source/2026-07-26 cutoff, while continuing to replace representative constructor photographs with verified race-specific photography where available.
 2. Verify edge-to-edge fill-view behavior across desktop and narrow layouts.
 3. Stabilize Snake across resize, focus, timing and persistence edge cases.
 4. Add archive-data validation and browser smoke coverage.
-5. Split heavy channel data and generate smaller gallery thumbnails.
+5. Split heavy channel data to reduce the initial client payload; gallery thumbnails already request smaller Commons renditions.
 6. Keep the active documentation synchronized with the registry and generated counts.
 
 ## Definition Of Done

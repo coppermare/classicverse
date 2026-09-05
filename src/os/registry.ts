@@ -1,8 +1,12 @@
 import { CARS } from '@/data/cars';
-import { F1_TEAMS } from '@/data/f1Teams';
+import { F1_ARCHIVE_TEAMS } from '@/data/f1Teams';
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
-import { resolveF1WinImage } from '@/data/f1WinImageManifest';
+import { F1_WIN_IMAGES } from '@/data/f1WinImages.generated';
+import { verifiedF1WinImage } from '@/data/f1WinImagePolicy';
+import { getF1WinRepresentativePhoto } from '@/data/f1WinRepresentativePhotos';
+import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
+import { MCLAREN_HISTORIC_WIN_IMAGES } from '@/data/mclarenHistoricWinImages';
 import { getWinImage } from '@/data/ferrariChassisImages';
 import { toThumb, THUMB_TILE } from '@/lib/wikimedia';
 import type { CarRecord } from '@/types/car';
@@ -85,10 +89,20 @@ const carsFolder: FolderNode = {
 /* ── F1 Archive: team folders → one win each ── */
 
 function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode {
-  // The resolver admits only local, rights-cleared, team/driver-contextual
-  // photos. Every other record remains explicitly unavailable instead of
-  // borrowing a misleading circuit, cross-team photograph or graphic.
-  const resolvedImage = resolveF1WinImage(team, win);
+  const candidateImage = team.id === 'ferrari'
+    ? undefined
+    : team.id === 'mclaren'
+      ? (MCLAREN_RECENT_WIN_IMAGES[win.number] ?? MCLAREN_HISTORIC_WIN_IMAGES[win.number])
+      : F1_WIN_IMAGES[`${team.id}:${win.number}`];
+  // A circuit photo or a picture of another constructor is not evidence of this
+  // win, so the central policy quarantines it. A distinct, source-linked photo
+  // of the correct constructor fills records without an exact race photograph.
+  const sourceImage = verifiedF1WinImage(team, win, candidateImage);
+  const representativeImage = getF1WinRepresentativePhoto(team.id, win.number, !sourceImage);
+  const displayImage = sourceImage ?? representativeImage ?? team.archiveImage;
+  const errorFallback = sourceImage
+    ? (getF1WinRepresentativePhoto(team.id, win.number, false) ?? team.archiveImage)
+    : undefined;
   const record: F1Win = {
     ...win,
     teamId: team.id,
@@ -96,25 +110,37 @@ function winNode(team: F1Team, win: F1WinRecord, teamWinCount: number): AppNode 
     teamMark: team.mark,
     teamAccent: team.accent,
     teamWinCount,
-    ...(resolvedImage.src ? {
-      teamImage: resolvedImage.src,
-      teamImageLabel: resolvedImage.label,
-      ...(resolvedImage.sourceUrl ? { teamImageSourceUrl: resolvedImage.sourceUrl } : {}),
-      ...(resolvedImage.kind ? { teamImageKind: resolvedImage.kind } : {}),
-      ...(resolvedImage.role !== 'unavailable' ? { teamImageRole: resolvedImage.role } : {}),
-      teamImageReuseBasis: resolvedImage.reuseBasis,
-      ...(resolvedImage.creator ? { teamImageCreator: resolvedImage.creator } : {}),
+    ...(displayImage ? {
+      teamImage: displayImage.src,
+      teamImageLabel: displayImage.label,
+      teamImageSourceUrl: displayImage.sourceUrl,
+      teamImageKind: sourceImage?.kind ?? 'constructor',
     } : {}),
-    teamImageVerificationStatus: resolvedImage.verificationStatus,
+    ...(errorFallback
+        ? {
+            teamFallbackImage: errorFallback.src,
+            teamFallbackImageLabel: errorFallback.label,
+            teamFallbackImageSourceUrl: errorFallback.sourceUrl,
+            teamFallbackImageKind: 'constructor',
+          }
+        : {}),
   };
   const img = team.id === 'ferrari' ? getWinImage(win as FerrariWin, THUMB_TILE) : undefined;
-  const thumbnail = img?.src ?? resolvedImage.src;
+  const thumbnail = img?.src ?? (record.teamImage ? toThumb(record.teamImage, THUMB_TILE) : undefined);
   return {
     id: String(win.number),
     kind: 'app',
     name: `${win.grand_prix} Grand Prix`,
     subtitle: `${win.year} - ${win.driver}`,
-    icon: thumbnail ? { kind: 'photo', src: thumbnail } : { kind: 'label', text: team.mark },
+    icon: thumbnail
+      ? {
+          kind: 'photo',
+          src: thumbnail,
+          ...(team.id !== 'ferrari' && record.teamFallbackImage
+            ? { fallbackSrc: toThumb(record.teamFallbackImage, THUMB_TILE) }
+            : {}),
+        }
+      : { kind: 'label', text: team.mark },
     component: WinApp,
     chrome: 'bleed',
     data: record,
@@ -136,7 +162,7 @@ const f1Folder: FolderNode = {
   icon: { kind: 'glyph', id: 'f1' },
   layout: 'icons',
   keywords: 'formula one grand prix racing motorsport',
-  children: lazy(() => F1_TEAMS.map((team): FolderNode => {
+  children: lazy(() => F1_ARCHIVE_TEAMS.map((team): FolderNode => {
     const wins = winsForTeam(team);
     return {
       id: team.id,

@@ -5,6 +5,7 @@ import { fetchLiveBand } from '@/data/liveRadio';
 import type { AppProps, RadioStation, RadioTrack } from '../types';
 import { RetroButton, INK, FACE } from '../ui';
 import { setTuner } from '../tuner';
+import { isInteractiveTarget } from '../keyboard';
 
 /**
  * The Radio — a working FM receiver.
@@ -101,6 +102,8 @@ export default function RadioApp({ os }: AppProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const graphRef = useRef<{ ctx: AudioContext; gain: GainNode; analyser: AnalyserNode } | null>(null);
   const staticRef = useRef<GainNode | null>(null);
+  const noiseRef = useRef<AudioBufferSourceNode | null>(null);
+  const lifetimeRef = useRef({ generation: 0 });
   const graphFailed = useRef(false);
 
   /* The low end of the band. Where the needle rests before the set is switched
@@ -246,6 +249,7 @@ export default function RadioApp({ os }: AppProps) {
       sg.gain.value = 0;
       noise.connect(bp); bp.connect(sg); sg.connect(gain);
       noise.start();
+      noiseRef.current = noise;
       staticRef.current = sg;
 
       // Hand volume over to the graph in the same breath. The element keeps
@@ -260,6 +264,31 @@ export default function RadioApp({ os }: AppProps) {
       return null;
     }
   }, [os.volume, os.muted]);
+
+  useEffect(() => {
+    const lifetime = lifetimeRef.current;
+    const generation = ++lifetime.generation;
+    const el = audioRef.current;
+    return () => {
+      // Strict Mode replays effects on the same audio element. Give that setup
+      // one microtask to reclaim the graph: a MediaElementSource cannot be
+      // recreated for an element that was already attached to a closed context.
+      queueMicrotask(() => {
+        if (generation !== lifetime.generation) return;
+        el?.pause();
+        el?.removeAttribute('src');
+        el?.load();
+        noiseRef.current?.stop();
+        noiseRef.current?.disconnect();
+        const graph = graphRef.current;
+        graph?.gain.disconnect();
+        if (graph && graph.ctx.state !== 'closed') void graph.ctx.close().catch(() => {});
+        graphRef.current = null;
+        staticRef.current = null;
+        noiseRef.current = null;
+      });
+    };
+  }, []);
 
   // The set's knob drives the graph gain, or the element directly if there's no graph.
   useEffect(() => {
@@ -397,7 +426,7 @@ export default function RadioApp({ os }: AppProps) {
   /* ── Keyboard: space/arrows, the way a remote works ── */
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (e.defaultPrevented || isInteractiveTarget(e.target)) return;
       if (e.key === ' ') { e.preventDefault(); void power(!powered); }
       if (e.key === 'ArrowRight') { e.preventDefault(); nudge(1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); nudge(-1); }

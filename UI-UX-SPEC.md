@@ -46,7 +46,7 @@ Requirements:
 
 ## 4. System Navigation
 
-Every location is an OS path serialized in the `?p=` query parameter. The toolbar and browser history operate the same path stack.
+Every location has a real pathname. The toolbar and browser history operate the same path stack, and legacy `?p=` links migrate to their canonical pathname when opened.
 
 Toolbar actions:
 

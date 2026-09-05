@@ -4,6 +4,7 @@ node_modules/
 # Next.js
 .next/
 out/
+next-env.d.ts
 
 # build artifacts
 tsconfig.tsbuildinfo
@@ -27,3 +28,7 @@ npm-debug.log*
 
 # The F1 archive generator reads its tracked constructor/alias configuration.
 !src/data/f1TeamConfig.json
+
+# Curated Commons photo pools back every F1 win with a real image.
+!src/data/f1PhotoPools/
+!src/data/f1PhotoPools/*.json

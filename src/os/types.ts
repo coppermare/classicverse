@@ -21,7 +21,7 @@ export type IconSpec =
   /** A logo/marque asset — letterboxed, keeps its own aspect ratio. */
   | { kind: 'image'; src: string }
   /** A photograph — fills the tile, used for gallery layouts. */
-  | { kind: 'photo'; src: string }
+  | { kind: 'photo'; src: string; fallbackSrc?: string }
   /** Fallback: a short label stamped on the folder. */
   | { kind: 'label'; text: string };
 

@@ -29,3 +29,11 @@ export const F1_TEAMS: F1Team[] = teamConfig.map((team) => {
 });
 
 export const getF1Team = (id: string) => F1_TEAMS.find((t) => t.id === id);
+
+/** Teams selected for the visitor-facing archive; source records stay intact. */
+const ARCHIVE_TEAM_IDS = new Set([
+  'ferrari', 'mclaren', 'mercedes', 'red-bull',
+  'williams', 'lotus', 'renault',
+]);
+
+export const F1_ARCHIVE_TEAMS = F1_TEAMS.filter((team) => ARCHIVE_TEAM_IDS.has(team.id));

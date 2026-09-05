@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import Classicverse from '@/os/Classicverse';
+import '../styles/base.css';
+import '../styles/television.css';
+import '../styles/changelog.css';
+import '../styles/radio.css';
 
 // One typeface for the whole set — chrome, screen, and every channel. A second
 // pixel "CRT" face was used for on-screen titles, which made the same product
@@ -46,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light" className={`${inter.variable} h-full`}>
       <body className="h-full min-h-screen antialiased" style={{ fontFamily: 'var(--font-sans)' }}>
-        {children}
+        <Classicverse>{children}</Classicverse>
       </body>
     </html>
   );
