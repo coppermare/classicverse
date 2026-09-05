@@ -13,7 +13,7 @@
 
 .cv-changelog-title {
   margin: 0;
-  padding: 14px 28px 8px 66px;
+  padding: 14px 28px 8px 39px;
   font-size: 24px;
   font-weight: 700;
   line-height: 1.1;
@@ -25,6 +25,16 @@
   margin: 0;
   padding: 0 28px 28px 66px;
   list-style: none;
+}
+
+.cv-changelog-list::before {
+  position: absolute;
+  top: 38px;
+  bottom: 27px;
+  left: 39px;
+  width: 1px;
+  background: #b8afa1;
+  content: '';
 }
 
 .cv-changelog-entry {
@@ -81,12 +91,18 @@
 
 @media (max-width: 500px) {
   .cv-changelog-title {
-    padding: 12px 18px 7px 45px;
+    padding: 12px 18px 7px 24px;
     font-size: 22px;
   }
 
   .cv-changelog-list {
     padding: 0 18px 22px 45px;
+  }
+
+  .cv-changelog-list::before {
+    top: 35px;
+    bottom: 24px;
+    left: 24px;
   }
 
   .cv-changelog-entry {
