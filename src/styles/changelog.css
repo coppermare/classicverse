@@ -13,7 +13,7 @@
 
 .cv-changelog-title {
   margin: 0;
-  padding: 14px 28px 8px 39px;
+  padding: 14px 28px 8px 66px;
   font-size: 24px;
   font-weight: 700;
   line-height: 1.1;
@@ -91,7 +91,7 @@
 
 @media (max-width: 500px) {
   .cv-changelog-title {
-    padding: 12px 18px 7px 24px;
+    padding: 12px 18px 7px 45px;
     font-size: 22px;
   }
 
