@@ -59,7 +59,7 @@ Maintenance rules:
 
 ### Formula One
 
-The implemented archive contains 1,013 victories across nine selected major constructor folders: 250 curated Ferrari records and 763 generated records across eight other winning constructor identities. Its generated snapshot uses Jolpica F1 through the 2026 Hungarian Grand Prix on 2026-07-26. Smaller and short-history constructor folders are intentionally outside the visible archive scope.
+The visitor archive contains 951 victories across Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus and Renault. The underlying source snapshot retains 250 curated Ferrari records and 899 generated records across 33 other winning constructor identities for research and future curation. Its generated snapshot uses Jolpica F1 through the 2026 Hungarian Grand Prix on 2026-07-26.
 
 Constructor victory records must come from a documented results source and be generated or normalized through a repeatable script. Every output records its source and cutoff date. Team aliases must be explicit because constructor names change across eras and datasets. Indianapolis-only chassis winners are excluded because those entries were Indianapolis 500 constructors rather than Formula One teams, even though that race once counted toward the World Drivers' Championship.
 
@@ -68,7 +68,7 @@ Maintenance rules:
 1. Preserve chronological ordering and a stable per-team win number.
 2. Validate team counts against the source snapshot.
 3. Keep Ferrari's chassis-image attribution separate from results data.
-4. Curate a contextual photograph for each victory where the source set supports it. The display resolver admits only a local WebP, rights-cleared photograph whose metadata connects it to the winning team, driver, season or event; circuit-only, cross-team and rights-unverified candidates stay quarantined. Every gap remains an explicit unavailable state.
+4. Give every displayed win a distinct, source-linked photograph. Prefer a verified race or chassis photograph; otherwise use a labelled photograph of the correct constructor. Circuit-only, cross-team and generated graphics remain quarantined.
 5. Re-run the generator deliberately; never silently fetch changing results during a production page request.
 
 ### Radio

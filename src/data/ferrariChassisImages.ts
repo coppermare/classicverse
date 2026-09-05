@@ -75,5 +75,6 @@ export function getWinImage(win: FerrariWin, width?: number): ChassisImage | nul
   // Prefer a photo specific to this individual win; fall back to the car's
   // per-chassis image if no per-win image was sourced. Win images are already
   // local and pre-compressed, so toThumb is a no-op for them.
-  return compress(WIN_IMAGES[win.number] ?? CHASSIS_IMAGES[win.chassis] ?? null, width);
+  const chassisKey = win.chassis === '641' ? '641/2' : win.chassis;
+  return compress(WIN_IMAGES[win.number] ?? CHASSIS_IMAGES[chassisKey] ?? null, width);
 }

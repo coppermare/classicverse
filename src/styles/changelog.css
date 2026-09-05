@@ -1,0 +1,129 @@
+/* Changelog — a paper register inside the same chrome as the other system
+   applications. It is intentionally still: this is a frequently scanned list,
+   so immediate scrolling is more useful than decorative entry animation. */
+.cv-changelog {
+  position: absolute;
+  inset: 0;
+  padding-top: 44px;
+  overflow-y: auto;
+  color: #1c1a17;
+  background: linear-gradient(180deg, #fdfbf5 0%, #f4efe2 100%);
+  font-family: var(--font-sans);
+}
+
+.cv-changelog-title {
+  margin: 0;
+  padding: 14px 28px 8px 66px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cv-changelog-list {
+  position: relative;
+  margin: 0;
+  padding: 0 28px 28px 66px;
+  list-style: none;
+}
+
+.cv-changelog-list::before {
+  position: absolute;
+  top: 38px;
+  bottom: 27px;
+  left: 39px;
+  width: 1px;
+  background: #b8afa1;
+  content: '';
+}
+
+.cv-changelog-entry {
+  position: relative;
+  padding: 14px 0 17px;
+}
+
+.cv-changelog-entry:last-child {
+  border-bottom: 0;
+}
+
+.cv-changelog-marker {
+  position: absolute;
+  top: 33px;
+  left: -33px;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #8c2b2b;
+  border-radius: 50%;
+  background: #fdfbf5;
+  box-shadow: 0 0 0 4px #fdfbf5;
+}
+
+.cv-changelog-entry article {
+  min-width: 0;
+}
+
+.cv-changelog-entry h2 {
+  margin: 2px 0 6px;
+  font-size: 17px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cv-changelog-entry time {
+  display: block;
+  color: #776f64;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cv-changelog-entry article > p:last-child {
+  max-width: 680px;
+  margin: 0;
+  color: #4f4941;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 500px) {
+  .cv-changelog-title {
+    padding: 12px 18px 7px 45px;
+    font-size: 22px;
+  }
+
+  .cv-changelog-list {
+    padding: 0 18px 22px 45px;
+  }
+
+  .cv-changelog-list::before {
+    top: 35px;
+    bottom: 24px;
+    left: 24px;
+  }
+
+  .cv-changelog-entry {
+    padding: 12px 0 15px;
+  }
+
+  .cv-changelog-marker {
+    top: 30px;
+    left: -27px;
+  }
+
+  .cv-changelog-entry h2 {
+    font-size: 16px;
+  }
+
+  .cv-changelog-entry time {
+    font-size: 9px;
+  }
+
+  .cv-changelog-entry article > p:last-child {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+}

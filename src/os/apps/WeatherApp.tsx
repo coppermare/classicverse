@@ -11,6 +11,7 @@ import { skyGrid } from '../weatherArt';
 import type { AppProps } from '../types';
 import { RetroButton, INK, FACE, RADIUS, WELL } from '../ui';
 import { setTuner } from '../tuner';
+import { isInteractiveTarget } from '../keyboard';
 
 /**
  * The Weather — a channel showing the real sky.
@@ -166,7 +167,9 @@ export default function WeatherApp({}: AppProps) {
   }, [trimmed]);
 
   const choosePlace = useCallback((p: Place) => {
-    setPlaces((list) => (list.some((x) => x.id === p.id) ? list : [p, ...list]));
+    setPlaces((list) => (list.some((x) => x.id === p.id)
+      ? list.map((existing) => existing.id === p.id ? p : existing)
+      : [p, ...list]));
     setPlaceId(p.id);
     setQuery('');
   }, []);
@@ -203,7 +206,7 @@ export default function WeatherApp({}: AppProps) {
     const h = (e: KeyboardEvent) => {
       // The search field is a text input: left and right belong to the caret
       // while it has focus, not to the dial.
-      if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (e.defaultPrevented || isInteractiveTarget(e.target)) return;
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       e.preventDefault();
       setPlaceId((id) => {

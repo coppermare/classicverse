@@ -5,6 +5,7 @@ import { isFolder, type FolderNode } from './types';
 import { buildIndex, recommendations, search as runSearch, type Hit } from './search';
 import { Bevel, TitleBar, RetroButton, RADIUS, WELL, RAISED } from './ui';
 import * as sfx from './sound';
+import { isEditingTarget, isInteractiveTarget } from './keyboard';
 
 /**
  * Global search — a white system panel, not a black overlay.
@@ -66,6 +67,7 @@ export default function SearchPanel({
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') { e.preventDefault(); sfx.back(); onClose(); return; }
+    if (e.defaultPrevented || (isInteractiveTarget(e.target) && !isEditingTarget(e.target))) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); sfx.tick(); setCursor((c) => Math.min(rows.length - 1, c + 1)); return; }
     if (e.key === 'ArrowUp') { e.preventDefault(); sfx.tick(); setCursor((c) => Math.max(0, c - 1)); return; }
     if (e.key === 'Enter') { e.preventDefault(); const r = rows[cursor]; if (r) go(r.path); else sfx.error(); }

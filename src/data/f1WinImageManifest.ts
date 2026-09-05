@@ -1,9 +1,10 @@
 import { FERRARI_WINS } from '@/data/ferrariWins';
 import { getWinImage } from '@/data/ferrariChassisImages';
+import { WIN_IMAGES } from '@/data/ferrariWinImages';
 import { F1_WIN_PHOTOS } from '@/data/f1WinPhotos.generated';
 import { F1_CIRCUIT_PHOTOS } from '@/data/f1CircuitPhotos.generated';
 import { F1_WINS_BY_TEAM } from '@/data/f1Wins.generated';
-import { F1_TEAMS } from '@/data/f1Teams';
+import { F1_ARCHIVE_TEAMS } from '@/data/f1Teams';
 import { MCLAREN_RECENT_WIN_IMAGES } from '@/data/mclarenRecentWinImages';
 import { verifiedF1CircuitImage, verifiedF1WinImage } from '@/data/f1WinImagePolicy';
 import type {
@@ -114,14 +115,15 @@ function resolveCircuitFallback(team: F1Team, win: F1WinRecord): ResolvedF1WinIm
 /** Resolve one safe primary car image, circuit fallback, or an honest unavailable state. */
 export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1WinImage {
   if (team.id === 'ferrari') {
-    const image = getWinImage(win as FerrariWin);
+    const exactWinImage = WIN_IMAGES[win.number];
+    const image = exactWinImage ?? getWinImage(win as FerrariWin);
     if (image?.src.startsWith('/f1-wins/')) {
       return {
         src: image.src,
         label: image.note ? `Car-context photograph — ${image.note}` : 'Car-context photograph',
         sourceUrl: image.attribution_url,
         kind: 'race',
-        role: image.note?.toLowerCase().includes('win') ? 'same-event' : 'team-era',
+        role: exactWinImage ? 'exact-win' : 'same-chassis',
         reuseBasis: image.license,
         creator: image.creator,
         verificationStatus: 'verified',
@@ -160,7 +162,7 @@ export function resolveF1WinImage(team: F1Team, win: F1WinRecord): ResolvedF1Win
  */
 export function buildF1WinImageManifest(): F1WinImageManifestEntry[] {
   const entries: F1WinImageManifestEntry[] = [];
-  const teams = F1_TEAMS.filter((team) => team.enabled && team.id !== 'ferrari');
+  const teams = F1_ARCHIVE_TEAMS.filter((team) => team.enabled && team.id !== 'ferrari');
   for (const team of teams) {
     for (const win of F1_WINS_BY_TEAM[team.id] ?? []) {
       const resolved = resolveF1WinImage(team, win);

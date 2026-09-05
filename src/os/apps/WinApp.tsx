@@ -1,68 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { getWinImage } from '@/data/ferrariChassisImages';
-import F1ImagePlaceholder from '../F1ImagePlaceholder';
+import { toThumb } from '@/lib/wikimedia';
 import type { F1Win, FerrariWin } from '@/types/f1';
 import type { AppProps } from '../types';
 import { RetroButton, TitleBar, Bevel, INK, RADIUS, WELL } from '../ui';
 import * as sfx from '../sound';
 
-function imageRoleLabel(role: F1Win['teamImageRole']): string {
-  switch (role) {
-    case 'exact-win': return 'Exact win photograph';
-    case 'same-event': return 'Same-event context photograph';
-    case 'same-season': return 'Same-season context photograph';
-    case 'same-chassis': return 'Correct-chassis context photograph';
-    case 'team-era': return 'Team/era context photograph';
-    case 'circuit': return 'Associated circuit fallback photograph';
-    case undefined: return 'Source photograph unavailable';
-    default: return 'Contextual image';
-  }
-}
-
-function directFallbackSource(source: string): string {
-  const url = new URL(source);
-  if (url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/')) {
-    // Wikimedia creates an efficiently sized raster when width is specified.
-    // Use it only after Next's server-side optimizer has been throttled.
-    url.searchParams.set('width', '1280');
-  }
-  return url.toString();
-}
-
-function isPreSizedWikimediaSource(source: string | undefined): source is string {
-  if (!source) return false;
-  const url = new URL(source);
-  return url.hostname === 'commons.wikimedia.org' && url.pathname.startsWith('/wiki/Special:FilePath/');
-}
-
 /** One Grand Prix victory: the car that scored it, and the record behind it. */
 export default function WinApp({ node, os }: AppProps) {
   const win = node.data as F1Win;
   const [details, setDetails] = useState(false);
-  const [failedImage, setFailedImage] = useState<string>();
-  const [loadedImage, setLoadedImage] = useState<string>();
-  const [imageAttempt, setImageAttempt] = useState<{ src: string; count: number }>({ src: '', count: 0 });
-  const [bypassedOptimizer, setBypassedOptimizer] = useState<string>();
+  const [failedImages, setFailedImages] = useState<string[]>([]);
   const img = win.teamId === 'ferrari' ? getWinImage(win as FerrariWin) : undefined;
-  const primaryImage = img?.src ?? (win.teamImageVerificationStatus === 'verified' ? win.teamImage : undefined);
-  const photoFailed = failedImage === primaryImage;
-  const imageFailed = !primaryImage || photoFailed;
-  const photoLoaded = loadedImage === primaryImage;
-  const retryCount = imageAttempt.src === primaryImage ? imageAttempt.count : 0;
-  const useDirectFallback = bypassedOptimizer === primaryImage;
-  // Wikimedia's redirect endpoint is reliable in the browser but its
-  // server-side optimizer fetch is frequently throttled. Start with the
-  // publisher's 1280px derivative so circuit cards paint immediately.
-  const usePreSizedWikimediaSource = isPreSizedWikimediaSource(primaryImage);
-  const bypassesOptimizer = usePreSizedWikimediaSource || useDirectFallback;
-  const deliveredImage = primaryImage && bypassesOptimizer ? directFallbackSource(primaryImage) : primaryImage;
-  const preserveWholeCar = primaryImage === '/f1-wins/context/renault-9.webp';
+  const preferredImage = img?.src ?? (win.teamImage ? toThumb(win.teamImage) : undefined);
+  const fallbackImage = win.teamFallbackImage ? toThumb(win.teamFallbackImage) : undefined;
+  const imageSrc = [preferredImage, fallbackImage]
+    .find((src): src is string => Boolean(src && !failedImages.includes(src)));
+  const usingFallback = Boolean(imageSrc && imageSrc === fallbackImage && imageSrc !== preferredImage);
+  const displayedImageLabel = usingFallback ? win.teamFallbackImageLabel : win.teamImageLabel;
+  const displayedImageSourceUrl = usingFallback ? win.teamFallbackImageSourceUrl : win.teamImageSourceUrl;
+  const displayedImageKind = usingFallback ? win.teamFallbackImageKind : win.teamImageKind;
   const carLabel = win.chassis ? `${win.teamName} ${win.chassis}` : win.teamName;
+  const imageAlt = displayedImageKind === 'constructor'
+    ? `Representative photograph of ${win.teamName} for archive win ${win.number}`
+    : `${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`;
   const meta = [win.year, win.driver, win.chassis].filter(Boolean).join(' - ');
-
   const facts: [string, string][] = [
     ['Team', win.teamName],
     ['Grand Prix', win.grand_prix],
@@ -77,56 +41,21 @@ export default function WinApp({ node, os }: AppProps) {
   ];
 
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} aria-busy={Boolean(primaryImage && !photoLoaded && !photoFailed)}>
-      {primaryImage && !imageFailed ? (
-        <>
-          {!photoLoaded && <F1ImagePlaceholder />}
-          {/* Local F1 cars are 1280px WebP. Wikimedia circuit sources use its
-              own 1280px derivative; other remote sources use Next's cache. */}
-          <Image
-            key={`${deliveredImage}-${retryCount}`}
-            src={deliveredImage!}
-            alt={`${carLabel} - win ${win.number}, ${win.grand_prix} Grand Prix ${win.year}`}
-            fill
-            sizes="(max-width: 800px) 100vw, 800px"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-            unoptimized={bypassesOptimizer}
-            onLoad={() => setLoadedImage(primaryImage)}
-            onError={() => {
-              // Some archival hosts throttle Next's server-side image fetches
-              // while permitting a browser request. Preserve the correct,
-              // pre-sized source and bypass the proxy before retrying.
-              if (!bypassesOptimizer) {
-                setBypassedOptimizer(primaryImage);
-                return;
-              }
-              // A remote source can still have a short transient outage. Retry
-              // twice before showing the honest unavailable state.
-              if (retryCount < 2) {
-                window.setTimeout(
-                  () => setImageAttempt({ src: primaryImage, count: retryCount + 1 }),
-                  900 * (retryCount + 1),
-                );
-                return;
-              }
-              setFailedImage(primaryImage);
-            }}
-            style={{
-              objectFit: preserveWholeCar ? 'contain' : 'cover',
-              background: preserveWholeCar ? '#fff' : undefined,
-              opacity: photoLoaded ? 1 : 0,
-              transition: 'opacity 180ms ease-out',
-            }}
-          />
-        </>
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+      {imageSrc ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          onError={() => setFailedImages((failed) => failed.includes(imageSrc) ? failed : [...failed, imageSrc])}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       ) : (
         <div style={{
           position: 'absolute', inset: 0, background: '#1a1612',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
         }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#b8b1a6', letterSpacing: '0.12em', textTransform: 'uppercase' }}>F1 car or circuit image unavailable</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#b8b1a6', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Source photo unavailable</span>
           <span style={{ fontSize: 14, color: '#8a8278' }}>{carLabel} · {win.grand_prix} · {win.year}</span>
         </div>
       )}
@@ -199,9 +128,6 @@ export default function WinApp({ node, os }: AppProps) {
                   </div>
                 ))}
               </dl>
-              <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
-                Image role: <strong>{imageRoleLabel(win.teamImageRole)}</strong>
-              </p>
               {img && (
                 <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
                   {img.note ? <>{img.note}<br /></> : null}
@@ -216,17 +142,10 @@ export default function WinApp({ node, os }: AppProps) {
                   <a href={win.source_url} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Race source</a>
                 </p>
               )}
-              {!img && win.teamImageVerificationStatus === 'verified' && win.teamImageSourceUrl && (
+              {!img && displayedImageSourceUrl && (
                 <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
-                  {win.teamImageLabel ?? 'Context photograph'}
-                  {win.teamImageCreator ? ` - ${win.teamImageCreator}` : ''}
-                  {win.teamImageReuseBasis ? ` - ${win.teamImageReuseBasis}` : ''} -{' '}
-                  <a href={win.teamImageSourceUrl} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
-                </p>
-              )}
-              {win.teamImageVerificationStatus !== 'verified' || imageFailed && !img && (
-                <p style={{ marginTop: 14, fontSize: 12, color: '#5a554d', lineHeight: 1.5 }}>
-                  No verified contextual photograph is available in the current source set.
+                  {displayedImageKind === 'constructor' ? 'Representative constructor photograph' : 'Race photograph'}: {displayedImageLabel ?? win.teamName} -{' '}
+                  <a href={displayedImageSourceUrl} target="_blank" rel="noreferrer" style={{ color: '#2a4a8a', fontWeight: 600 }}>Source</a>
                 </p>
               )}
             </div>

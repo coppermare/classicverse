@@ -179,6 +179,8 @@ interface RollerDialProps {
   options: RollerDialOption[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  /** Open the selected item when the roller is previewing a folder. */
+  onActivate?: () => void;
   embedded?: boolean;
   /** Prepend an "ALL" cell. Off for plain rollers e.g. channels, years. */
   showAll?: boolean;
@@ -206,7 +208,7 @@ interface RollerDialProps {
  * still tracked logically, so grabbing the wheel always resumes from whatever
  * is currently selected rather than from a stale position.
  */
-export default function RollerDial({ options: rawOptions, selectedId, onSelect, embedded, showAll = true, ariaLabel = 'Selector', pace = 'fine' }: RollerDialProps) {
+export default function RollerDial({ options: rawOptions, selectedId, onSelect, onActivate, embedded, showAll = true, ariaLabel = 'Selector', pace = 'fine' }: RollerDialProps) {
   const options = useMemo<RollerDialOption[]>(() => (
     showAll
       ? [{ id: null, mark: 'ALL', count: rawOptions.reduce((sum, opt) => sum + opt.count, 0) }, ...rawOptions]
@@ -419,6 +421,32 @@ export default function RollerDial({ options: rawOptions, selectedId, onSelect, 
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          onActivate?.();
+          return;
+        }
+        const from = selectedIndexRef.current;
+        let next: number;
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowUp': next = from + 1; break;
+          case 'ArrowLeft': case 'ArrowDown': next = from - 1; break;
+          case 'Home': next = 0; break;
+          case 'End': next = options.length - 1; break;
+          default: return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        next = clamp(next, 0, options.length - 1);
+        if (next === from) return;
+        selectedIndexRef.current = next;
+        rotationRef.current += (next - from) * ridgesPerStep;
+        setRotation(rotationRef.current);
+        playTick();
+        selectIndex(next);
+      }}
       role="slider"
       aria-valuemin={0}
       aria-valuemax={options.length - 1}

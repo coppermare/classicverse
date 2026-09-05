@@ -1,121 +1,106 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { ROOT } from './path';
 
+interface Entry { id: string; path: string }
+const ENTRY_KEY = 'cvNavigationEntry';
+
+function createEntry(path: string): Entry {
+  // getRandomValues also works on the HTTP LAN URL used for device testing;
+  // randomUUID is restricted to secure contexts in browsers.
+  const id = Array.from(crypto.getRandomValues(new Uint32Array(4)), (part) => part.toString(16)).join('-');
+  return { id, path };
+}
+
 /**
- * Navigation + history for the OS.
- *
- * The entire location is one path string in `?p=`, which is what makes Back and
- * Forward dependable: there is exactly one thing to compare, so "did the user
- * press Back" is answered by looking at neighbours in our own stack instead of
- * reconstructing state from a handful of loosely-related query params.
- *
- * We keep our own stack because the browser deliberately won't tell you whether
- * Back or Forward is available — without it the toolbar arrows can only guess.
- * The stack stays authoritative for the button states while the real browser
- * history stays authoritative for the actual movement, so the on-screen arrows
- * and the browser's own arrows drive the same trail and never disagree.
- *
- * Everything routes through next/navigation rather than raw history.pushState:
- * the App Router patches those globally and treats entries it didn't create as
- * cache misses, which turned a Back press into a full page reload — killing
- * in-flight audio and re-booting the whole set.
+ * Each visit has its own history identity, even when its path repeats.
+ * Next.js supports native pushState/replaceState navigation and copies its
+ * router state into those entries. Every channel has a real pathname while the
+ * shared root layout keeps the television mounted between them.
  */
 export function useOSNav() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   const [path, setPath] = useState<string>(ROOT);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
-
-  const stack = useRef<string[]>([ROOT]);
+  const stack = useRef<Entry[]>([]);
   const pos = useRef(0);
-  const hydrated = useRef(false);
 
   const sync = useCallback(() => {
     setCanGoBack(pos.current > 0);
     setCanGoForward(pos.current < stack.current.length - 1);
-    setPath(stack.current[pos.current]);
+    setPath(stack.current[pos.current].path);
   }, []);
 
-  const urlFor = (p: string) =>
-    p === ROOT ? window.location.pathname : `${window.location.pathname}?p=${encodeURIComponent(p)}`;
-
-  // Hydrate from the initial URL so a deep link or refresh lands on the right
-  // screen. searchParams can only be read in an effect — this component is
-  // server-rendered first.
   useEffect(() => {
-    const initial = searchParams.get('p') || ROOT;
-    stack.current = [initial];
-    pos.current = 0;
-    hydrated.current = true;
-    sync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const restore = () => {
+      const legacyPath = new URLSearchParams(window.location.search).get('p');
+      const currentPath = legacyPath || window.location.pathname || ROOT;
+      const id = window.history.state?.[ENTRY_KEY];
+      const index = stack.current.findIndex((entry) => entry.id === id);
+      if (index >= 0) {
+        pos.current = index;
+        stack.current[index].path = currentPath;
+      } else {
+        // A fresh load or an entry outside this mounted shell's history starts
+        // a new known trail. Never guess an index from a matching path.
+        const entry = createEntry(currentPath);
+        stack.current = [entry];
+        pos.current = 0;
+        window.history.replaceState(
+          { ...window.history.state, [ENTRY_KEY]: entry.id },
+          '',
+          legacyPath ? urlFor(currentPath) : undefined,
+        );
+      }
+      sync();
+    };
+    restore();
+    window.addEventListener('popstate', restore);
+    return () => window.removeEventListener('popstate', restore);
+  }, [sync]);
 
   const navigate = useCallback((next: string) => {
-    if (!hydrated.current || next === stack.current[pos.current]) return;
-    stack.current = [...stack.current.slice(0, pos.current + 1), next];
+    if (!stack.current.length || next === stack.current[pos.current].path) return;
+    const entry = createEntry(next);
+    // Pass only our state; copying Next's internal flags here bypasses its
+    // native-history adapter and would leave useSearchParams out of sync.
+    window.history.pushState({ [ENTRY_KEY]: entry.id }, '', urlFor(next));
+    stack.current = [...stack.current.slice(0, pos.current + 1), entry];
     pos.current = stack.current.length - 1;
-    router.push(urlFor(next), { scroll: false });
     sync();
-  }, [router, sync]);
+  }, [sync]);
 
-  /** Replace in place — for state that shouldn't earn a Back step. */
+  /** Replace in place, retaining the identity of this visit. */
   const replace = useCallback((next: string) => {
-    if (!hydrated.current) return;
-    stack.current[pos.current] = next;
-    router.replace(urlFor(next), { scroll: false });
+    const entry = stack.current[pos.current];
+    if (!entry) return;
+    window.history.replaceState({ [ENTRY_KEY]: entry.id }, '', urlFor(next));
+    entry.path = next;
     sync();
-  }, [router, sync]);
+  }, [sync]);
 
   const back = useCallback(() => {
     if (pos.current <= 0) return false;
-    router.back();
+    window.history.back();
     return true;
-  }, [router]);
+  }, []);
 
   const forward = useCallback(() => {
     if (pos.current >= stack.current.length - 1) return false;
-    router.forward();
+    window.history.forward();
     return true;
-  }, [router]);
+  }, []);
 
-  // React to URL changes we didn't just make — the browser's own Back/Forward.
-  // Neighbours are checked before a general search because a path can legitimately
-  // appear in the stack twice (visit Radio, leave, come back); indexOf alone would
-  // jump the cursor to the first copy and desync the arrows from the real trail.
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const p = searchParams.get('p') || ROOT;
-    if (p === stack.current[pos.current]) return;
-
-    if (stack.current[pos.current - 1] === p) pos.current -= 1;
-    else if (stack.current[pos.current + 1] === p) pos.current += 1;
-    else {
-      const i = stack.current.indexOf(p);
-      if (i !== -1) pos.current = i;
-      else {
-        stack.current = [...stack.current.slice(0, pos.current + 1), p];
-        pos.current = stack.current.length - 1;
-      }
-    }
-    sync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  // One object, rebuilt only when something in it actually changed.
-  //
-  // A fresh literal every render looked harmless — the functions inside were all
-  // useCallback'd — but the shell holds `nav` whole and derives half its handlers
-  // from it (`openNode`, `goUp`, `onCrumb`, the `os` object). A new identity each
-  // render invalidated every one of them, so each dependent re-rendered on every
-  // keystroke and every hover, memoised or not.
   return useMemo(
     () => ({ path, navigate, replace, back, forward, canGoBack, canGoForward }),
     [path, navigate, replace, back, forward, canGoBack, canGoForward],
   );
+}
+
+function urlFor(path: string): string {
+  const url = new URL(window.location.href);
+  url.pathname = path;
+  url.searchParams.delete('p');
+  return `${url.pathname}${url.search}${url.hash}`;
 }

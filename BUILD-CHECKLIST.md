@@ -17,9 +17,9 @@
 - [ ] README channels and controls match the desktop registry.
 - [ ] Car range is consistently described as 1885–1984.
 - [ ] F1 team roster, win totals, source and cutoff match the generated data.
-- [ ] The expected snapshot contains 763 generated non-Ferrari wins plus 250 curated Ferrari wins across the nine selected major constructor folders.
+- [ ] The source snapshot contains 899 generated non-Ferrari wins plus 250 curated Ferrari wins; navigation exposes the selected seven constructors and their 951 victories.
 - [ ] No enabled folder is described as coming soon.
-- [ ] Only Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham appear in the F1 folder roster.
+- [ ] No disabled/zero-record folder is described as complete.
 - [ ] New shortcuts and cabinet controls appear in README and UI specification.
 
 ## Cabinet
@@ -43,7 +43,7 @@
 - [ ] Back, Forward, Up and Home have correct enabled states.
 - [ ] Browser Back/Forward and toolbar Back/Forward remain synchronized.
 - [ ] Address breadcrumbs navigate to the selected ancestor.
-- [ ] A copied `?p=` deep link resolves to the expected destination.
+- [ ] A copied pathname deep link resolves directly, and a legacy `?p=` link migrates to its canonical pathname.
 - [ ] An invalid path is replaced with the nearest valid path.
 - [ ] `Ctrl/Command + K` opens search with focus in the field.
 - [ ] Search finds cars, years, manufacturers, constructors, drivers, circuits and apps.
@@ -66,7 +66,7 @@
 - [ ] Grand Prix, circuit, driver, chassis and engine render correctly.
 - [ ] Previous/next controls stay inside the current constructor.
 - [ ] Ferrari records retain correct chassis images and attribution where available.
-- [ ] Every victory has a manifest entry. The 298 displayed entries are local WebP photographs with a same-event, same-season or team-era role; the remaining 715 entries are explicit photo-unavailable states. Circuit-only, cross-team and rights-unverified imagery never appears as a win photograph.
+- [ ] Every displayed victory has a distinct, source-linked photograph. Verified race/chassis photographs take priority; otherwise a different photograph of the correct constructor is shown and labelled as representative. Graphics, duplicate images, circuit-only images and cross-team images never appear.
 - [ ] Source and cutoff documentation match the generation script.
 
 ## Radio
@@ -115,6 +115,6 @@
 
 - [ ] Review the deployed build, not only the development server.
 - [ ] Check console errors on initial load and each channel.
-- [ ] Verify external weather, radio and remote-image requests under realistic network conditions.
+- [ ] Verify external weather and radio requests under realistic network conditions; run `npm run check:media` to validate every displayed remote archive photograph.
 - [ ] Confirm no private keys, local paths or temporary research files are shipped.
 - [ ] Record the F1 data cutoff and any known incomplete media coverage in the release notes.

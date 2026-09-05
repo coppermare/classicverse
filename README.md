@@ -10,7 +10,7 @@ Classicverse is an interactive archive of classic things presented as a working 
 
 ## What Is In The Set
 
-- **F1 Archive** — 1,013 chronological Grand Prix victories across nine selected major constructor identities: Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus, Renault, Benetton and Brabham. Ferrari retains 250 curated records and licensed chassis imagery; 763 non-Ferrari records are generated from Jolpica F1 through the 2026 Hungarian Grand Prix. Each retained win uses a locally hosted, rights-cleared Formula 1 car photograph when available, with a genuine photograph of its associated circuit as the only fallback. Driver-only, component-only, trophy, safety-car, road-car, model, cross-team, map, graphic and rights-unverified candidates never appear as win photographs.
+- **F1 Archive** — 951 chronological Grand Prix victories across Ferrari, McLaren, Mercedes, Red Bull, Williams, Team Lotus and Renault. Ferrari retains 250 curated records and licensed chassis imagery; the other teams use generated Jolpica F1 records through the 2026 Hungarian Grand Prix. The complete source dataset remains available for research, while only these seven teams appear in navigation and search. Every win uses a real photograph: an exact, source-linked race photograph where one is verified, with a different sourced photograph of the correct constructor for records without one.
 - **A century of cars** — one curated hero car for every year from 1885 through 1984, with original historical writing, verified facts, sources, selection reasoning, alternates, confidence and image attribution.
 - **Radio** — a live FM-style tuner backed by a generated snapshot of public internet radio stations.
 - **Weather** — searchable live forecasts with saved place and unit preferences.
@@ -33,12 +33,13 @@ Open [http://localhost:3000](http://localhost:3000). The development server also
 ```bash
 npm run lint
 npm test
+npm run check:media
 npm run build
 ```
 
-`npm test` exercises the pure Snake rules and validates the generated F1 archive deterministically. The release checklist in [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md) covers interactive and content QA that is not yet automated.
+`npm test` exercises the pure Snake rules, validates the generated F1 archive, and runs React DOM integration regressions for navigation, keyboard controls, image recovery, geolocation and radio cleanup. `npm run check:media` verifies each displayed Commons file through the MediaWiki API and checks the remaining remote photographs directly. The integration checks use mocked device and network APIs; the release checklist in [BUILD-CHECKLIST.md](BUILD-CHECKLIST.md) covers browser and content QA that is not yet automated.
 
-The F1 image manifest covers all 1,013 retained victories and records whether each has a verified Formula 1 car photograph or a genuine photograph of the associated circuit. It preserves rights-cleared Commons car photographs as local WebP assets and retains source-linked circuit photographs only where the record and source metadata agree. Driver-only, component-only, trophy, safety-car, road-car, model, cross-team, map, graphic and rights-unverified candidates stay quarantined in the research indexes. Each displayed image carries a role label, subject metadata, source page, reuse basis and verification status.
+The F1 display gate admits working, unique win-specific photographs and quarantines circuit-only, cross-team and deleted sources. Records without a compliant race image use a distinct Commons photograph of the correct constructor, visibly labelled as representative when opened.
 
 Regenerate the non-Ferrari results snapshot deliberately with `npm run generate:f1`; the generated file records its [Jolpica F1](https://github.com/jolpica/jolpica-f1) source and 2026-07-26 cutoff date.
 
@@ -59,14 +60,16 @@ The interface is modeled as a small operating system:
 
 - [src/os/registry.ts](src/os/registry.ts) defines the folder and application tree.
 - [src/os/types.ts](src/os/types.ts) defines the generic folder/app contract and the API handed to each app.
-- [src/app/page.tsx](src/app/page.tsx) owns the cabinet, power lifecycle, navigation shell and physical controls.
+- [src/app](src/app) defines the public channel and archive routes; its root layout mounts the persistent television shell once.
+- [src/os/Classicverse.tsx](src/os/Classicverse.tsx) owns the cabinet, power lifecycle and navigation shell.
+- [src/os/TelevisionControls.tsx](src/os/TelevisionControls.tsx) and [src/components/TvKnob.tsx](src/components/TvKnob.tsx) own the physical controls.
 - [src/os/FolderView.tsx](src/os/FolderView.tsx), [src/os/Toolbar.tsx](src/os/Toolbar.tsx) and [src/os/SearchPanel.tsx](src/os/SearchPanel.tsx) provide shared OS behavior.
 - [src/os/apps](src/os/apps) contains the individual channels.
 - [src/data](src/data) contains curated and generated archive data.
 
 Folders expose children lazily and the shell renders them generically. Registering another channel or archive should not require special-casing the cabinet.
 
-Navigation is stored in the `?p=` URL parameter. That makes archive items deep-linkable while allowing the simulated toolbar and the browser history to remain synchronized.
+Each channel has a real pathname: `/f1`, `/cars`, `/radio`, `/weather`, `/snake` and `/changelog`. F1 teams, wins and individual cars have nested routes. The shared television layout remains mounted while the simulated toolbar and browser history move between them. Existing `?p=` links are migrated to their pathname when opened.
 
 ## Content And Sources
 
