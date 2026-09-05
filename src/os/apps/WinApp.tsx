@@ -90,17 +90,6 @@ export default function WinApp({ node, os }: AppProps) {
         </div>
       )}
 
-      {!details && displayedImageKind === 'constructor' && (
-        <div style={{
-          position: 'absolute', top: 48, left: 12, zIndex: 6,
-          padding: '4px 7px', borderRadius: 3,
-          background: 'rgba(18, 16, 13, 0.82)', color: '#f1eee7',
-          font: '700 9px/1.2 var(--font-sans)', letterSpacing: '0.12em', textTransform: 'uppercase',
-        }}>
-          Representative constructor photo
-        </div>
-      )}
-
       {/* Clear of the toolbar: it runs edge to edge across the top of the tube
           at z-index 12, so anything above ~36px is swallowed by it. */}
       <div style={{ position: 'absolute', top: 46, right: 14, zIndex: 6 }}>
