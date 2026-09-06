@@ -15,7 +15,9 @@
     "test:f1": "tsx scripts/test-f1-data.ts",
     "test:ui": "tsx scripts/test-ui.tsx",
     "check:media": "tsx scripts/check-remote-media.ts",
-    "generate:f1": "node scripts/generate-f1-wins.mjs"
+    "generate:f1": "node scripts/generate-f1-wins.mjs",
+    "video:radio": "remotion studio remotion/index.ts --no-open --public-dir=demo_videos",
+    "video:radio:render": "remotion render remotion/index.ts RadioDemo demo_videos/classicverse-radio-demo.mp4 --public-dir=demo_videos"
   },
   "dependencies": {
     "next": "16.3.1",
@@ -23,6 +25,8 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.506",
+    "@remotion/media": "^4.0.506",
     "@tailwindcss/postcss": "^4",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20",
@@ -31,6 +35,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "jsdom": "^26.1.0",
+    "remotion": "^4.0.506",
     "tailwindcss": "^4",
     "tsx": "4.23.12",
     "typescript": "^5"
