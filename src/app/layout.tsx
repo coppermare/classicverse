@@ -17,6 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://classicverse.vercel.app'),
   title: 'Classicverse - A Universe of Classic Things',
   description:
     'The cars, the races and the radio, on a vintage television set you operate. Turn the dial and find a century of things people still love.',
